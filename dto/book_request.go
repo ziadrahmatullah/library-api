@@ -7,6 +7,7 @@ type BookRequest struct {
 	Description string `json:"description" binding:"required"`
 	Quantity    *int   `json:"quantity" binding:"required,min=0"`
 	Cover       entity.Cover
+	AuthorId    uint `json:"author_id" binding:"required"`
 }
 
 func (r BookRequest) ToBook() *entity.Book {
@@ -15,5 +16,6 @@ func (r BookRequest) ToBook() *entity.Book {
 		Description: r.Description,
 		Quantity:    *r.Quantity,
 		Cover:       r.Cover,
+		AuthorId:    r.AuthorId,
 	}
 }

@@ -27,13 +27,13 @@ func NewBookRepository(db *gorm.DB) BookRepository {
 
 func (r *bookRepository) FindAll() []*entity.Book {
 	var books []*entity.Book
-	r.db.Find(&books)
+	r.db.Joins("Author").Find(&books)
 	return books
 }
 
 func (r *bookRepository) FindByTitle(title string) []*entity.Book {
 	var books []*entity.Book
-	r.db.Where("title ILIKE ?", "%"+title+"%").Find(&books)
+	r.db.Joins("Author").Where("title ILIKE ?", "%"+title+"%").Find(&books)
 	return books
 }
 
