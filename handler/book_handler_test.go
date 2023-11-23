@@ -2,7 +2,7 @@ package handler_test
 
 import (
 	"encoding/json"
-	// "errors"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -75,18 +75,141 @@ func TestHandleGetBooks(t *testing.T) {
 		assert.Equal(t, string(expectedResp), removeNewLine(rec.Body.String()))
 	})
 
-	// t.Run("should return 500 while error in query", func(t *testing.T) {
-	// 	bookUseCase := mocks.NewBookUsecase(t)
-	// 	bookHandler := handler.NewBookHandler(bookUseCase)
-	// 	r := gin.Default()
+	t.Run("should return 200 with empty book list", func(t *testing.T) {
+		expectedResp, _ := json.Marshal(dto.Response{
+			Data: make([]models.Book, 0),
+		})
+		bookUseCase := mocks.NewBookUsecase(t)
+		bookHandler := handler.NewBookHandler(bookUseCase)
+		bookUseCase.On("GetAllBooks").Return(make([]models.Book, 0), nil)
+		r := gin.Default()
+		req, _ := http.NewRequest(http.MethodGet, "/books", nil)
+		rec := httptest.NewRecorder()
 
-	// 	bookUseCase.On("GetAllBooks", &models.Book{}).Return(nil, errors.New("Fake error"))
-	// 	req, _ := http.NewRequest(http.MethodGet, "/v1/books", nil)
-	// 	w := httptest.NewRecorder()
+		r.GET("/books", bookHandler.HandleGetBooks)
+		r.ServeHTTP(rec, req)
 
-	// 	r.GET("/v1/books", bookHandler.HandleGetBooks)
-	// 	r.ServeHTTP(w, req)
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, string(expectedResp), removeNewLine(rec.Body.String()))
+	})
 
-	// 	assert.Equal(t, http.StatusInternalServerError, w.Code)
-	// })
+	t.Run("should return 200 if get all books by title success", func(t *testing.T) {
+		expectedResp, _ := json.Marshal(dto.Response{
+			Data: make([]models.Book, 0),
+		})
+		bookUseCase := mocks.NewBookUsecase(t)
+		bookHandler := handler.NewBookHandler(bookUseCase)
+		bookUseCase.On("GetBooksByTitle", mock.AnythingOfType("string")).Return(make([]models.Book, 0), nil)
+		r := gin.Default()
+		req, _ := http.NewRequest(http.MethodGet, "/books?title=buku", nil)
+		rec := httptest.NewRecorder()
+
+		r.GET("/books", bookHandler.HandleGetBooks)
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, string(expectedResp), removeNewLine(rec.Body.String()))
+	})
+
+	t.Run("should return 500 while error in query", func(t *testing.T) {
+		bookUseCase := mocks.NewBookUsecase(t)
+		bookHandler := handler.NewBookHandler(bookUseCase)
+		bookUseCase.On("GetAllBooks").Return(nil, errors.New("Fake error"))
+		r := gin.Default()
+		req, _ := http.NewRequest(http.MethodGet, "/books", nil)
+		rec := httptest.NewRecorder()
+
+		r.GET("/books", bookHandler.HandleGetBooks)
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+	})
 }
+
+// func TestHandleCreateBooks(t *testing.T) {
+// 	t.Run("should return 200 if create success", func(t *testing.T) {
+// 		expectedResp, _ := json.Marshal(dto.Response{
+// 			Data: books[0],
+// 		})
+// 		bookUseCase := mocks.NewBookUsecase(t)
+// 		bookHandler := handler.NewBookHandler(bookUseCase)
+// 		bookUseCase.On("GetAllBooks").Return(books, nil)
+// 		r := gin.Default()
+// 		req, _ := http.NewRequest(http.MethodGet, "/books", nil)
+// 		rec := httptest.NewRecorder()
+
+// 		r.GET("/books", bookHandler.HandleGetBooks)
+// 		r.ServeHTTP(rec, req)
+
+// 		assert.Equal(t, http.StatusOK, rec.Code)
+// 		assert.Equal(t, string(expectedResp), removeNewLine(rec.Body.String()))
+// 	})
+
+// 	t.Run("should return 200 if get all books by title success", func(t *testing.T) {
+// 		expectedResp, _ := json.Marshal(dto.Response{
+// 			Data: books,
+// 		})
+// 		bookUseCase := mocks.NewBookUsecase(t)
+// 		bookHandler := handler.NewBookHandler(bookUseCase)
+// 		bookUseCase.On("GetBooksByTitle", mock.AnythingOfType("string")).Return(books, nil)
+// 		r := gin.Default()
+// 		req, _ := http.NewRequest(http.MethodGet, "/books?title=buku", nil)
+// 		rec := httptest.NewRecorder()
+
+// 		r.GET("/books", bookHandler.HandleGetBooks)
+// 		r.ServeHTTP(rec, req)
+
+// 		assert.Equal(t, http.StatusOK, rec.Code)
+// 		assert.Equal(t, string(expectedResp), removeNewLine(rec.Body.String()))
+// 	})
+
+// 	t.Run("should return 200 with empty book list", func(t *testing.T) {
+// 		expectedResp, _ := json.Marshal(dto.Response{
+// 			Data: make([]models.Book, 0),
+// 		})
+// 		bookUseCase := mocks.NewBookUsecase(t)
+// 		bookHandler := handler.NewBookHandler(bookUseCase)
+// 		bookUseCase.On("GetAllBooks").Return(make([]models.Book, 0), nil)
+// 		r := gin.Default()
+// 		req, _ := http.NewRequest(http.MethodGet, "/books", nil)
+// 		rec := httptest.NewRecorder()
+
+// 		r.GET("/books", bookHandler.HandleGetBooks)
+// 		r.ServeHTTP(rec, req)
+
+// 		assert.Equal(t, http.StatusOK, rec.Code)
+// 		assert.Equal(t, string(expectedResp), removeNewLine(rec.Body.String()))
+// 	})
+
+// 	t.Run("should return 200 if get all books by title success", func(t *testing.T) {
+// 		expectedResp, _ := json.Marshal(dto.Response{
+// 			Data: make([]models.Book, 0),
+// 		})
+// 		bookUseCase := mocks.NewBookUsecase(t)
+// 		bookHandler := handler.NewBookHandler(bookUseCase)
+// 		bookUseCase.On("GetBooksByTitle", mock.AnythingOfType("string")).Return(make([]models.Book, 0), nil)
+// 		r := gin.Default()
+// 		req, _ := http.NewRequest(http.MethodGet, "/books?title=buku", nil)
+// 		rec := httptest.NewRecorder()
+
+// 		r.GET("/books", bookHandler.HandleGetBooks)
+// 		r.ServeHTTP(rec, req)
+
+// 		assert.Equal(t, http.StatusOK, rec.Code)
+// 		assert.Equal(t, string(expectedResp), removeNewLine(rec.Body.String()))
+// 	})
+
+// 	t.Run("should return 500 while error in query", func(t *testing.T) {
+// 		bookUseCase := mocks.NewBookUsecase(t)
+// 		bookHandler := handler.NewBookHandler(bookUseCase)
+// 		bookUseCase.On("CreateBook", &models.Book{}).Return(nil, nil)
+// 		r := gin.Default()
+// 		req, _ := http.NewRequest(http.MethodGet, "/books", nil)
+// 		rec := httptest.NewRecorder()
+
+// 		r.GET("/books", bookHandler.HandleGetBooks)
+// 		r.ServeHTTP(rec, req)
+
+// 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+// 	})
+// }
