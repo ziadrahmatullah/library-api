@@ -1,8 +1,11 @@
 package handler
 
 import (
+	"log"
 	"net/http"
+	"strings"
 
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/usecase"
 	"github.com/gin-gonic/gin"
@@ -28,5 +31,28 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"data": books,
+	})
+}
+
+func (h *BookHandler) AddBook(c *gin.Context) {
+	var request dto.BookRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": strings.Split(err.Error(), "\n"),
+		})
+		return
+	}
+	book := request.ToBook()
+
+	createdBook, err := h.bookUsecase.AddBook(book)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{
+		"data": createdBook,
 	})
 }

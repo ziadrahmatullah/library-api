@@ -8,6 +8,7 @@ import (
 type BookRepository interface {
 	FindAll() []*entity.Book
 	FindByTitle(name string) []*entity.Book
+	CreateBook(book *entity.Book) (*entity.Book, error)
 }
 
 type bookRepository struct {
@@ -30,4 +31,12 @@ func (r *bookRepository) FindByTitle(title string) []*entity.Book {
 	var books []*entity.Book
 	r.db.Where("title ILIKE ?", "%"+title+"%").Find(&books)
 	return books
+}
+
+func (r *bookRepository) CreateBook(b *entity.Book) (*entity.Book, error) {
+	result := r.db.Create(b)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return b, nil
 }

@@ -13,6 +13,7 @@ func New(handler Handlers) *gin.Engine {
 	router := gin.Default()
 
 	router.GET("/books", handler.Book.GetAllBooks)
+	router.POST("/books", handler.Book.AddBook)
 
 	return router
 }
