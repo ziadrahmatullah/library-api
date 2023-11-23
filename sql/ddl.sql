@@ -1,4 +1,4 @@
-CREATE DATABASE librady_db;
+CREATE DATABASE library_db;
 
 CREATE TABLE books(
     id bigserial,
