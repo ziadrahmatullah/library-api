@@ -8,6 +8,6 @@ type Book struct {
 	Description string  `json:"description" gorm:"not null"`
 	Quantity    int     `json:"quantity" gorm:"not null"`
 	Cover       Cover   `json:"cover"`
-	AuthorId    uint    `json:"-" gorm:"foreignKey:authorId;references:id"`
+	AuthorId    uint    `json:"-"`
 	Author      *Author `json:"author,omitempty"`
 }
