@@ -13,5 +13,10 @@ func main() {
 		log.Println(err)
 	}
 	b := &entity.Book{}
-	db.AutoMigrate(b)
+	_ = db.AutoMigrate(b)
+
+	books := []*entity.Book{
+		{Id: 1, Title: "How to eat", Description: "Explain how to eat", Quantity: 2, Cover: "kertas"},
+	}
+	db.Create(books)
 }
