@@ -13,5 +13,4 @@ func main() {
 		log.Println(err)
 	}
 	migration.Migrate(db)
-	migration.Seed(db)
 }
