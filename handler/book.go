@@ -24,10 +24,17 @@ func NewBookHandler(bookUsecase usecase.BookUsecase) *BookHandler {
 }
 
 func (h *BookHandler) GetAllBooks(c *gin.Context) {
+	cl, err := getClause(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
 	title := c.Query("title")
 	var books []*entity.Book
 	if title == "" {
-		books = h.bookUsecase.GetAllBooks()
+		books = h.bookUsecase.GetAllBooks(*cl)
 	} else {
 		books = h.bookUsecase.FindBooksByTitle(title)
 	}
