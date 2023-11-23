@@ -38,7 +38,7 @@ func (s *BookHandlerTestSuite) SetupSubTest() {
 
 func (s *BookHandlerTestSuite) TestListBooks() {
 	s.Run("should return 200", func() {
-		s.bu.On("GetAllBooks").Return([]*entity.Book{})
+		s.bu.On("GetAllBooks", mock.AnythingOfType("valueobject.Clause")).Return([]*entity.Book{})
 
 		req, _ := http.NewRequest(http.MethodGet, "/books", nil)
 		s.router.ServeHTTP(s.rec, req)
@@ -61,6 +61,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Title:       "A",
 			Description: "B",
 			Quantity:    &quantity,
+			AuthorId:    1,
 		}
 		body, _ := json.Marshal(request)
 		s.bu.On("AddBook", mock.AnythingOfType("*entity.Book")).Return(&entity.Book{}, nil)
@@ -76,6 +77,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Title:       "A",
 			Description: "B",
 			Quantity:    &quantity,
+			AuthorId:    1,
 		}
 		body, _ := json.Marshal(request)
 
@@ -90,6 +92,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Title:       "A",
 			Description: "B",
 			Quantity:    &quantity,
+			AuthorId:    1,
 		}
 		body, _ := json.Marshal(request)
 		s.bu.On("AddBook", mock.AnythingOfType("*entity.Book")).Return(nil, apperror.ErrAlreadyExist{})
@@ -105,6 +108,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Title:       "A",
 			Description: "B",
 			Quantity:    &quantity,
+			AuthorId:    1,
 		}
 		body, _ := json.Marshal(request)
 		s.bu.On("AddBook", mock.AnythingOfType("*entity.Book")).Return(nil, errors.New(""))
