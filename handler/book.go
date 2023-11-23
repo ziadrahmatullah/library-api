@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"strings"
 
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/usecase"
@@ -47,6 +49,13 @@ func (h *BookHandler) AddBook(c *gin.Context) {
 
 	createdBook, err := h.bookUsecase.AddBook(book)
 	if err != nil {
+		var e apperror.ErrAlreadyExist
+		if errors.As(err, &e) {
+			c.JSON(http.StatusConflict, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
