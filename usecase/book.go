@@ -7,6 +7,7 @@ import (
 
 type BookUsecase interface {
 	GetAllBooks() []*entity.Book
+	FindBooksByTitle(title string) []*entity.Book
 }
 
 type bookUsecase struct {
@@ -20,4 +21,8 @@ func NewBookUsecase(repo repository.BookRepository) BookUsecase {
 }
 func (u *bookUsecase) GetAllBooks() []*entity.Book {
 	return u.bookRepo.FindAll()
+}
+
+func (u *bookUsecase) FindBooksByTitle(name string) []*entity.Book {
+	return u.bookRepo.FindByTitle(name)
 }
