@@ -5,24 +5,48 @@ import (
 	"gorm.io/gorm"
 )
 
-type BookRepository interface{
-	FindAllBooks() ([]models.Book, error)
+type BookRepository interface {
+	FindBooks() ([]models.Book, error)
+	FindBooksByTitle(string) ([]models.Book, error)
+	NewBook(*models.Book) (*models.Book, error)
 }
 
-type bookRepository struct{
+type bookRepository struct {
 	db *gorm.DB
 }
 
-func NewBookRepository(db *gorm.DB) BookRepository{
+type BookParameter struct {
+	Title string
+}
+
+func NewBookRepository(db *gorm.DB) BookRepository {
 	return &bookRepository{
 		db: db,
 	}
 }
 
-func (b *bookRepository) FindAllBooks() (books []models.Book, err error){
-	err = b.db.Find(&books).Error
+func (b *bookRepository) FindBooks() (books []models.Book, err error) {
+	table := b.db.Preload("Author").Table("books")
+	err = table.Find(&books).Error
 	if err != nil {
 		return nil, err
 	}
 	return books, nil
+}
+
+func (b *bookRepository) FindBooksByTitle(title string) (books []models.Book, err error) {
+	table := b.db.Preload("Author").Table("books")
+	err = table.Where("title = ?", title).Find(&books).Error
+	if err != nil {
+		return nil, err
+	}
+	return books, nil
+}
+
+func (b *bookRepository) NewBook(book *models.Book) (newBook *models.Book, err error) {
+	err = b.db.Table("books").Create(&book).Error
+	if err != nil {
+		return nil, err
+	}
+	return book, nil
 }
