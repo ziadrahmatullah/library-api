@@ -21,9 +21,6 @@ func NewBookRepository(db *gorm.DB) BookRepository {
 
 func (r *bookRepository) FindAll() []*entity.Book {
 	var books []*entity.Book
-	r.db.Find(&entity.Book{}).Scan(&books)
-	if books == nil {
-		books = []*entity.Book{}
-	}
+	r.db.Find(&books)
 	return books
 }
