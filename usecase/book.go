@@ -40,5 +40,5 @@ func (u *bookUsecase) AddBook(book *entity.Book) (*entity.Book, error) {
 			Value:    b.Title,
 		}
 	}
-	return u.bookRepo.CreateBook(book)
+	return u.bookRepo.Create(book)
 }

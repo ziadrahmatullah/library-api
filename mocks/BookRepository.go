@@ -15,7 +15,7 @@ type BookRepository struct {
 }
 
 // CreateBook provides a mock function with given fields: book
-func (_m *BookRepository) CreateBook(book *entity.Book) (*entity.Book, error) {
+func (_m *BookRepository) Create(book *entity.Book) (*entity.Book, error) {
 	ret := _m.Called(book)
 
 	var r0 *entity.Book

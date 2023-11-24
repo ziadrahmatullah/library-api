@@ -12,7 +12,7 @@ import (
 type BookRepository interface {
 	Find(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book
 	First(conditions []valueobject.Condition) *entity.Book
-	CreateBook(book *entity.Book) (*entity.Book, error)
+	Create(book *entity.Book) (*entity.Book, error)
 }
 
 type bookRepository struct {
@@ -53,7 +53,7 @@ func (r *bookRepository) First(conditions []valueobject.Condition) *entity.Book 
 	return book
 }
 
-func (r *bookRepository) CreateBook(b *entity.Book) (*entity.Book, error) {
+func (r *bookRepository) Create(b *entity.Book) (*entity.Book, error) {
 	result := r.db.Create(b)
 	if result.Error != nil {
 		return nil, result.Error
