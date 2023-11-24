@@ -27,14 +27,14 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 		})
 		return
 	}
-	title := c.Query("title")
-	quantity := c.Query("qty")
-	description := c.Query("desc")
+	name := c.Query("name")
+	email := c.Query("email")
+	phone := c.Query("phone")
 
 	conditions := []*valueobject.Condition{
-		valueobject.NewCondition("title", valueobject.Ilike, title),
-		valueobject.NewCondition("description", valueobject.Ilike, description),
-		valueobject.NewCondition("quantity", valueobject.Equal, quantity),
+		valueobject.NewCondition("name", valueobject.Ilike, name),
+		valueobject.NewCondition("email", valueobject.Equal, email),
+		valueobject.NewCondition("phone", valueobject.Equal, phone),
 	}
 	var books []*entity.User
 	books = h.userUsecase.GetUsers(*cl, filterCondition(conditions))
