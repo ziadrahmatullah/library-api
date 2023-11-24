@@ -30,13 +30,17 @@ type BookResponse struct {
 }
 
 func NewFromBook(book *entity.Book) *BookResponse {
+	var authorResponse *AuthorResponse
+	if book.Author != nil {
+		authorResponse = NewFromAuthor(book.Author)
+	}
 	return &BookResponse{
 		Id:          book.Id,
 		Title:       book.Title,
 		Description: book.Description,
 		Quantity:    book.Quantity,
 		Cover:       book.Cover,
-		Author:      NewFromAuthor(book.Author),
+		Author:      authorResponse,
 	}
 }
 

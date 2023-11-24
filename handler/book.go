@@ -76,6 +76,6 @@ func (h *BookHandler) AddBook(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
-		"data": createdBook,
+		"data": dto.NewFromBook(createdBook),
 	})
 }
