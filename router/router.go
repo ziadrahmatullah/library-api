@@ -19,5 +19,7 @@ func New(handler Handlers) *gin.Engine {
 
 	router.GET("/users", handler.User.GetAllUsers)
 
+	router.POST("/borrowing-records", handler.BorrowingRecord.AddBorrowing)
+
 	return router
 }

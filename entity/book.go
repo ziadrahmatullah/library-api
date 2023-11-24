@@ -3,12 +3,12 @@ package entity
 type Cover string
 
 type Book struct {
-	Id          uint    `json:"id" gorm:"primaryKey;autoIncrement"`
-	Title       string  `json:"title" gorm:"not null;unique"`
-	Description string  `json:"description" gorm:"not null"`
-	Quantity    int     `json:"quantity" gorm:"not null"`
-	Cover       Cover   `json:"cover"`
-	AuthorId    uint    `json:"-"`
-	Author      *Author `json:"author,omitempty"`
-	User        []User  `gorm:"many2many:borrowing_records"`
+	Id          uint   `gorm:"primaryKey;autoIncrement"`
+	Title       string `gorm:"not null;unique"`
+	Description string `gorm:"not null"`
+	Quantity    int    `gorm:"not null"`
+	Cover       Cover
+	AuthorId    uint
+	Author      *Author
+	User        []User `gorm:"many2many:borrowing_records"`
 }

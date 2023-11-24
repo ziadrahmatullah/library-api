@@ -20,5 +20,5 @@ func NewBorrowingRecordUsecase(borrowingRepo repository.BorrowingRecordRepositor
 }
 
 func (u *borrowingRecordUsecase) AddBorrowingRecord(br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
-	return nil, nil
+	return u.borrowingRepo.Create(br)
 }

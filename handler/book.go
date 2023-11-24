@@ -43,8 +43,9 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 	}
 	var books []*entity.Book
 	books = h.bookUsecase.GetAllBooks(*cl, filterCondition(conditions))
+	var bookResponses []*dto.BookResponse
 	c.JSON(http.StatusOK, gin.H{
-		"data": books,
+		"data": dto.NewFromBook(),
 	})
 }
 

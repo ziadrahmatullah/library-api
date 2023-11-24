@@ -15,3 +15,10 @@ type ErrAlreadyExist struct {
 func (e ErrAlreadyExist) Error() string {
 	return fmt.Sprintf("%s with %s '%s' already exist", e.Resource, e.Field, e.Value)
 }
+
+type ErrNotFound struct {
+}
+
+func (e ErrNotFound) Error() string {
+	return ""
+}
