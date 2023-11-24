@@ -1,8 +1,6 @@
 package handler_test
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -17,6 +15,10 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )
+
+var books = []*entity.Book{
+	{Id: 1, Title: "A", Description: "B", Quantity: 1},
+}
 
 type BookHandlerTestSuite struct {
 	suite.Suite
@@ -38,20 +40,26 @@ func (s *BookHandlerTestSuite) SetupSubTest() {
 
 func (s *BookHandlerTestSuite) TestListBooks() {
 	s.Run("should return 200", func() {
-		s.bu.On("GetAllBooks", mock.AnythingOfType("valueobject.Query")).Return([]*entity.Book{})
+		s.bu.On("GetAllBooks", mock.AnythingOfType("valueobject.Query")).Return(books)
+		response := dto.NewFromBooks(books)
+		responseJson := marshal(h{"data": response})
 
 		req, _ := http.NewRequest(http.MethodGet, "/books", nil)
 		s.router.ServeHTTP(s.rec, req)
 
 		s.Equal(http.StatusOK, s.rec.Code)
+		s.Equal(responseJson, getBody(s.rec))
 	})
 	s.Run("should return 200 when search by name", func() {
 		s.bu.On("GetAllBooks", mock.AnythingOfType("valueobject.Query")).Return([]*entity.Book{})
+		response := make([]*dto.BookResponse, 0)
+		responseJson := marshal(h{"data": response})
 
 		req, _ := http.NewRequest(http.MethodGet, "/books?title=how", nil)
 		s.router.ServeHTTP(s.rec, req)
 
 		s.Equal(http.StatusOK, s.rec.Code)
+		s.Equal(responseJson, getBody(s.rec))
 	})
 }
 func (s *BookHandlerTestSuite) TestAddBook() {
@@ -63,13 +71,15 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		body, _ := json.Marshal(request)
-		s.bu.On("AddBook", mock.AnythingOfType("*entity.Book")).Return(&entity.Book{}, nil)
+		s.bu.On("AddBook", mock.AnythingOfType("*entity.Book")).Return(books[0], nil)
+		response := dto.NewFromBook(books[0])
+		responseJson := marshal(h{"data": response})
 
-		req, _ := http.NewRequest(http.MethodPost, "/books", bytes.NewReader(body))
+		req, _ := http.NewRequest(http.MethodPost, "/books", sendBody(request))
 		s.router.ServeHTTP(s.rec, req)
 
 		s.Equal(http.StatusCreated, s.rec.Code)
+		s.Equal(responseJson, getBody(s.rec))
 	})
 	s.Run("should return 400", func() {
 		quantity := -1
@@ -79,12 +89,12 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		body, _ := json.Marshal(request)
 
-		req, _ := http.NewRequest(http.MethodPost, "/books", bytes.NewReader(body))
+		req, _ := http.NewRequest(http.MethodPost, "/books", sendBody(request))
 		s.router.ServeHTTP(s.rec, req)
 
 		s.Equal(http.StatusBadRequest, s.rec.Code)
+		s.Contains(getBody(s.rec), "error")
 	})
 	s.Run("should return 409", func() {
 		quantity := 1
@@ -94,13 +104,13 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		body, _ := json.Marshal(request)
 		s.bu.On("AddBook", mock.AnythingOfType("*entity.Book")).Return(nil, apperror.ErrAlreadyExist{})
 
-		req, _ := http.NewRequest(http.MethodPost, "/books", bytes.NewReader(body))
+		req, _ := http.NewRequest(http.MethodPost, "/books", sendBody(request))
 		s.router.ServeHTTP(s.rec, req)
 
 		s.Equal(http.StatusConflict, s.rec.Code)
+		s.Contains(getBody(s.rec), "error")
 	})
 	s.Run("should return 500", func() {
 		quantity := 1
@@ -110,13 +120,13 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		body, _ := json.Marshal(request)
 		s.bu.On("AddBook", mock.AnythingOfType("*entity.Book")).Return(nil, errors.New(""))
 
-		req, _ := http.NewRequest(http.MethodPost, "/books", bytes.NewReader(body))
+		req, _ := http.NewRequest(http.MethodPost, "/books", sendBody(request))
 		s.router.ServeHTTP(s.rec, req)
 
 		s.Equal(http.StatusInternalServerError, s.rec.Code)
+		s.Contains(getBody(s.rec), "error")
 	})
 }
 
