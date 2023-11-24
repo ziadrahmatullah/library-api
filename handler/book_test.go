@@ -61,6 +61,13 @@ func (s *BookHandlerTestSuite) TestListBooks() {
 		s.Equal(http.StatusOK, s.rec.Code)
 		s.Equal(responseJson, getBody(s.rec))
 	})
+	s.Run("should return 400 when param is invalid", func() {
+		req, _ := http.NewRequest(http.MethodGet, "/books?page=a", nil)
+		s.router.ServeHTTP(s.rec, req)
+
+		s.Equal(http.StatusBadRequest, s.rec.Code)
+		s.Contains(getBody(s.rec), "error")
+	})
 }
 func (s *BookHandlerTestSuite) TestAddBook() {
 	s.Run("should return 201", func() {
