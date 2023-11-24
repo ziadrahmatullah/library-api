@@ -20,7 +20,14 @@ func Seed(db *gorm.DB) {
 		{Name: "Bob", Email: "bob@example.com", Phone: "085212819384"},
 		{Name: "Charlie", Email: "charlie@example.com", Phone: "081394839283"},
 	}
+	borrowingRecords := []*entity.BorrowingRecords{
+		{UserId: 1, BookId: 1, Status: 1},
+		{UserId: 1, BookId: 2, Status: 1},
+		{UserId: 2, BookId: 1, Status: 1},
+		{UserId: 3, BookId: 2, Status: 1},
+	}
 	db.Create(authors)
 	db.Create(books)
 	db.Create(users)
+	db.Create(borrowingRecords)
 }

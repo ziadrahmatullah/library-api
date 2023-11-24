@@ -5,4 +5,5 @@ type User struct {
 	Name  string
 	Email string `gorm:"unique"`
 	Phone string `gorm:"unique"`
+	Books []Book `gorm:"many2many:borrowing_records"`
 }

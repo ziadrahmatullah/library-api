@@ -10,4 +10,5 @@ type Book struct {
 	Cover       Cover   `json:"cover"`
 	AuthorId    uint    `json:"-"`
 	Author      *Author `json:"author,omitempty"`
+	User        []User  `gorm:"many2many:borrowing_records"`
 }
