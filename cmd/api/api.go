@@ -20,8 +20,13 @@ func main() {
 	bookUsecase := usecase.NewBookUsecase(bookRepo)
 	bookHandler := handler.NewBookHandler(bookUsecase)
 
+	userRepo := repository.NewUserRepository(db)
+	userUsecase := usecase.NewUserUsecase(userRepo)
+	userHandler := handler.NewUserHandler(userUsecase)
+
 	handlers := router.Handlers{
 		Book: bookHandler,
+		User: userHandler,
 	}
 	r := router.New(handlers)
 
