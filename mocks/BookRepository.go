@@ -14,13 +14,13 @@ type BookRepository struct {
 	mock.Mock
 }
 
-// CreateBook provides a mock function with given fields: book
-func (_m *BookRepository) Create(book *entity.Book) (*entity.Book, error) {
-	ret := _m.Called(book)
+// Create provides a mock function with given fields: t
+func (_m *BookRepository) Create(t *entity.Book) (*entity.Book, error) {
+	ret := _m.Called(t)
 
 	var r0 *entity.Book
 	if rf, ok := ret.Get(0).(func(*entity.Book) *entity.Book); ok {
-		r0 = rf(book)
+		r0 = rf(t)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entity.Book)
@@ -29,7 +29,7 @@ func (_m *BookRepository) Create(book *entity.Book) (*entity.Book, error) {
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(*entity.Book) error); ok {
-		r1 = rf(book)
+		r1 = rf(t)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -37,13 +37,13 @@ func (_m *BookRepository) Create(book *entity.Book) (*entity.Book, error) {
 	return r0, r1
 }
 
-// Find provides a mock function with given fields: clause, conditions
-func (_m *BookRepository) Find(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book {
-	ret := _m.Called(clause, conditions)
+// Find provides a mock function with given fields: query
+func (_m *BookRepository) Find(query valueobject.Query) []*entity.Book {
+	ret := _m.Called(query)
 
 	var r0 []*entity.Book
-	if rf, ok := ret.Get(0).(func(valueobject.Clause, []valueobject.Condition) []*entity.Book); ok {
-		r0 = rf(clause, conditions)
+	if rf, ok := ret.Get(0).(func(valueobject.Query) []*entity.Book); ok {
+		r0 = rf(query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*entity.Book)
@@ -53,13 +53,13 @@ func (_m *BookRepository) Find(clause valueobject.Clause, conditions []valueobje
 	return r0
 }
 
-// First provides a mock function with given fields: conditions
-func (_m *BookRepository) First(conditions []valueobject.Condition) *entity.Book {
-	ret := _m.Called(conditions)
+// First provides a mock function with given fields: query
+func (_m *BookRepository) First(query valueobject.Query) *entity.Book {
+	ret := _m.Called(query)
 
 	var r0 *entity.Book
-	if rf, ok := ret.Get(0).(func([]valueobject.Condition) *entity.Book); ok {
-		r0 = rf(conditions)
+	if rf, ok := ret.Get(0).(func(valueobject.Query) *entity.Book); ok {
+		r0 = rf(query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entity.Book)

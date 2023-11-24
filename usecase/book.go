@@ -8,8 +8,8 @@ import (
 )
 
 type BookUsecase interface {
-	GetAllBooks(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book
-	GetSingleBook(conditions []valueobject.Condition) *entity.Book
+	GetAllBooks(query valueobject.Query) []*entity.Book
+	GetSingleBook(query valueobject.Query) *entity.Book
 	AddBook(book *entity.Book) (*entity.Book, error)
 }
 
@@ -22,17 +22,20 @@ func NewBookUsecase(repo repository.BookRepository) BookUsecase {
 		bookRepo: repo,
 	}
 }
-func (u *bookUsecase) GetAllBooks(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book {
-	return u.bookRepo.Find(clause, conditions)
+func (u *bookUsecase) GetAllBooks(query valueobject.Query) []*entity.Book {
+	return u.bookRepo.Find(query)
 }
 
-func (u *bookUsecase) GetSingleBook(conditions []valueobject.Condition) *entity.Book {
-	return u.bookRepo.First(conditions)
+func (u *bookUsecase) GetSingleBook(query valueobject.Query) *entity.Book {
+	return u.bookRepo.First(query)
 }
 
 func (u *bookUsecase) AddBook(book *entity.Book) (*entity.Book, error) {
 	condition := *valueobject.NewCondition("title", valueobject.Equal, book.Title)
-	b := u.GetSingleBook([]valueobject.Condition{condition})
+	query := valueobject.Query{
+		Conditions: []valueobject.Condition{condition},
+	}
+	b := u.GetSingleBook(query)
 	if b != nil {
 		return nil, apperror.ErrAlreadyExist{
 			Resource: "book",

@@ -20,7 +20,7 @@ func NewUserHandler(userUsecase usecase.UserUsecase) *UserHandler {
 }
 
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
-	cl, err := getClause(c)
+	query, err := getQuery(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
@@ -36,8 +36,9 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 		valueobject.NewCondition("email", valueobject.Equal, email),
 		valueobject.NewCondition("phone", valueobject.Equal, phone),
 	}
+	query.Conditions = filterCondition(conditions)
 	var books []*entity.User
-	books = h.userUsecase.GetUsers(*cl, filterCondition(conditions))
+	books = h.userUsecase.GetUsers(*query)
 	c.JSON(http.StatusOK, gin.H{
 		"data": books,
 	})

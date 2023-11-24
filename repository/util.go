@@ -6,11 +6,11 @@ const (
 	defaultLimit = 10
 )
 
-func parseClause(c valueobject.Clause) (int, int, string) {
-	limit := c.PerPage
+func getPagination(q valueobject.Query) (int, int) {
+	limit := q.PerPage
 	if limit == 0 {
 		limit = defaultLimit
 	}
-	offset := (c.Page - 1) * limit
-	return limit, offset, c.Order
+	offset := (q.Page - 1) * limit
+	return limit, offset
 }

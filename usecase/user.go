@@ -7,8 +7,8 @@ import (
 )
 
 type UserUsecase interface {
-	GetUsers(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.User
-	GetSingleUser(conditions []valueobject.Condition) *entity.User
+	GetUsers(query valueobject.Query) []*entity.User
+	GetSingleUser(query valueobject.Query) *entity.User
 }
 
 type userUsecase struct {
@@ -21,10 +21,10 @@ func NewUserUsecase(userRepo repository.UserRepository) UserUsecase {
 	}
 }
 
-func (u *userUsecase) GetUsers(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.User {
-	return u.userRepo.Find(clause, conditions)
+func (u *userUsecase) GetUsers(query valueobject.Query) []*entity.User {
+	return u.userRepo.Find(query)
 }
 
-func (u *userUsecase) GetSingleUser(conditions []valueobject.Condition) *entity.User {
-	return u.userRepo.First(conditions)
+func (u *userUsecase) GetSingleUser(query valueobject.Query) *entity.User {
+	return u.userRepo.First(query)
 }

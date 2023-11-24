@@ -3,15 +3,14 @@ package repository
 import (
 	"errors"
 	"fmt"
-	"log"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
 	"gorm.io/gorm"
 )
 
 type BaseRepository[T any] interface {
-	Find(clause valueobject.Clause, conditions []valueobject.Condition) []*T
-	First(conditions []valueobject.Condition) *T
+	Find(query valueobject.Query) []*T
+	First(query valueobject.Query) *T
 	Create(t *T) (*T, error)
 }
 
@@ -19,24 +18,27 @@ type baseRepository[T any] struct {
 	db *gorm.DB
 }
 
-func (r *baseRepository[T]) Find(clause valueobject.Clause, conditions []valueobject.Condition) []*T {
+func (r *baseRepository[T]) Find(q valueobject.Query) []*T {
 	var ts []*T
-	limit, offset, order := parseClause(clause)
+	limit, offset := getPagination(q)
 	query := r.db.Model(ts)
-	log.Println(conditions)
-	for _, condition := range conditions {
+	for _, s := range q.With {
+		query.Joins(s)
+	}
+	for _, condition := range q.Conditions {
 		sql := fmt.Sprintf("%s %s $1", condition.Field, condition.Operation)
 		query.Where(sql, condition.Value)
 	}
 	query.
 		Limit(limit).
 		Offset(offset).
-		Order(order).
+		Order(q.Order).
 		Find(&ts)
 	return ts
 }
 
-func (r *baseRepository[T]) First(conditions []valueobject.Condition) *T {
+func (r *baseRepository[T]) First(q valueobject.Query) *T {
+	conditions := q.Conditions
 	var t *T
 	query := r.db.Model(t)
 	for _, condition := range conditions {

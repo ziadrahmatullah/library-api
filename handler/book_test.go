@@ -38,7 +38,7 @@ func (s *BookHandlerTestSuite) SetupSubTest() {
 
 func (s *BookHandlerTestSuite) TestListBooks() {
 	s.Run("should return 200", func() {
-		s.bu.On("GetAllBooks", mock.AnythingOfType("valueobject.Clause"), mock.AnythingOfType("[]valueobject.Condition")).Return([]*entity.Book{})
+		s.bu.On("GetAllBooks", mock.AnythingOfType("valueobject.Query")).Return([]*entity.Book{})
 
 		req, _ := http.NewRequest(http.MethodGet, "/books", nil)
 		s.router.ServeHTTP(s.rec, req)
@@ -46,7 +46,7 @@ func (s *BookHandlerTestSuite) TestListBooks() {
 		s.Equal(http.StatusOK, s.rec.Code)
 	})
 	s.Run("should return 200 when search by name", func() {
-		s.bu.On("GetAllBooks", mock.AnythingOfType("valueobject.Clause"), mock.AnythingOfType("[]valueobject.Condition")).Return([]*entity.Book{})
+		s.bu.On("GetAllBooks", mock.AnythingOfType("valueobject.Query")).Return([]*entity.Book{})
 
 		req, _ := http.NewRequest(http.MethodGet, "/books?title=how", nil)
 		s.router.ServeHTTP(s.rec, req)

@@ -25,7 +25,7 @@ func NewBookHandler(bookUsecase usecase.BookUsecase) *BookHandler {
 }
 
 func (h *BookHandler) GetAllBooks(c *gin.Context) {
-	cl, err := getClause(c)
+	q, err := getQuery(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
@@ -41,8 +41,9 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 		valueobject.NewCondition("description", valueobject.Ilike, description),
 		valueobject.NewCondition("quantity", valueobject.Equal, quantity),
 	}
+	q.Conditions = filterCondition(conditions)
 	var books []*entity.Book
-	books = h.bookUsecase.GetAllBooks(*cl, filterCondition(conditions))
+	books = h.bookUsecase.GetAllBooks(*q)
 	c.JSON(http.StatusOK, gin.H{
 		"data": dto.NewFromBooks(books),
 	})

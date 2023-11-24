@@ -2,13 +2,15 @@ package valueobject
 
 import "strconv"
 
-type Clause struct {
-	Page    int
-	PerPage int
-	Order   string
+type Query struct {
+	Page       int
+	PerPage    int
+	Order      string
+	Conditions []Condition
+	With       []string
 }
 
-func NewClause(page string, perPage string, order string) (*Clause, error) {
+func NewQuery(page string, perPage string, order string) (*Query, error) {
 	p, err := strconv.Atoi(page)
 	if err != nil {
 		return nil, err
@@ -20,10 +22,10 @@ func NewClause(page string, perPage string, order string) (*Clause, error) {
 	if p < 1 {
 		p = 1
 	}
-	clause := &Clause{
+	query := &Query{
 		Page:    p,
 		PerPage: pp,
 		Order:   order,
 	}
-	return clause, nil
+	return query, nil
 }

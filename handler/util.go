@@ -5,14 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getClause(c *gin.Context) (*valueobject.Clause, error) {
+func getQuery(c *gin.Context) (*valueobject.Query, error) {
 	page := c.DefaultQuery("page", "1")
 	perPage := c.DefaultQuery("per_page", "0")
-	cl, err := valueobject.NewClause(page, perPage, c.Query("order"))
+	query, err := valueobject.NewQuery(page, perPage, c.Query("order"))
 	if err != nil {
 		return nil, err
 	}
-	return cl, nil
+	return query, nil
 }
 
 func filterCondition(conditions []*valueobject.Condition) []valueobject.Condition {
