@@ -5,20 +5,20 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/repository"
 )
 
-type BorrowUsecase interface{
-	BorrowBook(*models.BorrowingBooks)(*models.BorrowingBooks, error)
+type BorrowUsecase interface {
+	BorrowBook(*models.BorrowingBook) (*models.BorrowingBook, error)
 }
 
-type borrowUsecase struct{
+type borrowUsecase struct {
 	borrowRepository repository.BorrowRepository
 }
 
-func NewBorrowUsecase(bu repository.BorrowRepository) BorrowUsecase{
+func NewBorrowUsecase(bu repository.BorrowRepository) BorrowUsecase {
 	return &borrowUsecase{
-		borrowRepository:bu,
+		borrowRepository: bu,
 	}
 }
 
-func (bu *borrowUsecase) BorrowBook(borrow *models.BorrowingBooks)(*models.BorrowingBooks, error){
+func (bu *borrowUsecase) BorrowBook(borrow *models.BorrowingBook) (*models.BorrowingBook, error) {
 	return bu.borrowRepository.BorrowBook(borrow)
 }

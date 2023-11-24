@@ -3,7 +3,6 @@ CREATE DATABASE library_db;
 CREATE TABLE authors(
     id bigserial,
     name varchar NOT NULL,
-    status varchar NOT NULL,
     created_at timestamp NOT NULL,
     updated_at timestamp NOT NULL,
     deleted_at timestamp,
@@ -39,6 +38,7 @@ CREATE TABLE borrowing_books(
     id bigserial,
     book_id bigint NOT NULL,
     user_id bigint NOT NULL,
+    status varchar NOT NULL,
     created_at timestamp NOT NULL,
     updated_at timestamp NOT NULL,
     deleted_at timestamp,

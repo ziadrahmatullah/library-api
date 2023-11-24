@@ -24,10 +24,10 @@ VALUES
 ('Ferina', 'alice@gmail.com', '0877237373', NOW(), NOW());
 
 
-INSERT INTO borrowing_books (book_id, user_id, created_at, updated_at)
+INSERT INTO borrowing_books (book_id, user_id, status, created_at, updated_at)
 VALUES
-(1, 1, NOW(), NOW()),
-(2, 1, NOW(), NOW()),
-(3, 1, NOW(), NOW()),
-(3, 1, NOW(), NOW()),
-(4, 1, NOW(), NOW());
+(1, 1,'not returned', NOW(), NOW()),
+(2, 1,'not returned', NOW(), NOW()),
+(3, 1,'not returned', NOW(), NOW()),
+(3, 1,'not returned', NOW(), NOW()),
+(4, 1,'not returned', NOW(), NOW());
