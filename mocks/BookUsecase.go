@@ -53,6 +53,22 @@ func (_m *BookUsecase) GetAllBooks(clause valueobject.Clause, conditions []value
 	return r0
 }
 
+// GetSingleBook provides a mock function with given fields: conditions
+func (_m *BookUsecase) GetSingleBook(conditions []valueobject.Condition) *entity.Book {
+	ret := _m.Called(conditions)
+
+	var r0 *entity.Book
+	if rf, ok := ret.Get(0).(func([]valueobject.Condition) *entity.Book); ok {
+		r0 = rf(conditions)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.Book)
+		}
+	}
+
+	return r0
+}
+
 type mockConstructorTestingTNewBookUsecase interface {
 	mock.TestingT
 	Cleanup(func())
