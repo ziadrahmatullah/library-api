@@ -2,6 +2,8 @@ package repository
 
 import (
 	"errors"
+	"fmt"
+	"log"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
@@ -11,8 +13,7 @@ import (
 )
 
 type BookRepository interface {
-	FindAll(c valueobject.Clause) []*entity.Book
-	FindByTitle(name string) []*entity.Book
+	FindAll(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book
 	CreateBook(book *entity.Book) (*entity.Book, error)
 }
 
@@ -26,21 +27,20 @@ func NewBookRepository(db *gorm.DB) BookRepository {
 	}
 }
 
-func (r *bookRepository) FindAll(c valueobject.Clause) []*entity.Book {
+func (r *bookRepository) FindAll(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book {
 	var books []*entity.Book
-	limit, offset, order := parseClause(c)
-	r.db.
-		Joins("Author").
+	limit, offset, order := parseClause(clause)
+	query := r.db.Joins("Author")
+	log.Println(conditions)
+	for _, condition := range conditions {
+		sql := fmt.Sprintf("%s %s $1", condition.Field, condition.Operation)
+		query.Where(sql, condition.Value)
+	}
+	query.
 		Limit(limit).
 		Offset(offset).
 		Order(order).
 		Find(&books)
-	return books
-}
-
-func (r *bookRepository) FindByTitle(title string) []*entity.Book {
-	var books []*entity.Book
-	r.db.Joins("Author").Where("title ILIKE ?", "%"+title+"%").Find(&books)
 	return books
 }
 

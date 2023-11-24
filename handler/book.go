@@ -10,6 +10,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/usecase"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,12 +33,16 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 		return
 	}
 	title := c.Query("title")
-	var books []*entity.Book
-	if title == "" {
-		books = h.bookUsecase.GetAllBooks(*cl)
-	} else {
-		books = h.bookUsecase.FindBooksByTitle(title)
+	quantity := c.Query("qty")
+	description := c.Query("desc")
+
+	conditions := []*valueobject.Condition{
+		valueobject.NewCondition("title", valueobject.Ilike, title),
+		valueobject.NewCondition("description", valueobject.Ilike, description),
+		valueobject.NewCondition("quantity", valueobject.Equal, quantity),
 	}
+	var books []*entity.Book
+	books = h.bookUsecase.GetAllBooks(*cl, filterCondition(conditions))
 	c.JSON(http.StatusOK, gin.H{
 		"data": books,
 	})

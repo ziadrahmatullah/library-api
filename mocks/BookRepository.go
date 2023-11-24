@@ -37,29 +37,13 @@ func (_m *BookRepository) CreateBook(book *entity.Book) (*entity.Book, error) {
 	return r0, r1
 }
 
-// FindAll provides a mock function with given fields: c
-func (_m *BookRepository) FindAll(c valueobject.Clause) []*entity.Book {
-	ret := _m.Called(c)
+// FindAll provides a mock function with given fields: clause, conditions
+func (_m *BookRepository) FindAll(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book {
+	ret := _m.Called(clause, conditions)
 
 	var r0 []*entity.Book
-	if rf, ok := ret.Get(0).(func(valueobject.Clause) []*entity.Book); ok {
-		r0 = rf(c)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entity.Book)
-		}
-	}
-
-	return r0
-}
-
-// FindByTitle provides a mock function with given fields: name
-func (_m *BookRepository) FindByTitle(name string) []*entity.Book {
-	ret := _m.Called(name)
-
-	var r0 []*entity.Book
-	if rf, ok := ret.Get(0).(func(string) []*entity.Book); ok {
-		r0 = rf(name)
+	if rf, ok := ret.Get(0).(func(valueobject.Clause, []valueobject.Condition) []*entity.Book); ok {
+		r0 = rf(clause, conditions)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*entity.Book)

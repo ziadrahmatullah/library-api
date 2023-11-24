@@ -37,29 +37,13 @@ func (_m *BookUsecase) AddBook(book *entity.Book) (*entity.Book, error) {
 	return r0, r1
 }
 
-// FindBooksByTitle provides a mock function with given fields: title
-func (_m *BookUsecase) FindBooksByTitle(title string) []*entity.Book {
-	ret := _m.Called(title)
+// GetAllBooks provides a mock function with given fields: clause, conditions
+func (_m *BookUsecase) GetAllBooks(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book {
+	ret := _m.Called(clause, conditions)
 
 	var r0 []*entity.Book
-	if rf, ok := ret.Get(0).(func(string) []*entity.Book); ok {
-		r0 = rf(title)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entity.Book)
-		}
-	}
-
-	return r0
-}
-
-// GetAllBooks provides a mock function with given fields: c
-func (_m *BookUsecase) GetAllBooks(c valueobject.Clause) []*entity.Book {
-	ret := _m.Called(c)
-
-	var r0 []*entity.Book
-	if rf, ok := ret.Get(0).(func(valueobject.Clause) []*entity.Book); ok {
-		r0 = rf(c)
+	if rf, ok := ret.Get(0).(func(valueobject.Clause, []valueobject.Condition) []*entity.Book); ok {
+		r0 = rf(clause, conditions)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*entity.Book)

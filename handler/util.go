@@ -14,3 +14,13 @@ func getClause(c *gin.Context) (*valueobject.Clause, error) {
 	}
 	return cl, nil
 }
+
+func filterCondition(conditions []*valueobject.Condition) []valueobject.Condition {
+	filtered := make([]valueobject.Condition, 0)
+	for _, condition := range conditions {
+		if condition != nil {
+			filtered = append(filtered, *condition)
+		}
+	}
+	return filtered
+}

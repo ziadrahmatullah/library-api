@@ -7,8 +7,7 @@ import (
 )
 
 type BookUsecase interface {
-	GetAllBooks(c valueobject.Clause) []*entity.Book
-	FindBooksByTitle(title string) []*entity.Book
+	GetAllBooks(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book
 	AddBook(book *entity.Book) (*entity.Book, error)
 }
 
@@ -21,12 +20,8 @@ func NewBookUsecase(repo repository.BookRepository) BookUsecase {
 		bookRepo: repo,
 	}
 }
-func (u *bookUsecase) GetAllBooks(c valueobject.Clause) []*entity.Book {
-	return u.bookRepo.FindAll(c)
-}
-
-func (u *bookUsecase) FindBooksByTitle(name string) []*entity.Book {
-	return u.bookRepo.FindByTitle(name)
+func (u *bookUsecase) GetAllBooks(clause valueobject.Clause, conditions []valueobject.Condition) []*entity.Book {
+	return u.bookRepo.FindAll(clause, conditions)
 }
 
 func (u *bookUsecase) AddBook(book *entity.Book) (*entity.Book, error) {
