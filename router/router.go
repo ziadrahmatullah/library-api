@@ -6,8 +6,9 @@ import (
 )
 
 type Handlers struct {
-	Book *handler.BookHandler
-	User *handler.UserHandler
+	Book            *handler.BookHandler
+	User            *handler.UserHandler
+	BorrowingRecord *handler.BorrowingRecordHandler
 }
 
 func New(handler Handlers) *gin.Engine {

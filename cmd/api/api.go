@@ -24,9 +24,14 @@ func main() {
 	userUsecase := usecase.NewUserUsecase(userRepo)
 	userHandler := handler.NewUserHandler(userUsecase)
 
+	borrowingRecordRepo := repository.NewBorrowingRecordsRepository(db)
+	borrowingRecordUsecase := usecase.NewBorrowingRecordUsecase(borrowingRecordRepo)
+	borrowingRecordHandler := handler.NewBorrowingRecordHandler(borrowingRecordUsecase)
+
 	handlers := router.Handlers{
-		Book: bookHandler,
-		User: userHandler,
+		Book:            bookHandler,
+		User:            userHandler,
+		BorrowingRecord: borrowingRecordHandler,
 	}
 	r := router.New(handlers)
 
