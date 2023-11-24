@@ -12,4 +12,4 @@ type Book struct {
 	Author      Author `gorm:"foreignKey:author_id;references:id"`
 }
 
-// Sentinel
+//dto

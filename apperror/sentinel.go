@@ -8,4 +8,6 @@ var (
 	ErrFindBooksQuery = errors.New("find books query error")
 	ErrFindBooksByTitleQuery = errors.New("find books by title query error")
 	ErrNewBookQuery = errors.New("new book query error")
+	ErrBookNotFound = errors.New("book not found")
+	ErrBookOutOfStock = errors.New("book out")
 )

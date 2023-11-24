@@ -7,6 +7,8 @@ import (
 
 type RouterOpts struct {
 	ProductHandler *handler.BookHandler
+	UserHandler    *handler.UserHandler
+	BorrowHandler  *handler.BorrowHandler
 }
 
 func NewRouter(opts RouterOpts) *gin.Engine {
@@ -15,5 +17,11 @@ func NewRouter(opts RouterOpts) *gin.Engine {
 	books := router.Group("/books")
 	books.GET("", opts.ProductHandler.HandleGetBooks)
 	books.POST("", opts.ProductHandler.HandleCreateBook)
+
+	users := router.Group("/users")
+	users.GET("", opts.UserHandler.HandleGetUsers)
+
+	borrow := router.Group("/borrows")
+	borrow.POST("", opts.BorrowHandler.HandleBorrowBook)
 	return router
 }

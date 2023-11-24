@@ -24,8 +24,18 @@ func main() {
 	bu := usecase.NewBookUsecase(br)
 	bh := handler.NewBookHandler(bu)
 
+	ur := repository.NewUserRepository(db)
+	uu := usecase.NewUserUsecase(ur)
+	uh := handler.NewUserHandler(uu)
+
+	brr := repository.NewBorrowRepository(db)
+	bru := usecase.NewBorrowUsecase(brr)
+	brh := handler.NewBorrowHandler(bru)
+
 	opts := server.RouterOpts{
 		ProductHandler: bh,
+		UserHandler: uh,
+		BorrowHandler: brh,
 	}
 	r := server.NewRouter(opts)
 

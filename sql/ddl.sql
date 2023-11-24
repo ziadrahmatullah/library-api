@@ -3,6 +3,18 @@ CREATE DATABASE library_db;
 CREATE TABLE authors(
     id bigserial,
     name varchar NOT NULL,
+    status varchar NOT NULL,
+    created_at timestamp NOT NULL,
+    updated_at timestamp NOT NULL,
+    deleted_at timestamp,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE users(
+    id bigserial,
+    name varchar NOT NULL,
+    email varchar NOT NULL,
+    phone varchar NOT NULL,
     created_at timestamp NOT NULL,
     updated_at timestamp NOT NULL,
     deleted_at timestamp,
@@ -21,5 +33,17 @@ CREATE TABLE books(
     deleted_at timestamp,
     PRIMARY KEY (id),
     FOREIGN KEY (author_id) REFERENCES authors(id)
+);
+
+CREATE TABLE borrowing_books(
+    id bigserial,
+    book_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp NOT NULL,
+    updated_at timestamp NOT NULL,
+    deleted_at timestamp,
+    PRIMARY KEY (id),
+    FOREIGN KEY (book_id) REFERENCES books(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

@@ -10,51 +10,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type BookHandler struct {
-	bookUsecase usecase.BookUsecase
+
+type BorrowHandler struct{
+	borrowUsecase usecase.BorrowUsecase
 }
 
-func NewBookHandler(bu usecase.BookUsecase) *BookHandler {
-	return &BookHandler{
-		bookUsecase: bu,
+func NewBorrowHandler(bu usecase.BorrowUsecase) *BorrowHandler{
+	return &BorrowHandler{
+		borrowUsecase: bu,
 	}
 }
 
-func (h *BookHandler) HandleGetBooks(ctx *gin.Context) {
+func (h *BorrowHandler) HandleBorrowBook(ctx *gin.Context){
 	resp := dto.Response{}
-	title := ctx.Query("title")
-	var books []models.Book
-	var err error
-	if title != "" {
-		books, err = h.bookUsecase.GetBooksByTitle(title)
-	} else {
-		books, err = h.bookUsecase.GetAllBooks()
-	}
-	if err != nil {
-		resp.Message = err.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
-		return
-	}
-	resp.Data = books
-	ctx.JSON(http.StatusOK, resp)
-}
-
-func (h *BookHandler) HandleCreateBook(ctx *gin.Context) {
-	resp := dto.Response{}
-	newBook := models.Book{}
-	err := ctx.ShouldBindJSON(&newBook)
+	newBorrow := models.BorrowingBooks{}
+	err := ctx.ShouldBindJSON(&newBorrow)
 	if err != nil {
 		resp.Message = apperror.ErrCannotBindJSON.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	book, err := h.bookUsecase.CreateBook(&newBook)
+	borrow, err := h.borrowUsecase.BorrowBook(&newBorrow)
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	resp.Data = book
+	resp.Data = borrow
 	ctx.JSON(http.StatusOK, resp)
-
 }

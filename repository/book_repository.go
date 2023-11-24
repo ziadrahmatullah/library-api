@@ -16,10 +16,6 @@ type bookRepository struct {
 	db *gorm.DB
 }
 
-type BookParameter struct {
-	Title string
-}
-
 func NewBookRepository(db *gorm.DB) BookRepository {
 	return &bookRepository{
 		db: db,
