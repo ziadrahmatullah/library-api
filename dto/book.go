@@ -45,10 +45,5 @@ func NewFromBook(book *entity.Book) *BookResponse {
 }
 
 func NewFromBooks(books []*entity.Book) []*BookResponse {
-	responses := make([]*BookResponse, 0)
-	for _, book := range books {
-		bookResponse := NewFromBook(book)
-		responses = append(responses, bookResponse)
-	}
-	return responses
+	return newResponsesFromEntities(books, NewFromBook)
 }
