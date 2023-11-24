@@ -21,11 +21,12 @@ func (r BookRequest) ToBook() *entity.Book {
 }
 
 type BookResponse struct {
-	Id          uint         `json:"id"`
-	Title       string       `json:"title"`
-	Description string       `json:"description"`
-	Quantity    int          `json:"quantity"`
-	Cover       entity.Cover `json:"cover"`
+	Id          uint            `json:"id"`
+	Title       string          `json:"title"`
+	Description string          `json:"description"`
+	Quantity    int             `json:"quantity"`
+	Cover       entity.Cover    `json:"cover"`
+	Author      *AuthorResponse `json:"author,omitempty"`
 }
 
 func NewFromBook(book *entity.Book) *BookResponse {
@@ -35,6 +36,7 @@ func NewFromBook(book *entity.Book) *BookResponse {
 		Description: book.Description,
 		Quantity:    book.Quantity,
 		Cover:       book.Cover,
+		Author:      NewFromAuthor(book.Author),
 	}
 }
 

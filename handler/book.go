@@ -42,6 +42,7 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 		valueobject.NewCondition("quantity", valueobject.Equal, quantity),
 	}
 	q.Conditions = filterCondition(conditions)
+	q.With = []string{"Author"}
 	var books []*entity.Book
 	books = h.bookUsecase.GetAllBooks(*q)
 	c.JSON(http.StatusOK, gin.H{
