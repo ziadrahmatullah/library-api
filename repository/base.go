@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -42,7 +43,10 @@ func (r *baseRepository[T]) First(conditions []valueobject.Condition) *T {
 		sql := fmt.Sprintf("%s %s $1", condition.Field, condition.Operation)
 		query.Where(sql, condition.Value)
 	}
-	query.First(&t)
+	err := query.First(&t).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil
+	}
 	return t
 }
 
