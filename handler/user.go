@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/usecase"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
@@ -37,9 +38,9 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 		valueobject.NewCondition("phone", valueobject.Equal, phone),
 	}
 	query.Conditions = filterCondition(conditions)
-	var books []*entity.User
-	books = h.userUsecase.GetUsers(*query)
+	var users []*entity.User
+	users = h.userUsecase.GetUsers(*query)
 	c.JSON(http.StatusOK, gin.H{
-		"data": books,
+		"data": dto.NewFromUsers(users),
 	})
 }
