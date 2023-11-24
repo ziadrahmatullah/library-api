@@ -44,12 +44,15 @@ func (r *bookRepository) Find(clause valueobject.Clause, conditions []valueobjec
 
 func (r *bookRepository) First(conditions []valueobject.Condition) *entity.Book {
 	var book *entity.Book
-	query := r.db
+	query := r.db.Model(book)
 	for _, condition := range conditions {
 		sql := fmt.Sprintf("%s %s $1", condition.Field, condition.Operation)
 		query.Where(sql, condition.Value)
 	}
 	query.First(&book)
+	if book.Id == 0 {
+		return nil
+	}
 	return book
 }
 

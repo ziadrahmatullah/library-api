@@ -33,7 +33,7 @@ func (u *bookUsecase) GetSingleBook(conditions []valueobject.Condition) *entity.
 func (u *bookUsecase) AddBook(book *entity.Book) (*entity.Book, error) {
 	condition := *valueobject.NewCondition("title", valueobject.Equal, book.Title)
 	b := u.GetSingleBook([]valueobject.Condition{condition})
-	if book != nil {
+	if b != nil {
 		return nil, apperror.ErrAlreadyExist{
 			Resource: "book",
 			Field:    "title",
