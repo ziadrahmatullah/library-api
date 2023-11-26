@@ -22,3 +22,11 @@ type ErrNotFound struct {
 func (e ErrNotFound) Error() string {
 	return ""
 }
+
+type ErrEmptyStock struct {
+	Resource string
+}
+
+func (e ErrEmptyStock) Error() string {
+	return fmt.Sprintf("there is no stock for this %s", e.Resource)
+}
