@@ -1,5 +1,11 @@
 package entity
 
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
 type Cover string
 
 type Book struct {
@@ -11,4 +17,7 @@ type Book struct {
 	AuthorId    uint
 	Author      *Author
 	User        []User `gorm:"many2many:borrowing_records"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   gorm.DeletedAt
 }
