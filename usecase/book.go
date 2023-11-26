@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"strconv"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
@@ -16,12 +17,14 @@ type BookUsecase interface {
 }
 
 type bookUsecase struct {
-	bookRepo repository.BookRepository
+	bookRepo   repository.BookRepository
+	authorRepo repository.AuthorRepository
 }
 
-func NewBookUsecase(repo repository.BookRepository) BookUsecase {
+func NewBookUsecase(bookRepo repository.BookRepository, authorRepo repository.AuthorRepository) BookUsecase {
 	return &bookUsecase{
-		bookRepo: repo,
+		bookRepo:   bookRepo,
+		authorRepo: authorRepo,
 	}
 }
 func (u *bookUsecase) GetAllBooks(ctx context.Context, query valueobject.Query) []*entity.Book {
@@ -33,16 +36,26 @@ func (u *bookUsecase) GetSingleBook(ctx context.Context, query valueobject.Query
 }
 
 func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.Book, error) {
-	condition := *valueobject.NewCondition("title", valueobject.Equal, book.Title)
-	query := valueobject.Query{
-		Conditions: []valueobject.Condition{condition},
+	bookCondition := *valueobject.NewCondition("title", valueobject.Equal, book.Title)
+	bookQuery := valueobject.Query{
+		Conditions: []valueobject.Condition{bookCondition},
 	}
-	b := u.GetSingleBook(ctx, query)
+	b := u.GetSingleBook(ctx, bookQuery)
 	if b != nil {
 		return nil, apperror.ErrAlreadyExist{
 			Resource: "book",
 			Field:    "title",
 			Value:    b.Title,
+		}
+	}
+	authorCondition := *valueobject.NewCondition("id", valueobject.Equal, strconv.Itoa(int(book.AuthorId)))
+	authorQuery := valueobject.Query{Conditions: []valueobject.Condition{authorCondition}}
+	author := u.authorRepo.First(ctx, authorQuery)
+	if author == nil {
+		return nil, apperror.ErrNotFound{
+			Resource: "author",
+			Field:    "id",
+			Value:    strconv.Itoa(int(book.AuthorId)),
 		}
 	}
 	return u.bookRepo.Create(ctx, book)

@@ -16,8 +16,10 @@ func main() {
 		log.Println(err)
 	}
 
+	authorRepo := repository.NewAuthorRepository(db)
+
 	bookRepo := repository.NewBookRepository(db)
-	bookUsecase := usecase.NewBookUsecase(bookRepo)
+	bookUsecase := usecase.NewBookUsecase(bookRepo, authorRepo)
 	bookHandler := handler.NewBookHandler(bookUsecase)
 
 	userRepo := repository.NewUserRepository(db)
