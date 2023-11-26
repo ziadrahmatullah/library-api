@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	entity "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	mock "github.com/stretchr/testify/mock"
 
@@ -14,13 +16,13 @@ type UserUsecase struct {
 	mock.Mock
 }
 
-// GetSingleUser provides a mock function with given fields: query
-func (_m *UserUsecase) GetSingleUser(query valueobject.Query) *entity.User {
-	ret := _m.Called(query)
+// GetSingleUser provides a mock function with given fields: ctx, query
+func (_m *UserUsecase) GetSingleUser(ctx context.Context, query valueobject.Query) *entity.User {
+	ret := _m.Called(ctx, query)
 
 	var r0 *entity.User
-	if rf, ok := ret.Get(0).(func(valueobject.Query) *entity.User); ok {
-		r0 = rf(query)
+	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) *entity.User); ok {
+		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entity.User)
@@ -30,13 +32,13 @@ func (_m *UserUsecase) GetSingleUser(query valueobject.Query) *entity.User {
 	return r0
 }
 
-// GetUsers provides a mock function with given fields: query
-func (_m *UserUsecase) GetUsers(query valueobject.Query) []*entity.User {
-	ret := _m.Called(query)
+// GetUsers provides a mock function with given fields: ctx, query
+func (_m *UserUsecase) GetUsers(ctx context.Context, query valueobject.Query) []*entity.User {
+	ret := _m.Called(ctx, query)
 
 	var r0 []*entity.User
-	if rf, ok := ret.Get(0).(func(valueobject.Query) []*entity.User); ok {
-		r0 = rf(query)
+	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) []*entity.User); ok {
+		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*entity.User)

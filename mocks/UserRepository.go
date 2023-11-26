@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	entity "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	mock "github.com/stretchr/testify/mock"
 
@@ -14,13 +16,13 @@ type UserRepository struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: t
-func (_m *UserRepository) Create(t *entity.User) (*entity.User, error) {
-	ret := _m.Called(t)
+// Create provides a mock function with given fields: ctx, t
+func (_m *UserRepository) Create(ctx context.Context, t *entity.User) (*entity.User, error) {
+	ret := _m.Called(ctx, t)
 
 	var r0 *entity.User
-	if rf, ok := ret.Get(0).(func(*entity.User) *entity.User); ok {
-		r0 = rf(t)
+	if rf, ok := ret.Get(0).(func(context.Context, *entity.User) *entity.User); ok {
+		r0 = rf(ctx, t)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entity.User)
@@ -28,8 +30,8 @@ func (_m *UserRepository) Create(t *entity.User) (*entity.User, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*entity.User) error); ok {
-		r1 = rf(t)
+	if rf, ok := ret.Get(1).(func(context.Context, *entity.User) error); ok {
+		r1 = rf(ctx, t)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -37,13 +39,27 @@ func (_m *UserRepository) Create(t *entity.User) (*entity.User, error) {
 	return r0, r1
 }
 
-// Find provides a mock function with given fields: query
-func (_m *UserRepository) Find(query valueobject.Query) []*entity.User {
-	ret := _m.Called(query)
+// Delete provides a mock function with given fields: ctx, t
+func (_m *UserRepository) Delete(ctx context.Context, t *entity.User) error {
+	ret := _m.Called(ctx, t)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *entity.User) error); ok {
+		r0 = rf(ctx, t)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Find provides a mock function with given fields: ctx, query
+func (_m *UserRepository) Find(ctx context.Context, query valueobject.Query) []*entity.User {
+	ret := _m.Called(ctx, query)
 
 	var r0 []*entity.User
-	if rf, ok := ret.Get(0).(func(valueobject.Query) []*entity.User); ok {
-		r0 = rf(query)
+	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) []*entity.User); ok {
+		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*entity.User)
@@ -53,13 +69,13 @@ func (_m *UserRepository) Find(query valueobject.Query) []*entity.User {
 	return r0
 }
 
-// First provides a mock function with given fields: query
-func (_m *UserRepository) First(query valueobject.Query) *entity.User {
-	ret := _m.Called(query)
+// First provides a mock function with given fields: ctx, query
+func (_m *UserRepository) First(ctx context.Context, query valueobject.Query) *entity.User {
+	ret := _m.Called(ctx, query)
 
 	var r0 *entity.User
-	if rf, ok := ret.Get(0).(func(valueobject.Query) *entity.User); ok {
-		r0 = rf(query)
+	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) *entity.User); ok {
+		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entity.User)
@@ -67,6 +83,43 @@ func (_m *UserRepository) First(query valueobject.Query) *entity.User {
 	}
 
 	return r0
+}
+
+// Run provides a mock function with given fields: ctx, runner
+func (_m *UserRepository) Run(ctx context.Context, runner func(context.Context) error) error {
+	ret := _m.Called(ctx, runner)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, func(context.Context) error) error); ok {
+		r0 = rf(ctx, runner)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Update provides a mock function with given fields: ctx, t
+func (_m *UserRepository) Update(ctx context.Context, t *entity.User) (*entity.User, error) {
+	ret := _m.Called(ctx, t)
+
+	var r0 *entity.User
+	if rf, ok := ret.Get(0).(func(context.Context, *entity.User) *entity.User); ok {
+		r0 = rf(ctx, t)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.User)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *entity.User) error); ok {
+		r1 = rf(ctx, t)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 type mockConstructorTestingTNewUserRepository interface {

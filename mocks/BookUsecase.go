@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	entity "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	mock "github.com/stretchr/testify/mock"
 
@@ -14,13 +16,13 @@ type BookUsecase struct {
 	mock.Mock
 }
 
-// AddBook provides a mock function with given fields: book
-func (_m *BookUsecase) AddBook(book *entity.Book) (*entity.Book, error) {
-	ret := _m.Called(book)
+// AddBook provides a mock function with given fields: ctx, book
+func (_m *BookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.Book, error) {
+	ret := _m.Called(ctx, book)
 
 	var r0 *entity.Book
-	if rf, ok := ret.Get(0).(func(*entity.Book) *entity.Book); ok {
-		r0 = rf(book)
+	if rf, ok := ret.Get(0).(func(context.Context, *entity.Book) *entity.Book); ok {
+		r0 = rf(ctx, book)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entity.Book)
@@ -28,8 +30,8 @@ func (_m *BookUsecase) AddBook(book *entity.Book) (*entity.Book, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*entity.Book) error); ok {
-		r1 = rf(book)
+	if rf, ok := ret.Get(1).(func(context.Context, *entity.Book) error); ok {
+		r1 = rf(ctx, book)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -37,13 +39,13 @@ func (_m *BookUsecase) AddBook(book *entity.Book) (*entity.Book, error) {
 	return r0, r1
 }
 
-// GetAllBooks provides a mock function with given fields: query
-func (_m *BookUsecase) GetAllBooks(query valueobject.Query) []*entity.Book {
-	ret := _m.Called(query)
+// GetAllBooks provides a mock function with given fields: ctx, query
+func (_m *BookUsecase) GetAllBooks(ctx context.Context, query valueobject.Query) []*entity.Book {
+	ret := _m.Called(ctx, query)
 
 	var r0 []*entity.Book
-	if rf, ok := ret.Get(0).(func(valueobject.Query) []*entity.Book); ok {
-		r0 = rf(query)
+	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) []*entity.Book); ok {
+		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*entity.Book)
@@ -53,13 +55,13 @@ func (_m *BookUsecase) GetAllBooks(query valueobject.Query) []*entity.Book {
 	return r0
 }
 
-// GetSingleBook provides a mock function with given fields: query
-func (_m *BookUsecase) GetSingleBook(query valueobject.Query) *entity.Book {
-	ret := _m.Called(query)
+// GetSingleBook provides a mock function with given fields: ctx, query
+func (_m *BookUsecase) GetSingleBook(ctx context.Context, query valueobject.Query) *entity.Book {
+	ret := _m.Called(ctx, query)
 
 	var r0 *entity.Book
-	if rf, ok := ret.Get(0).(func(valueobject.Query) *entity.Book); ok {
-		r0 = rf(query)
+	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) *entity.Book); ok {
+		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entity.Book)

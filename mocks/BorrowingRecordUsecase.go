@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	entity "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -12,13 +14,13 @@ type BorrowingRecordUsecase struct {
 	mock.Mock
 }
 
-// AddBorrowingRecord provides a mock function with given fields: br
-func (_m *BorrowingRecordUsecase) AddBorrowingRecord(br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
-	ret := _m.Called(br)
+// AddBorrowingRecord provides a mock function with given fields: ctx, br
+func (_m *BorrowingRecordUsecase) AddBorrowingRecord(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
+	ret := _m.Called(ctx, br)
 
 	var r0 *entity.BorrowingRecords
-	if rf, ok := ret.Get(0).(func(*entity.BorrowingRecords) *entity.BorrowingRecords); ok {
-		r0 = rf(br)
+	if rf, ok := ret.Get(0).(func(context.Context, *entity.BorrowingRecords) *entity.BorrowingRecords); ok {
+		r0 = rf(ctx, br)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entity.BorrowingRecords)
@@ -26,8 +28,8 @@ func (_m *BorrowingRecordUsecase) AddBorrowingRecord(br *entity.BorrowingRecords
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*entity.BorrowingRecords) error); ok {
-		r1 = rf(br)
+	if rf, ok := ret.Get(1).(func(context.Context, *entity.BorrowingRecords) error); ok {
+		r1 = rf(ctx, br)
 	} else {
 		r1 = ret.Error(1)
 	}
