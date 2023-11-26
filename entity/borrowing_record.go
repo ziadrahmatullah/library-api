@@ -8,11 +8,11 @@ import (
 
 type BorrowingRecords struct {
 	Id        uint `gorm:"primaryKey;autoIncrement"`
-	UserId    uint
+	UserId    uint `gorm:"not null"`
 	User      User
-	BookId    uint
+	BookId    uint `gorm:"not null"`
 	Book      Book
-	Status    int
+	Status    int `gorm:"not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt

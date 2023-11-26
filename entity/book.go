@@ -14,7 +14,7 @@ type Book struct {
 	Description string `gorm:"not null"`
 	Quantity    int    `gorm:"not null"`
 	Cover       Cover
-	AuthorId    uint
+	AuthorId    uint `gorm:"not null"`
 	Author      *Author
 	User        []User `gorm:"many2many:borrowing_records"`
 	CreatedAt   time.Time

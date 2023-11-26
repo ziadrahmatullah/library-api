@@ -7,10 +7,10 @@ import (
 )
 
 type User struct {
-	Id        uint `gorm:"primaryKey;autoIncrement"`
-	Name      string
-	Email     string `gorm:"unique"`
-	Phone     string `gorm:"unique"`
+	Id        uint   `gorm:"primaryKey;autoIncrement"`
+	Name      string `gorm:"not null"`
+	Email     string `gorm:"not null;unique"`
+	Phone     string `gorm:"not null;unique"`
 	Books     []Book `gorm:"many2many:borrowing_records"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
