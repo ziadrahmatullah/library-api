@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"context"
+
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"gorm.io/gorm"
@@ -23,7 +25,7 @@ func NewBorrowingRecordsRepository(db *gorm.DB) BorrowingRecordRepository {
 	}
 }
 
-func (r *borrowingRecordRepository) Create(br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
+func (r *borrowingRecordRepository) Create(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		book := &entity.Book{}
 		err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).

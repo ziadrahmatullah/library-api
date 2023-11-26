@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -9,16 +10,16 @@ import (
 )
 
 type BaseRepository[T any] interface {
-	Find(query valueobject.Query) []*T
-	First(query valueobject.Query) *T
-	Create(t *T) (*T, error)
+	Find(ctx context.Context, query valueobject.Query) []*T
+	First(ctx context.Context, query valueobject.Query) *T
+	Create(ctx context.Context, t *T) (*T, error)
 }
 
 type baseRepository[T any] struct {
 	db *gorm.DB
 }
 
-func (r *baseRepository[T]) Find(q valueobject.Query) []*T {
+func (r *baseRepository[T]) Find(ctx context.Context, q valueobject.Query) []*T {
 	var ts []*T
 	limit, offset := getPagination(q)
 	query := r.db.Model(ts)
@@ -37,7 +38,7 @@ func (r *baseRepository[T]) Find(q valueobject.Query) []*T {
 	return ts
 }
 
-func (r *baseRepository[T]) First(q valueobject.Query) *T {
+func (r *baseRepository[T]) First(ctx context.Context, q valueobject.Query) *T {
 	conditions := q.Conditions
 	var t *T
 	query := r.db.Model(t)
@@ -52,7 +53,7 @@ func (r *baseRepository[T]) First(q valueobject.Query) *T {
 	return t
 }
 
-func (r *baseRepository[T]) Create(t *T) (*T, error) {
+func (r *baseRepository[T]) Create(ctx context.Context, t *T) (*T, error) {
 	result := r.db.Create(t)
 	if result.Error != nil {
 		return nil, result.Error

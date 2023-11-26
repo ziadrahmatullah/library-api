@@ -1,14 +1,16 @@
 package usecase
 
 import (
+	"context"
+
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/repository"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
 )
 
 type UserUsecase interface {
-	GetUsers(query valueobject.Query) []*entity.User
-	GetSingleUser(query valueobject.Query) *entity.User
+	GetUsers(ctx context.Context, query valueobject.Query) []*entity.User
+	GetSingleUser(ctx context.Context, query valueobject.Query) *entity.User
 }
 
 type userUsecase struct {
@@ -21,10 +23,10 @@ func NewUserUsecase(userRepo repository.UserRepository) UserUsecase {
 	}
 }
 
-func (u *userUsecase) GetUsers(query valueobject.Query) []*entity.User {
-	return u.userRepo.Find(query)
+func (u *userUsecase) GetUsers(ctx context.Context, query valueobject.Query) []*entity.User {
+	return u.userRepo.Find(ctx, query)
 }
 
-func (u *userUsecase) GetSingleUser(query valueobject.Query) *entity.User {
-	return u.userRepo.First(query)
+func (u *userUsecase) GetSingleUser(ctx context.Context, query valueobject.Query) *entity.User {
+	return u.userRepo.First(ctx, query)
 }

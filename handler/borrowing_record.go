@@ -30,7 +30,7 @@ func (h *BorrowingRecordHandler) AddBorrowing(c *gin.Context) {
 		return
 	}
 	record := request.ToBorrowingRecord()
-	createdBorrowingRecord, err := h.borrowingUsecase.AddBorrowingRecord(record)
+	createdBorrowingRecord, err := h.borrowingUsecase.AddBorrowingRecord(c, record)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
