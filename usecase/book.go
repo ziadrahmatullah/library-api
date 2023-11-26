@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"strconv"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
@@ -48,14 +47,14 @@ func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.B
 			Value:    b.Title,
 		}
 	}
-	authorCondition := *valueobject.NewCondition("id", valueobject.Equal, strconv.Itoa(int(book.AuthorId)))
+	authorCondition := *valueobject.NewCondition("id", valueobject.Equal, book.AuthorId)
 	authorQuery := valueobject.Query{Conditions: []valueobject.Condition{authorCondition}}
 	author := u.authorRepo.First(ctx, authorQuery)
 	if author == nil {
 		return nil, apperror.ErrNotFound{
 			Resource: "author",
 			Field:    "id",
-			Value:    strconv.Itoa(int(book.AuthorId)),
+			Value:    book.AuthorId,
 		}
 	}
 	return u.bookRepo.Create(ctx, book)

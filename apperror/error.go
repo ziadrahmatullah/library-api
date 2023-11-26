@@ -9,7 +9,7 @@ const (
 type ErrAlreadyExist struct {
 	Resource string
 	Field    string
-	Value    string
+	Value    any
 }
 
 func (e ErrAlreadyExist) Error() string {
@@ -19,11 +19,11 @@ func (e ErrAlreadyExist) Error() string {
 type ErrNotFound struct {
 	Resource string
 	Field    string
-	Value    string
+	Value    any
 }
 
 func (e ErrNotFound) Error() string {
-	return fmt.Sprintf("%s with %s: %s is not found", e.Resource, e.Field, e.Value)
+	return fmt.Sprintf("%s with %s: %v is not found", e.Resource, e.Field, e.Value)
 }
 
 type ErrEmptyStock struct {

@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"strconv"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
@@ -28,7 +27,7 @@ func NewBorrowingRecordUsecase(borrowingRepo repository.BorrowingRecordRepositor
 
 func (u *borrowingRecordUsecase) AddBorrowingRecord(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
 	atomic := func(c context.Context) error {
-		bookCondition := *valueobject.NewCondition("id", valueobject.Equal, strconv.Itoa(int(br.BookId)))
+		bookCondition := *valueobject.NewCondition("id", valueobject.Equal, br.BookId)
 		bookQuery := valueobject.Query{
 			Lock:       true,
 			Conditions: []valueobject.Condition{bookCondition},
@@ -38,7 +37,7 @@ func (u *borrowingRecordUsecase) AddBorrowingRecord(ctx context.Context, br *ent
 			return apperror.ErrNotFound{
 				Resource: "book",
 				Field:    "id",
-				Value:    strconv.Itoa(int(br.BookId)),
+				Value:    br.BookId,
 			}
 		}
 		if book.Quantity == 0 {

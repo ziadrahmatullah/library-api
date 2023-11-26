@@ -1,5 +1,9 @@
 package valueobject
 
+import (
+	"fmt"
+)
+
 type Operator string
 
 const (
@@ -10,15 +14,15 @@ const (
 type Condition struct {
 	Field     string
 	Operation Operator
-	Value     string
+	Value     any
 }
 
-func NewCondition(field string, operation Operator, value string) *Condition {
+func NewCondition(field string, operation Operator, value any) *Condition {
 	if value == "" {
 		return nil
 	}
 	if operation == Ilike {
-		value = "%" + value + "%"
+		value = "%" + fmt.Sprintf("%v", value) + "%"
 	}
 	return &Condition{
 		Field:     field,
