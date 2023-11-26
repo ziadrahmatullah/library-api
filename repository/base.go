@@ -22,10 +22,18 @@ type baseRepository[T any] struct {
 	db *gorm.DB
 }
 
+func (r *baseRepository[T]) conn(ctx context.Context) *gorm.DB {
+	tx := extractTx(ctx)
+	if tx != nil {
+		return tx
+	}
+	return r.db
+}
+
 func (r *baseRepository[T]) Find(ctx context.Context, q valueobject.Query) []*T {
 	var ts []*T
 	limit, offset := getPagination(q)
-	query := r.db.Model(ts)
+	query := r.conn(ctx).Model(ts)
 	for _, s := range q.With {
 		query.Joins(s)
 	}
@@ -44,7 +52,7 @@ func (r *baseRepository[T]) Find(ctx context.Context, q valueobject.Query) []*T 
 func (r *baseRepository[T]) First(ctx context.Context, q valueobject.Query) *T {
 	conditions := q.Conditions
 	var t *T
-	query := r.db.Model(t)
+	query := r.conn(ctx).Model(t)
 	if q.Lock {
 		query.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
@@ -60,7 +68,7 @@ func (r *baseRepository[T]) First(ctx context.Context, q valueobject.Query) *T {
 }
 
 func (r *baseRepository[T]) Create(ctx context.Context, t *T) (*T, error) {
-	result := r.db.Create(t)
+	result := r.conn(ctx).Create(t)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -68,14 +76,14 @@ func (r *baseRepository[T]) Create(ctx context.Context, t *T) (*T, error) {
 }
 
 func (r *baseRepository[T]) Update(ctx context.Context, t *T) (*T, error) {
-	result := r.db.Model(t).Clauses(clause.Returning{}).Updates(t)
+	result := r.conn(ctx).Model(t).Clauses(clause.Returning{}).Updates(t)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return t, nil
 }
 func (r *baseRepository[T]) Delete(ctx context.Context, t *T) error {
-	result := r.db.Delete(t)
+	result := r.conn(ctx).Delete(t)
 	if result.Error != nil {
 		return result.Error
 	}
