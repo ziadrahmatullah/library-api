@@ -89,7 +89,7 @@ func (r *baseRepository[T]) Create(ctx context.Context, t *T) (*T, error) {
 }
 
 func (r *baseRepository[T]) Update(ctx context.Context, t *T) (*T, error) {
-	result := r.conn(ctx).Model(t).Clauses(clause.Returning{}).Updates(t)
+	result := r.conn(ctx).Model(t).Clauses(clause.Returning{}).Select("*").Updates(t)
 	if result.Error != nil {
 		return nil, result.Error
 	}
