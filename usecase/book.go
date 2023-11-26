@@ -41,21 +41,31 @@ func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.B
 	}
 	b := u.GetSingleBook(ctx, bookQuery)
 	if b != nil {
-		return nil, apperror.ErrAlreadyExist{
-			Resource: "book",
-			Field:    "title",
-			Value:    b.Title,
+		return nil, apperror.Type{
+			Type: apperror.Conflict,
+			AppError: apperror.ErrAlreadyExist{
+				Resource: "book",
+				Field:    "title",
+				Value:    b.Title,
+			},
 		}
 	}
 	authorCondition := *valueobject.NewCondition("id", valueobject.Equal, book.AuthorId)
 	authorQuery := valueobject.Query{Conditions: []valueobject.Condition{authorCondition}}
 	author := u.authorRepo.First(ctx, authorQuery)
 	if author == nil {
-		return nil, apperror.ErrNotFound{
-			Resource: "author",
-			Field:    "id",
-			Value:    book.AuthorId,
+		return nil, apperror.Type{
+			Type: apperror.BadRequest,
+			AppError: apperror.ErrNotFound{
+				Resource: "author",
+				Field:    "id",
+				Value:    book.AuthorId,
+			},
 		}
 	}
-	return u.bookRepo.Create(ctx, book)
+	createdBook, err := u.bookRepo.Create(ctx, book)
+	if err != nil {
+		return nil, err
+	}
+	return createdBook, nil
 }

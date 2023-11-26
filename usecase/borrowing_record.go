@@ -34,14 +34,20 @@ func (u *borrowingRecordUsecase) AddBorrowingRecord(ctx context.Context, br *ent
 		}
 		book := u.bookRepo.First(c, bookQuery)
 		if book == nil {
-			return apperror.ErrNotFound{
-				Resource: "book",
-				Field:    "id",
-				Value:    br.BookId,
+			return apperror.Type{
+				Type: apperror.NotFound,
+				AppError: apperror.ErrNotFound{
+					Resource: "book",
+					Field:    "id",
+					Value:    br.BookId,
+				},
 			}
 		}
 		if book.Quantity == 0 {
-			return apperror.ErrEmptyStock{Resource: "book"}
+			return apperror.Type{
+				Type:     apperror.BadRequest,
+				AppError: apperror.ErrEmptyStock{Resource: "book"},
+			}
 		}
 		a, err := u.borrowingRepo.Create(c, br)
 		if err != nil {

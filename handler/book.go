@@ -1,10 +1,7 @@
 package handler
 
 import (
-	"errors"
-	"log"
 	"net/http"
-	"strings"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
@@ -53,26 +50,14 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 func (h *BookHandler) AddBook(c *gin.Context) {
 	var request dto.BookRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": strings.Split(err.Error(), "\n"),
-		})
+		_ = c.Error(apperror.ErrBinding{ErrBinding: err})
 		return
 	}
 	book := request.ToBook()
 
 	createdBook, err := h.bookUsecase.AddBook(c.Request.Context(), book)
 	if err != nil {
-		var e apperror.ErrAlreadyExist
-		if errors.As(err, &e) {
-			c.JSON(http.StatusConflict, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
-		})
+		_ = c.Error(err)
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{

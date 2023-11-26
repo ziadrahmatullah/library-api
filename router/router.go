@@ -2,6 +2,7 @@ package router
 
 import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/handler"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +14,8 @@ type Handlers struct {
 
 func New(handler Handlers) *gin.Engine {
 	router := gin.Default()
-
+	router.Use(middleware.ErrorHandler())
+	
 	router.GET("/books", handler.Book.GetAllBooks)
 	router.POST("/books", handler.Book.AddBook)
 

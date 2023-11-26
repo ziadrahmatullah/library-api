@@ -33,3 +33,11 @@ type ErrEmptyStock struct {
 func (e ErrEmptyStock) Error() string {
 	return fmt.Sprintf("there is no stock for this %s", e.Resource)
 }
+
+type ErrBinding struct {
+	ErrBinding error
+}
+
+func (e ErrBinding) Error() string {
+	return e.ErrBinding.Error()
+}
