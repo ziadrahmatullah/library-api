@@ -7,6 +7,7 @@ import (
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type BaseRepository[T any] interface {
@@ -42,6 +43,9 @@ func (r *baseRepository[T]) First(ctx context.Context, q valueobject.Query) *T {
 	conditions := q.Conditions
 	var t *T
 	query := r.db.Model(t)
+	if q.Lock {
+		query.Clauses(clause.Locking{Strength: "UPDATE"})
+	}
 	for _, condition := range conditions {
 		sql := fmt.Sprintf("%s %s $1", condition.Field, condition.Operation)
 		query.Where(sql, condition.Value)

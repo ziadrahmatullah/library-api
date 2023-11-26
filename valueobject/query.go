@@ -8,6 +8,7 @@ type Query struct {
 	Order      string
 	Conditions []Condition
 	With       []string
+	Lock       bool
 }
 
 func NewQuery(page string, perPage string, order string) (*Query, error) {
