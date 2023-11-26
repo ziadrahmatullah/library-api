@@ -14,6 +14,8 @@ type BaseRepository[T any] interface {
 	Find(ctx context.Context, query valueobject.Query) []*T
 	First(ctx context.Context, query valueobject.Query) *T
 	Create(ctx context.Context, t *T) (*T, error)
+	Update(ctx context.Context, t *T) (*T, error)
+	Delete(ctx context.Context, t *T) error
 }
 
 type baseRepository[T any] struct {
@@ -63,4 +65,19 @@ func (r *baseRepository[T]) Create(ctx context.Context, t *T) (*T, error) {
 		return nil, result.Error
 	}
 	return t, nil
+}
+
+func (r *baseRepository[T]) Update(ctx context.Context, t *T) (*T, error) {
+	result := r.db.Model(t).Clauses(clause.Returning{}).Updates(t)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return t, nil
+}
+func (r *baseRepository[T]) Delete(ctx context.Context, t *T) error {
+	result := r.db.Delete(t)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
