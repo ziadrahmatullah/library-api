@@ -18,5 +18,5 @@ var (
 	ErrUserNotFound          = errors.New("user not found")
 	ErrTxCommit              = errors.New("commit transaction error")
 	ErrFindBorrowQuery       = errors.New("find borrow query error")
-	ErrBorrowRecordNotFound   = errors.New("borrow record not found")
+	ErrBorrowRecordNotFound  = errors.New("borrow record not found")
 )

@@ -1,13 +1,9 @@
 package database
 
 import (
-	// "fmt"
 	"fmt"
 	"log"
 	"os"
-
-	// "os"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

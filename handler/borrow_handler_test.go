@@ -2,6 +2,7 @@ package handler_test
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -20,36 +21,75 @@ var Borrows = []models.BorrowBook{
 	{
 		UserId:        1,
 		BookId:        1,
-		Status:        "not complete",
+		Status:        "not returned",
 	},
 }
 
-var BorrowsCreate = []dto.BorrowReq{
+var BorrowsReq = []dto.BorrowReq{
 	{
 		UserId: 1,
 		BookId: 1,
 	},
 }
 
-var BorrowsResponse = []dto.BorrowRes{
+var BorrowsRes = []dto.BorrowRes{
 	{
 		UserId:        1,
 		BookId:        1,
-		Status:        "not complete",
+		Status:        "not returned",
 	},
 }
 
-func TestHandlBorrowBook(t *testing.T) {
-	t.Run("should return 200 with borrows when request valid", func(t *testing.T) {
+func TestHandleGetRecords(t *testing.T){
+	t.Run("should return 200 when get records success", func(t *testing.T) {
 		expectedResp, _ := json.Marshal(dto.Response{
-			Data: BorrowsResponse[0],
+			Data: Borrows,
 		})
-		param, _ := json.Marshal(BorrowsCreate[0])
-		bu := mocks.NewBorrowUsecase(t)
-		bh := handler.NewBorrowHandler(bu)
-		bu.On("BorrowBook", BorrowsCreate[0].ToBorrowModel()).Return(&Borrows[0], nil)
+		borrowUsecase := mocks.NewBorrowUsecase(t)
+		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
+		borrowUsecase.On("GetAllRecords").Return(Borrows, nil)
 		opts := server.RouterOpts{
-			BorrowHandler: bh,
+			BorrowHandler: borrowHandler,
+		}
+		r := server.NewRouter(opts)
+		
+		req, _ := http.NewRequest(http.MethodGet, "/borrows", nil)
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
+	})
+
+
+	t.Run("should return 500 while error in server", func(t *testing.T) {
+		borrowUsecase := mocks.NewBorrowUsecase(t)
+		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
+		borrowUsecase.On("GetAllRecords").Return(nil, errors.New("Fake error"))
+		opts := server.RouterOpts{
+			BorrowHandler: borrowHandler,
+		}
+		r := server.NewRouter(opts)
+
+		req, _ := http.NewRequest(http.MethodGet, "/borrows", nil)
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+	})
+}
+
+func TestHandlBorrowBook(t *testing.T) {
+	t.Run("should return 200 when borrow book success", func(t *testing.T) {
+		expectedResp, _ := json.Marshal(dto.Response{
+			Data: BorrowsRes[0],
+		})
+		param, _ := json.Marshal(BorrowsReq[0])
+		borrowUsecase := mocks.NewBorrowUsecase(t)
+		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
+		borrowUsecase.On("BorrowBook", BorrowsReq[0].ToBorrowModel()).Return(&Borrows[0], nil)
+		opts := server.RouterOpts{
+			BorrowHandler: borrowHandler,
 		}
 		r := server.NewRouter(opts)
 		rec := httptest.NewRecorder()
@@ -59,5 +99,63 @@ func TestHandlBorrowBook(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
+	})
+
+
+	t.Run("should return 500 while error in server", func(t *testing.T) {
+		param, _ := json.Marshal(BorrowsReq[0])
+		borrowUsecase := mocks.NewBorrowUsecase(t)
+		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
+		borrowUsecase.On("BorrowBook", BorrowsReq[0].ToBorrowModel()).Return(nil, errors.New("Fake error"))
+		opts := server.RouterOpts{
+			BorrowHandler: borrowHandler,
+		}
+		r := server.NewRouter(opts)
+
+		req, _ := http.NewRequest(http.MethodPost, "/borrows", strings.NewReader(string(param)))
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+	})
+}
+
+func TestHandlReturnBook(t *testing.T) {
+	t.Run("should return 200 when return book success", func(t *testing.T) {
+		expectedResp, _ := json.Marshal(dto.Response{
+			Data: BorrowsRes[0],
+		})
+		param, _ := json.Marshal(BorrowsReq[0])
+		borrowUsecase := mocks.NewBorrowUsecase(t)
+		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
+		borrowUsecase.On("ReturnBook", BorrowsReq[0].ToBorrowModel()).Return(&Borrows[0], nil)
+		opts := server.RouterOpts{
+			BorrowHandler: borrowHandler,
+		}
+		r := server.NewRouter(opts)
+		rec := httptest.NewRecorder()
+
+		req, _ := http.NewRequest(http.MethodPut, "/borrows", strings.NewReader(string(param)))
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
+	})
+
+	t.Run("should return 500 while error in server", func(t *testing.T) {
+		param, _ := json.Marshal(BorrowsReq[0])
+		borrowUsecase := mocks.NewBorrowUsecase(t)
+		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
+		borrowUsecase.On("ReturnBook", BorrowsReq[0].ToBorrowModel()).Return(nil, errors.New("Fake error"))
+		opts := server.RouterOpts{
+			BorrowHandler: borrowHandler,
+		}
+		r := server.NewRouter(opts)
+
+		req, _ := http.NewRequest(http.MethodPut, "/borrows", strings.NewReader(string(param)))
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 	})
 }
