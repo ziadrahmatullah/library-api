@@ -21,7 +21,7 @@ func NewBorrowingRecordHandler(borrowingRecord usecase.BorrowingRecordUsecase) *
 }
 
 func (h *BorrowingRecordHandler) AddBorrowing(c *gin.Context) {
-	var request dto.BorrowingRequest
+	var request dto.BorrowingRecordRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -38,6 +38,6 @@ func (h *BorrowingRecordHandler) AddBorrowing(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
-		"data": createdBorrowingRecord,
+		"data": dto.NewFromBorrowingRecord(createdBorrowingRecord),
 	})
 }
