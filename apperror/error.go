@@ -17,10 +17,13 @@ func (e ErrAlreadyExist) Error() string {
 }
 
 type ErrNotFound struct {
+	Resource string
+	Field    string
+	Value    string
 }
 
 func (e ErrNotFound) Error() string {
-	return ""
+	return fmt.Sprintf("%s with %s: %s is not found", e.Resource, e.Field, e.Value)
 }
 
 type ErrEmptyStock struct {
