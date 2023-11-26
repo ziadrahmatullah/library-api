@@ -5,11 +5,11 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/repository"
 )
 
-type UserUsecase interface{
+type UserUsecase interface {
 	GetAllUsers() ([]models.User, error)
 }
 
-type userUsecase struct{
+type userUsecase struct {
 	userRepository repository.UserRepository
 }
 

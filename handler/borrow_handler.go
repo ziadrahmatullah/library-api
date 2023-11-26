@@ -18,6 +18,18 @@ func NewBorrowHandler(bu usecase.BorrowUsecase) *BorrowHandler {
 	}
 }
 
+func (h *BorrowHandler) HandleGetRecords(ctx *gin.Context) {
+	resp := dto.Response{}
+	records, err := h.borrowUsecase.GetAllRecords()
+	if err != nil {
+		resp.Message = err.Error()
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		return
+	}
+	resp.Data = records
+	ctx.JSON(http.StatusOK, resp)
+}
+
 func (h *BorrowHandler) HandleBorrowBook(ctx *gin.Context) {
 	resp := dto.Response{}
 	newBorrow := dto.BorrowReq{}
@@ -27,14 +39,35 @@ func (h *BorrowHandler) HandleBorrowBook(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	borrowModel := newBorrow.ToModel("not complete")
-	borrow, err := h.borrowUsecase.BorrowBook(&borrowModel)
+	borrowModel := newBorrow.ToBorrowModel()
+	borrow, err := h.borrowUsecase.BorrowBook(borrowModel)
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	borrowRespond := dto.ToResponse(borrow)
+	borrowRespond := dto.ToBorrowResponse(borrow)
+	resp.Data = borrowRespond
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *BorrowHandler) HandleReturnBook(ctx *gin.Context){
+	resp := dto.Response{}
+	borrowRecord := dto.BorrowReq{}
+	err := ctx.ShouldBindJSON(&borrowRecord)
+	if err != nil {
+		resp.Message = err.Error()
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		return
+	}
+	borrowModel := borrowRecord.ToBorrowModel()
+	borrow, err := h.borrowUsecase.ReturnBook(borrowModel)
+	if err != nil {
+		resp.Message = err.Error()
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		return
+	}
+	borrowRespond := dto.ToBorrowResponse(borrow)
 	resp.Data = borrowRespond
 	ctx.JSON(http.StatusOK, resp)
 }

@@ -9,7 +9,7 @@ import (
 type BookUsecase interface {
 	GetAllBooks() ([]models.Book, error)
 	GetBooksByTitle(string) ([]models.Book, error)
-	CreateBook(*models.Book) (*models.Book, error)
+	CreateBook(models.Book) (*models.Book, error)
 }
 
 type bookUsecase struct {
@@ -30,7 +30,7 @@ func (b *bookUsecase) GetBooksByTitle(title string) ([]models.Book, error) {
 	return b.bookRepository.FindBooksByTitle(title)
 }
 
-func (b *bookUsecase) CreateBook(book *models.Book) (newBook *models.Book, err error) {
+func (b *bookUsecase) CreateBook(book models.Book) (newBook *models.Book, err error) {
 	existBook, _ := b.bookRepository.FindBooksByTitle(book.Title)
 	if len(existBook) != 0 {
 		err = apperror.ErrBookAlreadyExist

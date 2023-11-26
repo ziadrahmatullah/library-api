@@ -29,11 +29,11 @@ func main() {
 	uh := handler.NewUserHandler(uu)
 
 	brr := repository.NewBorrowRepository(db)
-	bru := usecase.NewBorrowUsecase(brr)
+	bru := usecase.NewBorrowUsecase(brr, br, ur)
 	brh := handler.NewBorrowHandler(bru)
 
 	opts := server.RouterOpts{
-		ProductHandler: bh,
+		BookHandler: bh,
 		UserHandler: uh,
 		BorrowHandler: brh,
 	}

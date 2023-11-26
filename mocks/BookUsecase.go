@@ -13,11 +13,11 @@ type BookUsecase struct {
 }
 
 // CreateBook provides a mock function with given fields: _a0
-func (_m *BookUsecase) CreateBook(_a0 *models.Book) (*models.Book, error) {
+func (_m *BookUsecase) CreateBook(_a0 models.Book) (*models.Book, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *models.Book
-	if rf, ok := ret.Get(0).(func(*models.Book) *models.Book); ok {
+	if rf, ok := ret.Get(0).(func(models.Book) *models.Book); ok {
 		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
@@ -26,7 +26,7 @@ func (_m *BookUsecase) CreateBook(_a0 *models.Book) (*models.Book, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*models.Book) error); ok {
+	if rf, ok := ret.Get(1).(func(models.Book) error); ok {
 		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)

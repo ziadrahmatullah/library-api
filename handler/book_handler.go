@@ -41,14 +41,14 @@ func (h *BookHandler) HandleGetBooks(ctx *gin.Context) {
 
 func (h *BookHandler) HandleCreateBook(ctx *gin.Context) {
 	resp := dto.Response{}
-	newBook := models.Book{}
+	newBook := dto.BookReq{}
 	err := ctx.ShouldBindJSON(&newBook)
 	if err != nil {
 		resp.Message = apperror.ErrCannotBindJSON.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	book, err := h.bookUsecase.CreateBook(&newBook)
+	book, err := h.bookUsecase.CreateBook(newBook.ToBookModel())
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
@@ -56,5 +56,4 @@ func (h *BookHandler) HandleCreateBook(ctx *gin.Context) {
 	}
 	resp.Data = book
 	ctx.JSON(http.StatusOK, resp)
-
 }
