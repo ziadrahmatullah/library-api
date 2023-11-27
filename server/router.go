@@ -20,6 +20,8 @@ func NewRouter(opts RouterOpts) *gin.Engine {
 
 	users := router.Group("/users")
 	users.GET("", opts.UserHandler.HandleGetUsers)
+	users.POST("/register", opts.UserHandler.HandleUserRegister)
+	users.POST("/login", opts.UserHandler.HandleUserLogin)
 
 	borrow := router.Group("/borrows")
 	borrow.GET("", opts.BorrowHandler.HandleGetRecords)

@@ -4,6 +4,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type BookRepository interface {
@@ -70,7 +71,7 @@ func (b *bookRepository) DecreaseBookQty(id uint) (err error) {
 	if err = tx.Error; err != nil {
 		return
 	}
-	err = tx.Table("books").Where("id = ?", id).Update("quantity", gorm.Expr("quantity - ?", 1)).Error
+	err = tx.Table("books").Where("id = ?", id).Clauses(clause.Locking{Strength: "UPDATE"}).Update("quantity", gorm.Expr("quantity - ?", 1)).Error
 	if err != nil {
 		return apperror.ErrUpdateBookQtyQuery
 	}
@@ -91,7 +92,7 @@ func (b *bookRepository) IncreaseBookQty(id uint) (err error) {
 	if err = tx.Error; err != nil {
 		return
 	}
-	err = tx.Table("books").Where("id = ?", id).Update("quantity", gorm.Expr("quantity + ?", 1)).Error
+	err = tx.Table("books").Where("id = ?", id).Clauses(clause.Locking{Strength: "UPDATE"}).Update("quantity", gorm.Expr("quantity + ?", 1)).Error
 	if err != nil {
 		return apperror.ErrUpdateBookQtyQuery
 	}

@@ -19,4 +19,6 @@ var (
 	ErrTxCommit              = errors.New("commit transaction error")
 	ErrFindBorrowQuery       = errors.New("find borrow query error")
 	ErrBorrowRecordNotFound  = errors.New("borrow record not found")
+	ErrInvalidJWTToken       = errors.New("invalid jwt token")
+	ErrEmailALreadyUsed      = errors.New("email already used")
 )

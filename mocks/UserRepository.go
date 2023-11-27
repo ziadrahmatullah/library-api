@@ -12,6 +12,29 @@ type UserRepository struct {
 	mock.Mock
 }
 
+// FindByEmail provides a mock function with given fields: _a0
+func (_m *UserRepository) FindByEmail(_a0 string) (*models.User, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *models.User
+	if rf, ok := ret.Get(0).(func(string) *models.User); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*models.User)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // FindUserById provides a mock function with given fields: _a0
 func (_m *UserRepository) FindUserById(_a0 uint) (*models.User, error) {
 	ret := _m.Called(_a0)
@@ -27,6 +50,29 @@ func (_m *UserRepository) FindUserById(_a0 uint) (*models.User, error) {
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FindUserByName provides a mock function with given fields: _a0
+func (_m *UserRepository) FindUserByName(_a0 string) ([]models.User, error) {
+	ret := _m.Called(_a0)
+
+	var r0 []models.User
+	if rf, ok := ret.Get(0).(func(string) []models.User); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.User)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)
@@ -51,6 +97,29 @@ func (_m *UserRepository) FindUsers() ([]models.User, error) {
 	var r1 error
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// NewUser provides a mock function with given fields: _a0
+func (_m *UserRepository) NewUser(_a0 models.User) (*models.User, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *models.User
+	if rf, ok := ret.Get(0).(func(models.User) *models.User); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*models.User)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(models.User) error); ok {
+		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)
 	}

@@ -8,7 +8,10 @@ type BorrowReq struct {
 }
 
 func (b *BorrowReq) ToBorrowModel() models.BorrowBook {
-	return models.BorrowBook{UserId: b.UserId, BookId: b.BookId, Status: "not returned"}
+	return models.BorrowBook{
+		UserId: b.UserId, 
+		BookId: b.BookId, 
+		Status: "not returned"}
 }
 
 type BorrowRes struct {
@@ -19,5 +22,9 @@ type BorrowRes struct {
 }
 
 func ToBorrowResponse(model *models.BorrowBook) BorrowRes {
-	return BorrowRes{ID: model.ID, UserId: model.UserId, BookId: model.BookId, Status: model.Status}
+	return BorrowRes{
+		ID: model.ID, 
+		UserId: model.UserId, 
+		BookId: model.BookId, 
+		Status: model.Status}
 }

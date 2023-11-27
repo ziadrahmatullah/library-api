@@ -13,16 +13,14 @@ type BorrowRepository struct {
 }
 
 // FindBorrow provides a mock function with given fields: _a0
-func (_m *BorrowRepository) FindBorrow(_a0 models.BorrowBook) (*models.BorrowBook, error) {
+func (_m *BorrowRepository) FindBorrow(_a0 models.BorrowBook) (uint, error) {
 	ret := _m.Called(_a0)
 
-	var r0 *models.BorrowBook
-	if rf, ok := ret.Get(0).(func(models.BorrowBook) *models.BorrowBook); ok {
+	var r0 uint
+	if rf, ok := ret.Get(0).(func(models.BorrowBook) uint); ok {
 		r0 = rf(_a0)
 	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*models.BorrowBook)
-		}
+		r0 = ret.Get(0).(uint)
 	}
 
 	var r1 error
@@ -82,11 +80,11 @@ func (_m *BorrowRepository) NewBorrow(_a0 models.BorrowBook) (*models.BorrowBook
 }
 
 // UpdateBorrowStatus provides a mock function with given fields: _a0
-func (_m *BorrowRepository) UpdateBorrowStatus(_a0 *models.BorrowBook) (*models.BorrowBook, error) {
+func (_m *BorrowRepository) UpdateBorrowStatus(_a0 uint) (*models.BorrowBook, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *models.BorrowBook
-	if rf, ok := ret.Get(0).(func(*models.BorrowBook) *models.BorrowBook); ok {
+	if rf, ok := ret.Get(0).(func(uint) *models.BorrowBook); ok {
 		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
@@ -95,7 +93,7 @@ func (_m *BorrowRepository) UpdateBorrowStatus(_a0 *models.BorrowBook) (*models.
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*models.BorrowBook) error); ok {
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
 		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)

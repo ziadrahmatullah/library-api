@@ -13,6 +13,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// middleware
+// rapihin handler dibawah
+
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Println("no env got")

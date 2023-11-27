@@ -34,7 +34,7 @@ func (h *BorrowHandler) HandleBorrowBook(ctx *gin.Context) {
 	resp := dto.Response{}
 	newBorrow := dto.BorrowReq{}
 	err := ctx.ShouldBindJSON(&newBorrow)
-	if err != nil {
+	if err != nil {	
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return

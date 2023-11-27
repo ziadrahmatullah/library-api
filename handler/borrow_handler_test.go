@@ -17,42 +17,42 @@ import (
 	"github.com/go-playground/assert/v2"
 )
 
-var Borrows = []models.BorrowBook{
+var borrows = []models.BorrowBook{
 	{
-		UserId:        1,
-		BookId:        1,
-		Status:        "not returned",
+		UserId: 1,
+		BookId: 1,
+		Status: "not returned",
 	},
 }
 
-var BorrowsReq = []dto.BorrowReq{
+var borrowsReq = []dto.BorrowReq{
 	{
 		UserId: 1,
 		BookId: 1,
 	},
 }
 
-var BorrowsRes = []dto.BorrowRes{
+var borrowsRes = []dto.BorrowRes{
 	{
-		UserId:        1,
-		BookId:        1,
-		Status:        "not returned",
+		UserId: 1,
+		BookId: 1,
+		Status: "not returned",
 	},
 }
 
-func TestHandleGetRecords(t *testing.T){
+func TestHandleGetRecords(t *testing.T) {
 	t.Run("should return 200 when get records success", func(t *testing.T) {
 		expectedResp, _ := json.Marshal(dto.Response{
-			Data: Borrows,
+			Data: borrows,
 		})
 		borrowUsecase := mocks.NewBorrowUsecase(t)
 		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
-		borrowUsecase.On("GetAllRecords").Return(Borrows, nil)
+		borrowUsecase.On("GetAllRecords").Return(borrows, nil)
 		opts := server.RouterOpts{
 			BorrowHandler: borrowHandler,
 		}
 		r := server.NewRouter(opts)
-		
+
 		req, _ := http.NewRequest(http.MethodGet, "/borrows", nil)
 		rec := httptest.NewRecorder()
 		r.ServeHTTP(rec, req)
@@ -60,7 +60,6 @@ func TestHandleGetRecords(t *testing.T){
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
 	})
-
 
 	t.Run("should return 500 while error in server", func(t *testing.T) {
 		borrowUsecase := mocks.NewBorrowUsecase(t)
@@ -82,12 +81,12 @@ func TestHandleGetRecords(t *testing.T){
 func TestHandlBorrowBook(t *testing.T) {
 	t.Run("should return 200 when borrow book success", func(t *testing.T) {
 		expectedResp, _ := json.Marshal(dto.Response{
-			Data: BorrowsRes[0],
+			Data: borrowsRes[0],
 		})
-		param, _ := json.Marshal(BorrowsReq[0])
+		param, _ := json.Marshal(borrowsReq[0])
 		borrowUsecase := mocks.NewBorrowUsecase(t)
 		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
-		borrowUsecase.On("BorrowBook", BorrowsReq[0].ToBorrowModel()).Return(&Borrows[0], nil)
+		borrowUsecase.On("BorrowBook", borrowsReq[0].ToBorrowModel()).Return(&borrows[0], nil)
 		opts := server.RouterOpts{
 			BorrowHandler: borrowHandler,
 		}
@@ -101,12 +100,11 @@ func TestHandlBorrowBook(t *testing.T) {
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
 	})
 
-
 	t.Run("should return 500 while error in server", func(t *testing.T) {
-		param, _ := json.Marshal(BorrowsReq[0])
+		param, _ := json.Marshal(borrowsReq[0])
 		borrowUsecase := mocks.NewBorrowUsecase(t)
 		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
-		borrowUsecase.On("BorrowBook", BorrowsReq[0].ToBorrowModel()).Return(nil, errors.New("Fake error"))
+		borrowUsecase.On("BorrowBook", borrowsReq[0].ToBorrowModel()).Return(nil, errors.New("Fake error"))
 		opts := server.RouterOpts{
 			BorrowHandler: borrowHandler,
 		}
@@ -123,12 +121,12 @@ func TestHandlBorrowBook(t *testing.T) {
 func TestHandlReturnBook(t *testing.T) {
 	t.Run("should return 200 when return book success", func(t *testing.T) {
 		expectedResp, _ := json.Marshal(dto.Response{
-			Data: BorrowsRes[0],
+			Data: borrowsRes[0],
 		})
-		param, _ := json.Marshal(BorrowsReq[0])
+		param, _ := json.Marshal(borrowsReq[0])
 		borrowUsecase := mocks.NewBorrowUsecase(t)
 		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
-		borrowUsecase.On("ReturnBook", BorrowsReq[0].ToBorrowModel()).Return(&Borrows[0], nil)
+		borrowUsecase.On("ReturnBook", borrowsReq[0].ToBorrowModel()).Return(&borrows[0], nil)
 		opts := server.RouterOpts{
 			BorrowHandler: borrowHandler,
 		}
@@ -143,10 +141,10 @@ func TestHandlReturnBook(t *testing.T) {
 	})
 
 	t.Run("should return 500 while error in server", func(t *testing.T) {
-		param, _ := json.Marshal(BorrowsReq[0])
+		param, _ := json.Marshal(borrowsReq[0])
 		borrowUsecase := mocks.NewBorrowUsecase(t)
 		borrowHandler := handler.NewBorrowHandler(borrowUsecase)
-		borrowUsecase.On("ReturnBook", BorrowsReq[0].ToBorrowModel()).Return(nil, errors.New("Fake error"))
+		borrowUsecase.On("ReturnBook", borrowsReq[0].ToBorrowModel()).Return(nil, errors.New("Fake error"))
 		opts := server.RouterOpts{
 			BorrowHandler: borrowHandler,
 		}

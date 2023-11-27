@@ -16,12 +16,12 @@ VALUES
 ('Buku 8', 'Tentang orang 8', 10, 'Book_Eight', 1,NOW(), NOW()),
 ('Buku 9', 'Tentang orang 9', 10, 'Book_Nine', 1,NOW(), NOW());
 
-INSERT INTO users (name, email, phone, created_at, updated_at)
+INSERT INTO users (name, email, phone, password, created_at, updated_at)
 VALUES
-('Alice', 'alice@gmail.com', '0877237373', NOW(), NOW()),
-('Bob', 'alice@gmail.com', '0877237373', NOW(), NOW()),
-('Celine', 'alice@gmail.com', '0877237373', NOW(), NOW()),
-('Ferina', 'alice@gmail.com', '0877237373', NOW(), NOW());
+('Alice', 'alice@gmail.com', '0877237373','no hash', NOW(), NOW());
+-- ('Bob', 'alice@gmail.com', '0877237373', NOW(), NOW()),
+-- ('Celine', 'alice@gmail.com', '0877237373', NOW(), NOW()),
+-- ('Ferina', 'alice@gmail.com', '0877237373', NOW(), NOW());
 
 
 INSERT INTO borrowing_books (book_id, user_id, status, created_at, updated_at)

@@ -14,6 +14,7 @@ CREATE TABLE users(
     name varchar NOT NULL,
     email varchar NOT NULL,
     phone varchar NOT NULL,
+    password varchar NOT NULL,
     created_at timestamp NOT NULL,
     updated_at timestamp NOT NULL,
     deleted_at timestamp,
