@@ -113,7 +113,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		s.bu.On("AddBook", emptyCtx, mock.AnythingOfType("*entity.Book")).Return(nil, apperror.ErrAlreadyExist{})
+		s.bu.On("AddBook", emptyCtx, mock.AnythingOfType("*entity.Book")).Return(nil, apperror.Type{Type: apperror.Conflict, AppError: apperror.ErrAlreadyExist{}})
 
 		req, _ := http.NewRequest(http.MethodPost, "/books", sendBody(request))
 		s.router.ServeHTTP(s.rec, req)
