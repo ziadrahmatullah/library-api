@@ -7,6 +7,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/repository"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthUsecase interface {
@@ -56,10 +57,20 @@ func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.
 		}
 	}
 
+	hashedPassword, err := hashPassword(user.Password)
+	if err != nil {
+		return nil, err
+	}
+	user.Password = hashedPassword
 	createdUser, err := u.userRepo.Create(ctx, user)
 	if err != nil {
 		return nil, err
 	}
 	return createdUser, nil
 
+}
+
+func hashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	return string(hashedPassword), err
 }
