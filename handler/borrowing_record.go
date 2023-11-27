@@ -26,7 +26,7 @@ func (h *BorrowingRecordHandler) AddBorrowing(c *gin.Context) {
 		return
 	}
 	record := request.ToBorrowingRecord()
-	createdBorrowingRecord, err := h.borrowingUsecase.AddBorrowingRecord(c, record)
+	createdBorrowingRecord, err := h.borrowingUsecase.BorrowBook(c, record)
 	if err != nil {
 		_ = c.Error(err)
 		return

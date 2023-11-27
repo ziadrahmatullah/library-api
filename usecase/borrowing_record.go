@@ -11,7 +11,7 @@ import (
 )
 
 type BorrowingRecordUsecase interface {
-	AddBorrowingRecord(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error)
+	BorrowBook(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error)
 }
 
 type borrowingRecordUsecase struct {
@@ -26,7 +26,7 @@ func NewBorrowingRecordUsecase(borrowingRepo repository.BorrowingRecordRepositor
 	}
 }
 
-func (u *borrowingRecordUsecase) AddBorrowingRecord(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
+func (u *borrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
 	atomic := func(c context.Context) error {
 		bookCondition := *valueobject.NewCondition("id", valueobject.Equal, br.BookId)
 		bookQuery := valueobject.Query{

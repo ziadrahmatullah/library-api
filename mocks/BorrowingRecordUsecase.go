@@ -15,7 +15,7 @@ type BorrowingRecordUsecase struct {
 }
 
 // AddBorrowingRecord provides a mock function with given fields: ctx, br
-func (_m *BorrowingRecordUsecase) AddBorrowingRecord(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
+func (_m *BorrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
 	ret := _m.Called(ctx, br)
 
 	var r0 *entity.BorrowingRecords
