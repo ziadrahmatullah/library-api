@@ -41,3 +41,10 @@ type ErrBinding struct {
 func (e ErrBinding) Error() string {
 	return e.ErrBinding.Error()
 }
+
+type ErrBookAlreadyReturned struct {
+}
+
+func (e ErrBookAlreadyReturned) Error() string {
+	return fmt.Sprintf("book already returned")
+}

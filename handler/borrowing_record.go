@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
@@ -33,5 +34,21 @@ func (h *BorrowingRecordHandler) AddBorrowing(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, gin.H{
 		"data": dto.NewFromBorrowingRecord(createdBorrowingRecord),
+	})
+}
+
+func (h *BorrowingRecordHandler) ReturnBook(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		_ = c.Error(apperror.ErrBinding{ErrBinding: err})
+		return
+	}
+	br, err := h.borrowingUsecase.ReturnBook(c.Request.Context(), uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": dto.NewFromBorrowingRecord(br),
 	})
 }
