@@ -4,6 +4,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type BorrowRepository interface {
@@ -24,14 +25,31 @@ func NewBorrowRepository(db *gorm.DB) BorrowRepository {
 }
 
 func (b *borrowRepository) NewBorrow(borrow models.BorrowBook) (newBorrow *models.BorrowBook, err error) {
-	err = b.db.Table("borrowing_books").Create(&borrow).Error
+	tx := b.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	err = tx.Table("books").
+		Where("id = ?", borrow.BookId).
+		Clauses(clause.Locking{Strength: "UPDATE"}).
+		Update("quantity", gorm.Expr("quantity - ?", 1)).Error
+	if err != nil {
+		return nil, apperror.ErrUpdateBookQtyQuery
+	}
+	err = tx.Table("borrowing_books").Create(&borrow).Error
 	if err != nil {
 		return nil, apperror.ErrNewBorrowQuery
+	}
+	err = tx.Commit().Error
+	if err != nil {
+		return nil, apperror.ErrTxCommit
 	}
 	return &borrow, nil
 }
 
-func (b *borrowRepository) FindBorrows() (borrows []models.BorrowBook, err error) {
+func (b *borrowRepository) FindBorrows() (borrows []models.BorrowBook, err error) {	
 	err = b.db.Preload("User").Preload("Book").Table("borrowing_books").Find(&borrows).Error
 	if err != nil {
 		return nil, apperror.ErrFindBooksQuery
@@ -54,12 +72,29 @@ func (b *borrowRepository) FindBorrow(borrow models.BorrowBook) (id uint,err err
 }
 
 func (b *borrowRepository) UpdateBorrowStatus(id uint) (updatedBorrow *models.BorrowBook, err error) {
+	tx := b.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
 	var borrow models.BorrowBook
-	err = b.db.Table("borrowing_books").
+	err = tx.Table("borrowing_books").
 		Where("id = ?", id).Update("status", "returned").
 		Scan(&borrow).Error
 	if err != nil {
 		return nil, apperror.ErrNewBorrowQuery
+	}
+	err = tx.Table("books").
+		Where("id = ?", borrow.BookId).
+		Clauses(clause.Locking{Strength: "UPDATE"}).
+		Update("quantity", gorm.Expr("quantity + ?", 1)).Error
+	if err != nil {
+		return nil, apperror.ErrUpdateBookQtyQuery
+	}
+	err = tx.Commit().Error
+	if err != nil {
+		return nil, apperror.ErrTxCommit
 	}
 	return &borrow, nil
 }

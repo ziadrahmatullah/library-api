@@ -40,18 +40,12 @@ func (bu *borrowUsecase) BorrowBook(borrow models.BorrowBook) (*models.BorrowBoo
 	}else if book.Quantity == 0{
 		return nil, apperror.ErrBookOutOfStock
 	}
-	if err := bu.bookRepository.DecreaseBookQty(borrow.BookId); err != nil{
-		return nil, err
-	}
 	return bu.borrowRepository.NewBorrow(borrow)
 }
 
 func (bu *borrowUsecase) ReturnBook(borrow models.BorrowBook) (*models.BorrowBook, error){
 	id, err := bu.borrowRepository.FindBorrow(borrow)
 	if id == 0{
-		return nil, err
-	}
-	if err := bu.bookRepository.IncreaseBookQty(borrow.BookId); err != nil{
 		return nil, err
 	}
 	return bu.borrowRepository.UpdateBorrowStatus(id)	

@@ -4,7 +4,6 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type BookRepository interface {
@@ -12,8 +11,6 @@ type BookRepository interface {
 	FindBooksByTitle(string) ([]models.Book, error)
 	FindBooksById(uint) (*models.Book, error)
 	NewBook(models.Book) (*models.Book, error)
-	IncreaseBookQty(uint) error
-	DecreaseBookQty(uint) error
 }
 
 type bookRepository struct {
@@ -61,44 +58,41 @@ func (b *bookRepository) NewBook(book models.Book) (newBook *models.Book, err er
 	return &book, nil
 }
 
-func (b *bookRepository) DecreaseBookQty(id uint) (err error) {
-	tx := b.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-	if err = tx.Error; err != nil {
-		return
-	}
-	err = tx.Table("books").Where("id = ?", id).Clauses(clause.Locking{Strength: "UPDATE"}).Update("quantity", gorm.Expr("quantity - ?", 1)).Error
-	if err != nil {
-		return apperror.ErrUpdateBookQtyQuery
-	}
-	err = tx.Commit().Error
-	if err != nil {
-		return apperror.ErrTxCommit
-	}
-	return nil
-}
+// func (b *bookRepository) DecreaseBookQty(id uint) (err error) {
+// 	tx := b.db.Begin()
+// 	defer func() {
+// 		if r := recover(); r != nil {
+// 			tx.Rollback()
+// 		}
+// 	}()
+// 	err = tx.Table("books").Where("id = ?", id).Clauses(clause.Locking{Strength: "UPDATE"}).Update("quantity", gorm.Expr("quantity - ?", 1)).Error
+// 	if err != nil {
+// 		return apperror.ErrUpdateBookQtyQuery
+// 	}
+// 	err = tx.Commit().Error
+// 	if err != nil {
+// 		return apperror.ErrTxCommit
+// 	}
+// 	return nil
+// }
 
-func (b *bookRepository) IncreaseBookQty(id uint) (err error) {
-	tx := b.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-	if err = tx.Error; err != nil {
-		return
-	}
-	err = tx.Table("books").Where("id = ?", id).Clauses(clause.Locking{Strength: "UPDATE"}).Update("quantity", gorm.Expr("quantity + ?", 1)).Error
-	if err != nil {
-		return apperror.ErrUpdateBookQtyQuery
-	}
-	err = tx.Commit().Error
-	if err != nil {
-		return apperror.ErrTxCommit
-	}
-	return nil
-}
+// func (b *bookRepository) IncreaseBookQty(id uint) (err error) {
+// 	tx := b.db.Begin()
+// 	defer func() {
+// 		if r := recover(); r != nil {
+// 			tx.Rollback()
+// 		}
+// 	}()
+// 	if err = tx.Error; err != nil {
+// 		return
+// 	}
+// 	err = tx.Table("books").Where("id = ?", id).Clauses(clause.Locking{Strength: "UPDATE"}).Update("quantity", gorm.Expr("quantity + ?", 1)).Error
+// 	if err != nil {
+// 		return apperror.ErrUpdateBookQtyQuery
+// 	}
+// 	err = tx.Commit().Error
+// 	if err != nil {
+// 		return apperror.ErrTxCommit
+// 	}
+// 	return nil
+// }

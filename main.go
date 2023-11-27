@@ -13,7 +13,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// middleware
+// learn middleware (error, auth)
 // rapihin handler dibawah
 
 func main() {
