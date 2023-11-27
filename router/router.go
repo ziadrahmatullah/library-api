@@ -10,6 +10,7 @@ type Handlers struct {
 	Book            *handler.BookHandler
 	User            *handler.UserHandler
 	BorrowingRecord *handler.BorrowingRecordHandler
+	Auth            *handler.AuthHandler
 }
 
 func New(handler Handlers) *gin.Engine {
@@ -23,6 +24,8 @@ func New(handler Handlers) *gin.Engine {
 
 	router.POST("/borrowing-records", handler.BorrowingRecord.AddBorrowing)
 	router.PUT("/borrowing-records/:id", handler.BorrowingRecord.ReturnBook)
+
+	router.POST("/register", handler.Auth.Register)
 
 	return router
 }
