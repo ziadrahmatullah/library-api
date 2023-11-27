@@ -1,6 +1,8 @@
 package migration
 
 import (
+	"time"
+
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"gorm.io/gorm"
 )
@@ -21,10 +23,10 @@ func Seed(db *gorm.DB) {
 		{Name: "Charlie", Email: "charlie@example.com", Phone: "081394839283"},
 	}
 	borrowingRecords := []*entity.BorrowingRecords{
-		{UserId: 1, BookId: 1, Status: 1},
-		{UserId: 1, BookId: 2, Status: 1},
-		{UserId: 2, BookId: 1, Status: 1},
-		{UserId: 3, BookId: 2, Status: 1},
+		{UserId: 1, BookId: 1, Status: 1, BorrowedDate: time.Now()},
+		{UserId: 1, BookId: 2, Status: 1, BorrowedDate: time.Now()},
+		{UserId: 2, BookId: 1, Status: 1, BorrowedDate: time.Now()},
+		{UserId: 3, BookId: 2, Status: 1, BorrowedDate: time.Now()},
 	}
 	db.Create(authors)
 	db.Create(books)

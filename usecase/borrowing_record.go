@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"time"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
@@ -49,6 +50,7 @@ func (u *borrowingRecordUsecase) AddBorrowingRecord(ctx context.Context, br *ent
 				AppError: apperror.ErrEmptyStock{Resource: "book"},
 			}
 		}
+		br.BorrowedDate = time.Now()
 		a, err := u.borrowingRepo.Create(c, br)
 		if err != nil {
 			return err
