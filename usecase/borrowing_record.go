@@ -8,6 +8,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/repository"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/transactor"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
 )
 
@@ -17,14 +18,16 @@ type BorrowingRecordUsecase interface {
 }
 
 type borrowingRecordUsecase struct {
+	manager       transactor.Manager
 	borrowingRepo repository.BorrowingRecordRepository
 	bookRepo      repository.BookRepository
 }
 
-func NewBorrowingRecordUsecase(borrowingRepo repository.BorrowingRecordRepository, bookRepo repository.BookRepository) BorrowingRecordUsecase {
+func NewBorrowingRecordUsecase(manager transactor.Manager, borrowingRepo repository.BorrowingRecordRepository, bookRepo repository.BookRepository) BorrowingRecordUsecase {
 	return &borrowingRecordUsecase{
 		borrowingRepo: borrowingRepo,
 		bookRepo:      bookRepo,
+		manager:       manager,
 	}
 }
 
@@ -64,7 +67,7 @@ func (u *borrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.Borr
 		br = a
 		return nil
 	}
-	err := u.borrowingRepo.Run(ctx, atomic)
+	err := u.manager.Run(ctx, atomic)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +128,7 @@ func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*enti
 		}
 		return nil
 	}
-	err := u.borrowingRepo.Run(ctx, atomic)
+	err := u.manager.Run(ctx, atomic)
 	if err != nil {
 		return nil, err
 	}

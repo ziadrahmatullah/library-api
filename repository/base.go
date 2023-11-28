@@ -11,7 +11,6 @@ import (
 )
 
 type BaseRepository[T any] interface {
-	UnitOfWork
 	Find(ctx context.Context, query *valueobject.Query) ([]*T, error)
 	First(ctx context.Context, query *valueobject.Query) (*T, error)
 	Create(ctx context.Context, t *T) (*T, error)
@@ -21,18 +20,6 @@ type BaseRepository[T any] interface {
 
 type baseRepository[T any] struct {
 	db *gorm.DB
-}
-
-func (r *baseRepository[T]) Run(ctx context.Context, runner func(c context.Context) error) error {
-	tx := r.db.Begin()
-	ctx = injectTx(ctx, tx)
-	err := runner(ctx)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	tx.Commit()
-	return nil
 }
 
 func (r *baseRepository[T]) conn(ctx context.Context) *gorm.DB {

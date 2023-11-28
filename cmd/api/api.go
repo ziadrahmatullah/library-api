@@ -15,6 +15,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/handler"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/repository"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/router"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/transactor"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/usecase"
 )
 
@@ -23,6 +24,8 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
+
+	manager := transactor.NewTransactor(db)
 
 	authorRepo := repository.NewAuthorRepository(db)
 
@@ -35,7 +38,7 @@ func main() {
 	userHandler := handler.NewUserHandler(userUsecase)
 
 	borrowingRecordRepo := repository.NewBorrowingRecordsRepository(db)
-	borrowingRecordUsecase := usecase.NewBorrowingRecordUsecase(borrowingRecordRepo, bookRepo)
+	borrowingRecordUsecase := usecase.NewBorrowingRecordUsecase(manager, borrowingRecordRepo, bookRepo)
 	borrowingRecordHandler := handler.NewBorrowingRecordHandler(borrowingRecordUsecase)
 
 	jwt := appjwt.NewJwt()
