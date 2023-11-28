@@ -13,10 +13,14 @@ const (
 
 func getPagination(q *valueobject.Query) (int, int) {
 	limit := q.PerPage
-	if limit == 0 {
+	if limit <= 0 {
 		limit = defaultLimit
 	}
-	offset := (q.Page - 1) * limit
+	page := q.Page
+	if page < 0 {
+		page = 1
+	}
+	offset := (page - 1) * limit
 	return limit, offset
 }
 
