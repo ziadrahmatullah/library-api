@@ -1,8 +1,15 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"strconv"
+	"syscall"
+	"time"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/appjwt"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/handler"
@@ -47,8 +54,32 @@ func main() {
 		Addr:    ":8080",
 		Handler: r,
 	}
-	err = server.ListenAndServe()
+
+	go func() {
+		if err = server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	log.Println("Shutdown Server ...")
+
+	const defaultTimeout = 5
+	timeoutString := os.Getenv("TIMEOUT")
+	timeout, err := strconv.Atoi(timeoutString)
 	if err != nil {
-		log.Println(err)
+		timeout = defaultTimeout
 	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
+	defer cancel()
+	if err = server.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+	select {
+	case <-ctx.Done():
+		log.Println("timeout of 5 seconds.")
+	}
+	log.Println("Server exiting")
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func WithTimeout() gin.HandlerFunc {
-	var defaultTimeout = 5
+	const defaultTimeout = 5
 	timeoutString := os.Getenv("TIMEOUT")
 	timeout, err := strconv.Atoi(timeoutString)
 	if err != nil {
