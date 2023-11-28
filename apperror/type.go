@@ -6,6 +6,8 @@ const (
 	BadRequest HandlerErrType = iota + 1
 	NotFound
 	Conflict
+	UnAuthenticated
+	UnAuthorized
 )
 
 type Type struct {

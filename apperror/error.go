@@ -48,3 +48,9 @@ type ErrBookAlreadyReturned struct {
 func (e ErrBookAlreadyReturned) Error() string {
 	return fmt.Sprintf("book already returned")
 }
+
+type ErrInvalidCredential struct{}
+
+func (e ErrInvalidCredential) Error() string {
+	return "invalid credentials"
+}

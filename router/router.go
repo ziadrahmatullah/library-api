@@ -26,6 +26,7 @@ func New(handler Handlers) *gin.Engine {
 	router.PUT("/borrowing-records/:id", handler.BorrowingRecord.ReturnBook)
 
 	router.POST("/register", handler.Auth.Register)
+	router.POST("/login", handler.Auth.Login)
 
 	return router
 }

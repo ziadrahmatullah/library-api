@@ -17,3 +17,15 @@ func (r *RegisterRequest) ToUser() *entity.User {
 		Phone:    r.Phone,
 	}
 }
+
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (r *LoginRequest) ToUser() *entity.User {
+	return &entity.User{
+		Email:    r.Email,
+		Password: r.Password,
+	}
+}
