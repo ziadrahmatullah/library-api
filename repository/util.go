@@ -24,10 +24,8 @@ func getPagination(q *valueobject.Query) (int, int) {
 	return limit, offset
 }
 
-type contextKeyTx string
-
 func extractTx(ctx context.Context) *gorm.DB {
-	if tx, ok := ctx.Value(contextKeyTx("tx")).(*gorm.DB); ok {
+	if tx, ok := ctx.Value("tx").(*gorm.DB); ok {
 		return tx
 	}
 	return nil

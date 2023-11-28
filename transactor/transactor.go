@@ -30,8 +30,6 @@ func (t *manager) Run(ctx context.Context, runner func(c context.Context) error)
 	return nil
 }
 
-type contextKeyTx string
-
 func injectTx(ctx context.Context, tx *gorm.DB) context.Context {
-	return context.WithValue(ctx, contextKeyTx("tx"), tx)
+	return context.WithValue(ctx, "tx", tx)
 }
