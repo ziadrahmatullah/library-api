@@ -20,9 +20,10 @@ func NewRouter(opts RouterOpts) *gin.Engine {
 	router := gin.Default()
 	router.ContextWithFallback = true
 
-	router.Use(middleware.ErrorHandler())
 	router.Use(middleware.WithTimeout)
-
+	router.Use(middleware.AuthorizeHandler())
+	router.Use(middleware.ErrorHandler())
+	
 	router.GET("/hello", func(ctx *gin.Context) {
 		time.Sleep(5 * time.Second)
 		ctx.JSON(http.StatusOK, gin.H{

@@ -34,12 +34,13 @@ func (h *BorrowHandler) HandleBorrowBook(ctx *gin.Context) {
 	resp := dto.Response{}
 	newBorrow := dto.BorrowReq{}
 	err := ctx.ShouldBindJSON(&newBorrow)
-	if err != nil {	
+	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	borrowModel := newBorrow.ToBorrowModel()
+	reqContext := dto.CreateContext(ctx)
+	borrowModel := newBorrow.ToBorrowModel(reqContext.UserID)
 	borrow, err := h.borrowUsecase.BorrowBook(ctx, borrowModel)
 	if err != nil {
 		resp.Message = err.Error()
@@ -51,7 +52,7 @@ func (h *BorrowHandler) HandleBorrowBook(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, resp)
 }
 
-func (h *BorrowHandler) HandleReturnBook(ctx *gin.Context){
+func (h *BorrowHandler) HandleReturnBook(ctx *gin.Context) {
 	resp := dto.Response{}
 	borrowRecord := dto.BorrowReq{}
 	err := ctx.ShouldBindJSON(&borrowRecord)
@@ -60,8 +61,9 @@ func (h *BorrowHandler) HandleReturnBook(ctx *gin.Context){
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	borrowModel := borrowRecord.ToBorrowModel()
-	borrow, err := h.borrowUsecase.ReturnBook(ctx,borrowModel)
+	reqContext := dto.CreateContext(ctx)
+	borrowModel := borrowRecord.ToBorrowModel(reqContext.UserID)
+	borrow, err := h.borrowUsecase.ReturnBook(ctx, borrowModel)
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)

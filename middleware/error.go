@@ -15,7 +15,7 @@ func ErrorHandler() gin.HandlerFunc {
 		err := c.Errors.Last()
 		if err != nil {
 			if errors.Is(err, context.DeadlineExceeded) {
-				c.AbortWithStatusJSON(http.StatusOK, dto.Response{Message: "request timeout"})
+				c.AbortWithStatusJSON(http.StatusGatewayTimeout, dto.Response{Message: "request timeout"})
 				return
 			}
 			switch err.Err.(type) {
