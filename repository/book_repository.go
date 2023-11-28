@@ -26,10 +26,9 @@ func NewBookRepository(db *gorm.DB) BookRepository {
 }
 
 func (b *bookRepository) FindBooks(ctx context.Context) (books []models.Book, err error) {
-	b.db.WithContext(ctx).Exec("select pg_sleep(10)")
 	err = b.db.WithContext(ctx).Preload("Author").Table("books").Find(&books).Error
 	if err != nil {
-		return nil, err
+		return nil,apperror.ErrFindBooksQuery
 	}
 	return books, nil
 }
@@ -37,7 +36,7 @@ func (b *bookRepository) FindBooks(ctx context.Context) (books []models.Book, er
 func (b *bookRepository) FindBooksByTitle(ctx context.Context, title string) (books []models.Book, err error) {
 	err = b.db.WithContext(ctx).Preload("Author").Table("books").Where("title = ?", title).Find(&books).Error
 	if err != nil {
-		return nil, apperror.ErrFindBooksByTitleQuery
+		return nil, apperror.ErrFindBookByTitleQuery
 	}
 	return books, nil
 }
@@ -45,7 +44,7 @@ func (b *bookRepository) FindBooksByTitle(ctx context.Context, title string) (bo
 func (b *bookRepository) FindBooksById(ctx context.Context, id uint) (book *models.Book, err error) {
 	result := b.db.WithContext(ctx).Table("books").Where("id = ?", id).Find(&book)
 	if result.Error != nil {
-		return nil, apperror.ErrFindBooksByTitleQuery
+		return nil, apperror.ErrFindBookByIdQuery
 	}
 	if result.RowsAffected == 0 {
 		return nil, apperror.ErrBookNotFound

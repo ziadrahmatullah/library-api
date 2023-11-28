@@ -1,9 +1,6 @@
 package server
 
 import (
-	"net/http"
-	"time"
-
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/handler"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/middleware"
 	"github.com/gin-gonic/gin"
@@ -23,13 +20,6 @@ func NewRouter(opts RouterOpts) *gin.Engine {
 	router.Use(middleware.WithTimeout)
 	router.Use(middleware.AuthorizeHandler())
 	router.Use(middleware.ErrorHandler())
-	
-	router.GET("/hello", func(ctx *gin.Context) {
-		time.Sleep(5 * time.Second)
-		ctx.JSON(http.StatusOK, gin.H{
-			"data": "hello world",
-		})
-	})
 
 	books := router.Group("/books")
 	books.GET("", opts.BookHandler.HandleGetBooks)

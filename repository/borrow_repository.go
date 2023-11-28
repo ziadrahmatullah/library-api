@@ -38,7 +38,7 @@ func (b *borrowRepository) NewBorrow(ctx context.Context, borrow models.BorrowBo
 		Clauses(clause.Locking{Strength: "UPDATE"}).
 		Update("quantity", gorm.Expr("quantity - ?", 1)).Error
 	if err != nil {
-		return nil, apperror.ErrUpdateBookQtyQuery
+		return nil, apperror.ErrUpdateQty
 	}
 	err = tx.Table("borrowing_books").Create(&borrow).Error
 	if err != nil {
@@ -54,7 +54,7 @@ func (b *borrowRepository) NewBorrow(ctx context.Context, borrow models.BorrowBo
 func (b *borrowRepository) FindBorrows(ctx context.Context) (borrows []models.BorrowBook, err error) {	
 	err = b.db.WithContext(ctx).Preload("User").Preload("Book").Table("borrowing_books").Find(&borrows).Error
 	if err != nil {
-		return nil, apperror.ErrFindBooksQuery
+		return nil, apperror.ErrFindBorrowsQuery
 	}
 	return borrows, nil
 }
@@ -85,14 +85,14 @@ func (b *borrowRepository) UpdateBorrowStatus(ctx context.Context, id uint) (upd
 		Where("id = ?", id).Update("status", "returned").
 		Scan(&borrow).Error
 	if err != nil {
-		return nil, apperror.ErrNewBorrowQuery
+		return nil, apperror.ErrUpdateStatus
 	}
 	err = tx.Table("books").
 		Where("id = ?", borrow.BookId).
 		Clauses(clause.Locking{Strength: "UPDATE"}).
 		Update("quantity", gorm.Expr("quantity + ?", 1)).Error
 	if err != nil {
-		return nil, apperror.ErrUpdateBookQtyQuery
+		return nil, apperror.ErrUpdateQty
 	}
 	err = tx.Commit().Error
 	if err != nil {

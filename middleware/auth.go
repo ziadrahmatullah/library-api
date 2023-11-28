@@ -38,8 +38,7 @@ func AuthorizeHandler() gin.HandlerFunc {
 
 		token, err := dto.ValidateJWT(splittedHeader[1])
 		if err != nil {
-			resp.Message = apperror.ErrInvalidJWTToken.Error()
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, resp)
+			ctx.Error(err)
 			return
 		}
 

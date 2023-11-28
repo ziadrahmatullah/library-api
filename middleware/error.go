@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/dto"
 	"github.com/gin-gonic/gin"
 )
@@ -18,10 +19,12 @@ func ErrorHandler() gin.HandlerFunc {
 				c.AbortWithStatusJSON(http.StatusGatewayTimeout, dto.Response{Message: "request timeout"})
 				return
 			}
-			switch err.Err.(type) {
+			switch e := err.Err.(type) {
+			case *apperror.CustomError:
+				c.AbortWithStatusJSON(e.Code, e.ToErrorRes())
 			default:
 				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-					"error": err.Error(),
+					"message": err.Error(),
 				})
 				return
 			}

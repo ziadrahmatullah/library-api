@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	dto "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/dto"
 	mock "github.com/stretchr/testify/mock"
 
@@ -14,13 +16,13 @@ type UserUsecase struct {
 	mock.Mock
 }
 
-// CreateUser provides a mock function with given fields: _a0
-func (_m *UserUsecase) CreateUser(_a0 dto.RegisterReq) (*dto.RegisterRes, error) {
-	ret := _m.Called(_a0)
+// CreateUser provides a mock function with given fields: _a0, _a1
+func (_m *UserUsecase) CreateUser(_a0 context.Context, _a1 dto.RegisterReq) (*dto.RegisterRes, error) {
+	ret := _m.Called(_a0, _a1)
 
 	var r0 *dto.RegisterRes
-	if rf, ok := ret.Get(0).(func(dto.RegisterReq) *dto.RegisterRes); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(context.Context, dto.RegisterReq) *dto.RegisterRes); ok {
+		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*dto.RegisterRes)
@@ -28,8 +30,8 @@ func (_m *UserUsecase) CreateUser(_a0 dto.RegisterReq) (*dto.RegisterRes, error)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(dto.RegisterReq) error); ok {
-		r1 = rf(_a0)
+	if rf, ok := ret.Get(1).(func(context.Context, dto.RegisterReq) error); ok {
+		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -37,35 +39,12 @@ func (_m *UserUsecase) CreateUser(_a0 dto.RegisterReq) (*dto.RegisterRes, error)
 	return r0, r1
 }
 
-// GetAllUsers provides a mock function with given fields:
-func (_m *UserUsecase) GetAllUsers() ([]models.User, error) {
-	ret := _m.Called()
-
-	var r0 []models.User
-	if rf, ok := ret.Get(0).(func() []models.User); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]models.User)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetUserByName provides a mock function with given fields: _a0
-func (_m *UserUsecase) GetUserByName(_a0 string) ([]models.User, error) {
+// GetAllUsers provides a mock function with given fields: _a0
+func (_m *UserUsecase) GetAllUsers(_a0 context.Context) ([]models.User, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []models.User
-	if rf, ok := ret.Get(0).(func(string) []models.User); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) []models.User); ok {
 		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
@@ -74,7 +53,7 @@ func (_m *UserUsecase) GetUserByName(_a0 string) ([]models.User, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)
@@ -83,13 +62,36 @@ func (_m *UserUsecase) GetUserByName(_a0 string) ([]models.User, error) {
 	return r0, r1
 }
 
-// UserLogin provides a mock function with given fields: _a0
-func (_m *UserUsecase) UserLogin(_a0 dto.LoginReq) (*dto.LoginRes, error) {
-	ret := _m.Called(_a0)
+// GetUserByName provides a mock function with given fields: _a0, _a1
+func (_m *UserUsecase) GetUserByName(_a0 context.Context, _a1 string) ([]models.User, error) {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 []models.User
+	if rf, ok := ret.Get(0).(func(context.Context, string) []models.User); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.User)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UserLogin provides a mock function with given fields: _a0, _a1
+func (_m *UserUsecase) UserLogin(_a0 context.Context, _a1 dto.LoginReq) (*dto.LoginRes, error) {
+	ret := _m.Called(_a0, _a1)
 
 	var r0 *dto.LoginRes
-	if rf, ok := ret.Get(0).(func(dto.LoginReq) *dto.LoginRes); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(context.Context, dto.LoginReq) *dto.LoginRes); ok {
+		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*dto.LoginRes)
@@ -97,8 +99,8 @@ func (_m *UserUsecase) UserLogin(_a0 dto.LoginReq) (*dto.LoginRes, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(dto.LoginReq) error); ok {
-		r1 = rf(_a0)
+	if rf, ok := ret.Get(1).(func(context.Context, dto.LoginReq) error); ok {
+		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}

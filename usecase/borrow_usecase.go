@@ -33,13 +33,15 @@ func (bu *borrowUsecase) GetAllRecords(ctx context.Context) ([]models.BorrowBook
 }
 
 func (bu *borrowUsecase) BorrowBook(ctx context.Context, borrow models.BorrowBook) (*models.BorrowBook, error) {
-	if user, err := bu.userRepository.FindUserById(ctx, borrow.UserId); user == nil{
+	_, err := bu.userRepository.FindUserById(ctx, borrow.UserId)
+	if err != nil{
 		return nil, err
 	}
 	book, err := bu.bookRepository.FindBooksById(ctx, borrow.BookId)
-	if book == nil {
+	if err != nil {
 		return nil, err
-	}else if book.Quantity == 0{
+	}
+	if book.Quantity == 0{
 		return nil, apperror.ErrBookOutOfStock
 	}
 	return bu.borrowRepository.NewBorrow(ctx, borrow)
@@ -47,7 +49,7 @@ func (bu *borrowUsecase) BorrowBook(ctx context.Context, borrow models.BorrowBoo
 
 func (bu *borrowUsecase) ReturnBook(ctx context.Context, borrow models.BorrowBook) (*models.BorrowBook, error){
 	id, err := bu.borrowRepository.FindBorrow(ctx, borrow)
-	if id == 0{
+	if err !=  nil{
 		return nil, err
 	}
 	return bu.borrowRepository.UpdateBorrowStatus(ctx, id)	

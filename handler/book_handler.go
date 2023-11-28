@@ -43,14 +43,12 @@ func (h *BookHandler) HandleCreateBook(ctx *gin.Context) {
 	newBook := dto.BookReq{}
 	err := ctx.ShouldBindJSON(&newBook)
 	if err != nil {
-		resp.Message = apperror.ErrCannotBindJSON.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		ctx.Error(apperror.ErrInvalidBody)
 		return
 	}
 	book, err := h.bookUsecase.CreateBook(ctx, newBook.ToBookModel())
 	if err != nil {
-		resp.Message = err.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		ctx.Error(err)
 		return
 	}
 	resp.Data = book

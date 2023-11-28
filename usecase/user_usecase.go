@@ -42,7 +42,7 @@ func (u *userUsecase) CreateUser(ctx context.Context, registerData dto.RegisterR
 	}
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(registerData.Password), 10)
 	if err != nil {
-		return nil, err
+		return nil, apperror.ErrGenerateHashPassword
 	}
 	userModel := registerData.ToUserModelFromRegisterDTO(string(hashPassword))
 	newUser, err := u.userRepository.NewUser(ctx, userModel)
@@ -55,18 +55,18 @@ func (u *userUsecase) CreateUser(ctx context.Context, registerData dto.RegisterR
 
 func (u *userUsecase) UserLogin(ctx context.Context, loginData dto.LoginReq) (token *dto.LoginRes, err error) {
 	user, err := u.userRepository.FindByEmail(ctx, loginData.Email)
-	if user == nil || err != nil {
+	if err != nil {
 		return nil, err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginData.Password))
 	if err != nil {
-		return nil, err
+		return nil, apperror.ErrMatchHashPassword
 	}
 	newToken, err := dto.GenerateJWT(dto.JwtClaims{
 		ID: user.ID,
 	})
 	if err != nil {
-		return nil, err
+		return nil, apperror.ErrGenerateJWTToken
 	}
 	return &dto.LoginRes{AccessToken: newToken}, nil
 }

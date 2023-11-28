@@ -29,7 +29,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 func (u *userRepository) FindUsers(ctx context.Context) (users []models.User, err error) {
 	err = u.db.WithContext(ctx).Table("users").Find(&users).Error
 	if err != nil {
-		return nil, apperror.ErrFindUserQuery
+		return nil, apperror.ErrFindUsersQuery
 	}
 	return users, nil
 }
@@ -37,7 +37,7 @@ func (u *userRepository) FindUsers(ctx context.Context) (users []models.User, er
 func (b *userRepository) FindUserByName(ctx context.Context, name string) (users []models.User, err error) {
 	err = b.db.WithContext(ctx).Table("users").Where("name = ?", name).Find(&users).Error
 	if err != nil {
-		return nil, apperror.ErrFindUserQuery
+		return nil, apperror.ErrFindUserByName
 	}
 	return users, nil
 }
@@ -45,7 +45,7 @@ func (b *userRepository) FindUserByName(ctx context.Context, name string) (users
 func (u *userRepository) FindUserById(ctx context.Context, id uint) (user *models.User, err error) {
 	result := u.db.WithContext(ctx).Table("users").Where("id = ?", id).Find(&user)
 	if result.Error != nil {
-		return nil, apperror.ErrFindUserQuery
+		return nil, apperror.ErrFindUserByIdQuery
 	}
 	if result.RowsAffected == 0 {
 		return nil, apperror.ErrUserNotFound
@@ -56,7 +56,7 @@ func (u *userRepository) FindUserById(ctx context.Context, id uint) (user *model
 func (u *userRepository) FindByEmail(ctx context.Context, email string) (user *models.User, err error) {
 	result := u.db.WithContext(ctx).Table("users").Where("email = ?", email).Find(&user)
 	if result.Error != nil {
-		return nil, apperror.ErrFindUserQuery
+		return nil, apperror.ErrFindUserByEmail
 	}
 	if result.RowsAffected == 0 {
 		return nil, apperror.ErrUserNotFound

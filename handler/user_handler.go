@@ -43,14 +43,12 @@ func (h *UserHandler) HandleUserRegister(ctx *gin.Context) {
 	var data dto.RegisterReq
 	err := ctx.ShouldBindJSON(&data)
 	if err != nil {
-		resp.Message = err.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		ctx.Error(apperror.ErrInvalidBody)
 		return
 	}
 	user, err := h.userUsecase.CreateUser(ctx, data)
 	if err != nil {
-		resp.Message = err.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		ctx.Error(err)
 		return
 	}
 	resp.Data = user
@@ -59,18 +57,15 @@ func (h *UserHandler) HandleUserRegister(ctx *gin.Context) {
 }
 
 func (h *UserHandler) HandleUserLogin(ctx *gin.Context) {
-	resp := dto.Response{}
 	var data dto.LoginReq
 	err := ctx.ShouldBindJSON(&data)
 	if err != nil {
-		resp.Message = apperror.ErrCannotBindJSON.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		ctx.Error(apperror.ErrInvalidBody)
 		return
 	}
 	res, err := h.userUsecase.UserLogin(ctx, data)
 	if err != nil {
-		resp.Message = err.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		ctx.Error(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, res)
