@@ -17,16 +17,19 @@ func New(handler Handlers) *gin.Engine {
 	router := gin.Default()
 	router.Use(middleware.ErrorHandler())
 
+	router.POST("/register", handler.Auth.Register)
+	router.POST("/login", handler.Auth.Login)
+
 	router.GET("/books", handler.Book.GetAllBooks)
+
+	router.Use(middleware.AuthHandler)
+
 	router.POST("/books", handler.Book.AddBook)
 
 	router.GET("/users", handler.User.GetAllUsers)
 
 	router.POST("/borrowing-records", handler.BorrowingRecord.AddBorrowing)
 	router.PUT("/borrowing-records/:id", handler.BorrowingRecord.ReturnBook)
-
-	router.POST("/register", handler.Auth.Register)
-	router.POST("/login", handler.Auth.Login)
 
 	return router
 }

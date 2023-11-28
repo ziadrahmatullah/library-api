@@ -54,3 +54,15 @@ type ErrInvalidCredential struct{}
 func (e ErrInvalidCredential) Error() string {
 	return "invalid credentials"
 }
+
+type ErrMissingToken struct{}
+
+func (e ErrMissingToken) Error() string {
+	return "missing token"
+}
+
+type ErrInvalidToken struct{}
+
+func (e ErrInvalidToken) Error() string {
+	return "invalid token"
+}
