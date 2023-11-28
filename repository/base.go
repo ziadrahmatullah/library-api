@@ -37,9 +37,9 @@ func (r *baseRepository[T]) Run(ctx context.Context, runner func(c context.Conte
 func (r *baseRepository[T]) conn(ctx context.Context) *gorm.DB {
 	tx := extractTx(ctx)
 	if tx != nil {
-		return tx
+		return tx.WithContext(ctx)
 	}
-	return r.db
+	return r.db.WithContext(ctx)
 }
 
 func (r *baseRepository[T]) Find(ctx context.Context, q *valueobject.Query) ([]*T, error) {

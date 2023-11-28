@@ -15,6 +15,7 @@ type Handlers struct {
 
 func New(handler Handlers) *gin.Engine {
 	router := gin.Default()
+	router.Use(middleware.WithTimeout())
 	router.Use(middleware.ErrorHandler())
 
 	router.POST("/register", handler.Auth.Register)
