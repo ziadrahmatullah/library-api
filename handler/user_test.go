@@ -38,7 +38,7 @@ func (s *UserHandlerTestSuite) SetupSubTest() {
 
 func (s *UserHandlerTestSuite) TestListUser() {
 	s.Run("should return 200", func() {
-		s.uu.On("GetUsers", emptyCtx, mock.AnythingOfType("*valueobject.Query")).Return(users, nil)
+		s.uu.On("GetUsers", mock.Anything, mock.AnythingOfType("*valueobject.Query")).Return(users, nil)
 		response := h{"data": dto.NewFromUsers(users)}
 		responseJson := marshal(response)
 

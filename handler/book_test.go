@@ -28,8 +28,6 @@ type BookHandlerTestSuite struct {
 	rec    *httptest.ResponseRecorder
 }
 
-var emptyCtx = mock.AnythingOfType("*context.emptyCtx")
-
 func (s *BookHandlerTestSuite) SetupSubTest() {
 	s.bu = mocks.NewBookUsecase(s.T())
 	s.bh = handler.NewBookHandler(s.bu)
@@ -42,7 +40,7 @@ func (s *BookHandlerTestSuite) SetupSubTest() {
 
 func (s *BookHandlerTestSuite) TestListBooks() {
 	s.Run("should return 200", func() {
-		s.bu.On("GetAllBooks", emptyCtx, mock.AnythingOfType("*valueobject.Query")).Return(books, nil)
+		s.bu.On("GetAllBooks", mock.Anything, mock.AnythingOfType("*valueobject.Query")).Return(books, nil)
 		response := dto.NewFromBooks(books)
 		responseJson := marshal(h{"data": response})
 
@@ -53,7 +51,7 @@ func (s *BookHandlerTestSuite) TestListBooks() {
 		s.Equal(responseJson, getBody(s.rec))
 	})
 	s.Run("should return 200 when search by name", func() {
-		s.bu.On("GetAllBooks", emptyCtx, mock.AnythingOfType("*valueobject.Query")).Return([]*entity.Book{}, nil)
+		s.bu.On("GetAllBooks", mock.Anything, mock.AnythingOfType("*valueobject.Query")).Return([]*entity.Book{}, nil)
 		response := make([]*dto.BookResponse, 0)
 		responseJson := marshal(h{"data": response})
 
@@ -80,7 +78,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		s.bu.On("AddBook", emptyCtx, mock.AnythingOfType("*entity.Book")).Return(books[0], nil)
+		s.bu.On("AddBook", mock.Anything, mock.AnythingOfType("*entity.Book")).Return(books[0], nil)
 		response := dto.NewFromBook(books[0])
 		responseJson := marshal(h{"data": response})
 
@@ -113,7 +111,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		s.bu.On("AddBook", emptyCtx, mock.AnythingOfType("*entity.Book")).Return(nil, apperror.Type{Type: apperror.Conflict, AppError: apperror.ErrAlreadyExist{}})
+		s.bu.On("AddBook", mock.Anything, mock.AnythingOfType("*entity.Book")).Return(nil, apperror.Type{Type: apperror.Conflict, AppError: apperror.ErrAlreadyExist{}})
 
 		req, _ := http.NewRequest(http.MethodPost, "/books", sendBody(request))
 		s.router.ServeHTTP(s.rec, req)
@@ -129,7 +127,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		s.bu.On("AddBook", emptyCtx, mock.AnythingOfType("*entity.Book")).Return(nil, errors.New(""))
+		s.bu.On("AddBook", mock.Anything, mock.AnythingOfType("*entity.Book")).Return(nil, errors.New(""))
 
 		req, _ := http.NewRequest(http.MethodPost, "/books", sendBody(request))
 		s.router.ServeHTTP(s.rec, req)
