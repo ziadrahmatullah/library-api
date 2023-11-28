@@ -1,17 +1,25 @@
 package handler
 
 import (
+	"strconv"
+
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
 	"github.com/gin-gonic/gin"
 )
 
 func getQuery(c *gin.Context) (*valueobject.Query, error) {
-	page := c.DefaultQuery("page", "1")
-	perPage := c.DefaultQuery("per_page", "0")
-	query, err := valueobject.NewQuery(page, perPage)
+	pageQuery := c.DefaultQuery("page", "1")
+	perPageQuery := c.DefaultQuery("per_page", "0")
+	page, err := strconv.Atoi(pageQuery)
 	if err != nil {
 		return nil, err
 	}
+	perPage, err := strconv.Atoi(perPageQuery)
+	if err != nil {
+		return nil, err
+	}
+	query := valueobject.NewQuery().Paginate(page, perPage)
+
 	return query, nil
 }
 

@@ -1,7 +1,5 @@
 package valueobject
 
-import "strconv"
-
 type Query struct {
 	Page       int
 	PerPage    int
@@ -11,22 +9,30 @@ type Query struct {
 	Locked     bool
 }
 
-func NewQuery(page string, perPage string) (*Query, error) {
-	p, err := strconv.Atoi(page)
-	if err != nil {
-		return nil, err
-	}
-	pp, err := strconv.Atoi(perPage)
-	if err != nil {
-		return nil, err
-	}
-	if p < 1 {
-		p = 1
-	}
-	query := &Query{
-		Page:    p,
-		PerPage: pp,
-	}
+func NewQuery() *Query {
+	query := &Query{}
 	query.Conditions = make([]*Condition, 0)
-	return query, nil
+	return query
+}
+
+func (q *Query) Condition(field string, operator Operator, value any) *Query {
+	condition := NewCondition(field, operator, value)
+	q.Conditions = append(q.Conditions, condition)
+	return q
+}
+
+func (q *Query) Paginate(page int, perPage int) *Query {
+	q.Page = page
+	q.PerPage = perPage
+	return q
+}
+
+func (q *Query) Order(orderedBy string) *Query {
+	q.OrderedBy = orderedBy
+	return q
+}
+
+func (q *Query) Lock() *Query {
+	q.Locked = true
+	return q
 }
