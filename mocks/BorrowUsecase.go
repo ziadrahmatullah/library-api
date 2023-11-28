@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	models "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -12,13 +14,13 @@ type BorrowUsecase struct {
 	mock.Mock
 }
 
-// BorrowBook provides a mock function with given fields: _a0
-func (_m *BorrowUsecase) BorrowBook(_a0 models.BorrowBook) (*models.BorrowBook, error) {
-	ret := _m.Called(_a0)
+// BorrowBook provides a mock function with given fields: _a0, _a1
+func (_m *BorrowUsecase) BorrowBook(_a0 context.Context, _a1 models.BorrowBook) (*models.BorrowBook, error) {
+	ret := _m.Called(_a0, _a1)
 
 	var r0 *models.BorrowBook
-	if rf, ok := ret.Get(0).(func(models.BorrowBook) *models.BorrowBook); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(context.Context, models.BorrowBook) *models.BorrowBook); ok {
+		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.BorrowBook)
@@ -26,8 +28,8 @@ func (_m *BorrowUsecase) BorrowBook(_a0 models.BorrowBook) (*models.BorrowBook, 
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(models.BorrowBook) error); ok {
-		r1 = rf(_a0)
+	if rf, ok := ret.Get(1).(func(context.Context, models.BorrowBook) error); ok {
+		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -35,13 +37,13 @@ func (_m *BorrowUsecase) BorrowBook(_a0 models.BorrowBook) (*models.BorrowBook, 
 	return r0, r1
 }
 
-// GetAllRecords provides a mock function with given fields:
-func (_m *BorrowUsecase) GetAllRecords() ([]models.BorrowBook, error) {
-	ret := _m.Called()
+// GetAllRecords provides a mock function with given fields: _a0
+func (_m *BorrowUsecase) GetAllRecords(_a0 context.Context) ([]models.BorrowBook, error) {
+	ret := _m.Called(_a0)
 
 	var r0 []models.BorrowBook
-	if rf, ok := ret.Get(0).(func() []models.BorrowBook); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(context.Context) []models.BorrowBook); ok {
+		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]models.BorrowBook)
@@ -49,8 +51,8 @@ func (_m *BorrowUsecase) GetAllRecords() ([]models.BorrowBook, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -58,13 +60,13 @@ func (_m *BorrowUsecase) GetAllRecords() ([]models.BorrowBook, error) {
 	return r0, r1
 }
 
-// ReturnBook provides a mock function with given fields: _a0
-func (_m *BorrowUsecase) ReturnBook(_a0 models.BorrowBook) (*models.BorrowBook, error) {
-	ret := _m.Called(_a0)
+// ReturnBook provides a mock function with given fields: _a0, _a1
+func (_m *BorrowUsecase) ReturnBook(_a0 context.Context, _a1 models.BorrowBook) (*models.BorrowBook, error) {
+	ret := _m.Called(_a0, _a1)
 
 	var r0 *models.BorrowBook
-	if rf, ok := ret.Get(0).(func(models.BorrowBook) *models.BorrowBook); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(context.Context, models.BorrowBook) *models.BorrowBook); ok {
+		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.BorrowBook)
@@ -72,8 +74,8 @@ func (_m *BorrowUsecase) ReturnBook(_a0 models.BorrowBook) (*models.BorrowBook, 
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(models.BorrowBook) error); ok {
-		r1 = rf(_a0)
+	if rf, ok := ret.Get(1).(func(context.Context, models.BorrowBook) error); ok {
+		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}

@@ -26,13 +26,12 @@ func (h *UserHandler) HandleGetUsers(ctx *gin.Context) {
 	var users []models.User
 	var err error
 	if name != "" {
-		users, err = h.userUsecase.GetUserByName(name)
+		users, err = h.userUsecase.GetUserByName(ctx, name)
 	} else {
-		users, err = h.userUsecase.GetAllUsers()
+		users, err = h.userUsecase.GetAllUsers(ctx)
 	}
 	if err != nil {
-		resp.Message = err.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		ctx.Error(err)
 		return
 	}
 	resp.Data = users
@@ -48,7 +47,7 @@ func (h *UserHandler) HandleUserRegister(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	user, err := h.userUsecase.CreateUser(data)
+	user, err := h.userUsecase.CreateUser(ctx, data)
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
@@ -68,7 +67,7 @@ func (h *UserHandler) HandleUserLogin(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	res, err := h.userUsecase.UserLogin(data)
+	res, err := h.userUsecase.UserLogin(ctx, data)
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)

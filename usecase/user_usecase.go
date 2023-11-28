@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
@@ -9,10 +11,10 @@ import (
 )
 
 type UserUsecase interface {
-	GetAllUsers() ([]models.User, error)
-	GetUserByName(string) ([]models.User, error)
-	CreateUser(dto.RegisterReq) (*dto.RegisterRes, error)
-	UserLogin(dto.LoginReq) (*dto.LoginRes, error)
+	GetAllUsers(context.Context) ([]models.User, error)
+	GetUserByName(context.Context, string) ([]models.User, error)
+	CreateUser(context.Context, dto.RegisterReq) (*dto.RegisterRes, error)
+	UserLogin(context.Context, dto.LoginReq) (*dto.LoginRes, error)
 }
 
 type userUsecase struct {
@@ -25,16 +27,16 @@ func NewUserUsecase(u repository.UserRepository) UserUsecase {
 	}
 }
 
-func (u *userUsecase) GetAllUsers() ([]models.User, error) {
-	return u.userRepository.FindUsers()
+func (u *userUsecase) GetAllUsers(ctx context.Context) ([]models.User, error) {
+	return u.userRepository.FindUsers(ctx)
 }
 
-func (u *userUsecase) GetUserByName(name string) ([]models.User, error) {
-	return u.userRepository.FindUserByName(name)
+func (u *userUsecase) GetUserByName(ctx context.Context, name string) ([]models.User, error) {
+	return u.userRepository.FindUserByName(ctx, name)
 }
 
-func (u *userUsecase) CreateUser(registerData dto.RegisterReq) (data *dto.RegisterRes, err error) {
-	user, _ := u.userRepository.FindByEmail(registerData.Email)
+func (u *userUsecase) CreateUser(ctx context.Context, registerData dto.RegisterReq) (data *dto.RegisterRes, err error) {
+	user, _ := u.userRepository.FindByEmail(ctx, registerData.Email)
 	if user != nil {
 		return nil, apperror.ErrEmailALreadyUsed
 	}
@@ -43,7 +45,7 @@ func (u *userUsecase) CreateUser(registerData dto.RegisterReq) (data *dto.Regist
 		return nil, err
 	}
 	userModel := registerData.ToUserModelFromRegisterDTO(string(hashPassword))
-	newUser, err := u.userRepository.NewUser(userModel)
+	newUser, err := u.userRepository.NewUser(ctx, userModel)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +53,8 @@ func (u *userUsecase) CreateUser(registerData dto.RegisterReq) (data *dto.Regist
 	return data, nil
 }
 
-func (u *userUsecase) UserLogin(loginData dto.LoginReq) (token *dto.LoginRes, err error) {
-	user, err := u.userRepository.FindByEmail(loginData.Email)
+func (u *userUsecase) UserLogin(ctx context.Context, loginData dto.LoginReq) (token *dto.LoginRes, err error) {
+	user, err := u.userRepository.FindByEmail(ctx, loginData.Email)
 	if user == nil || err != nil {
 		return nil, err
 	}

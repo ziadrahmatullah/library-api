@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	models "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -12,72 +14,12 @@ type BookRepository struct {
 	mock.Mock
 }
 
-// DecreaseBookQty provides a mock function with given fields: _a0
-func (_m *BookRepository) DecreaseBookQty(_a0 uint) error {
-	ret := _m.Called(_a0)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(uint) error); ok {
-		r0 = rf(_a0)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// FindBooks provides a mock function with given fields:
-func (_m *BookRepository) FindBooks() ([]models.Book, error) {
-	ret := _m.Called()
-
-	var r0 []models.Book
-	if rf, ok := ret.Get(0).(func() []models.Book); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]models.Book)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// FindBooksById provides a mock function with given fields: _a0
-func (_m *BookRepository) FindBooksById(_a0 uint) (*models.Book, error) {
-	ret := _m.Called(_a0)
-
-	var r0 *models.Book
-	if rf, ok := ret.Get(0).(func(uint) *models.Book); ok {
-		r0 = rf(_a0)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*models.Book)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(uint) error); ok {
-		r1 = rf(_a0)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// FindBooksByTitle provides a mock function with given fields: _a0
-func (_m *BookRepository) FindBooksByTitle(_a0 string) ([]models.Book, error) {
+// FindBooks provides a mock function with given fields: _a0
+func (_m *BookRepository) FindBooks(_a0 context.Context) ([]models.Book, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []models.Book
-	if rf, ok := ret.Get(0).(func(string) []models.Book); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) []models.Book); ok {
 		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
@@ -86,7 +28,7 @@ func (_m *BookRepository) FindBooksByTitle(_a0 string) ([]models.Book, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)
@@ -95,27 +37,13 @@ func (_m *BookRepository) FindBooksByTitle(_a0 string) ([]models.Book, error) {
 	return r0, r1
 }
 
-// IncreaseBookQty provides a mock function with given fields: _a0
-func (_m *BookRepository) IncreaseBookQty(_a0 uint) error {
-	ret := _m.Called(_a0)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(uint) error); ok {
-		r0 = rf(_a0)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// NewBook provides a mock function with given fields: _a0
-func (_m *BookRepository) NewBook(_a0 models.Book) (*models.Book, error) {
-	ret := _m.Called(_a0)
+// FindBooksById provides a mock function with given fields: _a0, _a1
+func (_m *BookRepository) FindBooksById(_a0 context.Context, _a1 uint) (*models.Book, error) {
+	ret := _m.Called(_a0, _a1)
 
 	var r0 *models.Book
-	if rf, ok := ret.Get(0).(func(models.Book) *models.Book); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(context.Context, uint) *models.Book); ok {
+		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.Book)
@@ -123,8 +51,54 @@ func (_m *BookRepository) NewBook(_a0 models.Book) (*models.Book, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(models.Book) error); ok {
-		r1 = rf(_a0)
+	if rf, ok := ret.Get(1).(func(context.Context, uint) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FindBooksByTitle provides a mock function with given fields: _a0, _a1
+func (_m *BookRepository) FindBooksByTitle(_a0 context.Context, _a1 string) ([]models.Book, error) {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 []models.Book
+	if rf, ok := ret.Get(0).(func(context.Context, string) []models.Book); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.Book)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// NewBook provides a mock function with given fields: _a0, _a1
+func (_m *BookRepository) NewBook(_a0 context.Context, _a1 models.Book) (*models.Book, error) {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 *models.Book
+	if rf, ok := ret.Get(0).(func(context.Context, models.Book) *models.Book); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*models.Book)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, models.Book) error); ok {
+		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}

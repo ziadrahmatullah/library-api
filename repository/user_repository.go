@@ -1,17 +1,19 @@
 package repository
 
 import (
+	"context"
+
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
-	FindUsers() ([]models.User, error)
-	FindUserByName(string) (users []models.User, err error)
-	FindUserById(uint) (*models.User, error)
-	FindByEmail(string) (*models.User, error)
-	NewUser(models.User)(*models.User, error)
+	FindUsers(context.Context) ([]models.User, error)
+	FindUserByName(context.Context, string) (users []models.User, err error)
+	FindUserById(context.Context, uint) (*models.User, error)
+	FindByEmail(context.Context, string) (*models.User, error)
+	NewUser(context.Context, models.User)(*models.User, error)
 }
 
 type userRepository struct {
@@ -24,24 +26,24 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	}
 }
 
-func (u *userRepository) FindUsers() (users []models.User, err error) {
-	err = u.db.Table("users").Find(&users).Error
+func (u *userRepository) FindUsers(ctx context.Context) (users []models.User, err error) {
+	err = u.db.WithContext(ctx).Table("users").Find(&users).Error
 	if err != nil {
 		return nil, apperror.ErrFindUserQuery
 	}
 	return users, nil
 }
 
-func (b *userRepository) FindUserByName(name string) (users []models.User, err error) {
-	err = b.db.Table("users").Where("name = ?", name).Find(&users).Error
+func (b *userRepository) FindUserByName(ctx context.Context, name string) (users []models.User, err error) {
+	err = b.db.WithContext(ctx).Table("users").Where("name = ?", name).Find(&users).Error
 	if err != nil {
 		return nil, apperror.ErrFindUserQuery
 	}
 	return users, nil
 }
 
-func (u *userRepository) FindUserById(id uint) (user *models.User, err error) {
-	result := u.db.Table("users").Where("id = ?", id).Find(&user)
+func (u *userRepository) FindUserById(ctx context.Context, id uint) (user *models.User, err error) {
+	result := u.db.WithContext(ctx).Table("users").Where("id = ?", id).Find(&user)
 	if result.Error != nil {
 		return nil, apperror.ErrFindUserQuery
 	}
@@ -51,8 +53,8 @@ func (u *userRepository) FindUserById(id uint) (user *models.User, err error) {
 	return user, nil
 }
 
-func (u *userRepository) FindByEmail(email string) (user *models.User, err error) {
-	result := u.db.Table("users").Where("email = ?", email).Find(&user)
+func (u *userRepository) FindByEmail(ctx context.Context, email string) (user *models.User, err error) {
+	result := u.db.WithContext(ctx).Table("users").Where("email = ?", email).Find(&user)
 	if result.Error != nil {
 		return nil, apperror.ErrFindUserQuery
 	}
@@ -62,8 +64,8 @@ func (u *userRepository) FindByEmail(email string) (user *models.User, err error
 	return user, nil
 }
 
-func (u *userRepository) NewUser(user models.User) (newUser *models.User, err error){
-	err = u.db.Table("users").Create(&user).Error
+func (u *userRepository) NewUser(ctx context.Context, user models.User) (newUser *models.User, err error){
+	err = u.db.WithContext(ctx).Table("users").Create(&user).Error
 	if err != nil {
 		return nil, apperror.ErrNewUserQuery
 	}

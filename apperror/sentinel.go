@@ -21,4 +21,5 @@ var (
 	ErrBorrowRecordNotFound  = errors.New("borrow record not found")
 	ErrInvalidJWTToken       = errors.New("invalid jwt token")
 	ErrEmailALreadyUsed      = errors.New("email already used")
+	ErrSigningMethodInvalid  = errors.New("signing method invalid")
 )

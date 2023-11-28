@@ -26,13 +26,12 @@ func (h *BookHandler) HandleGetBooks(ctx *gin.Context) {
 	var books []models.Book
 	var err error
 	if title != "" {
-		books, err = h.bookUsecase.GetBooksByTitle(title)
+		books, err = h.bookUsecase.GetBooksByTitle(ctx, title)
 	} else {
-		books, err = h.bookUsecase.GetAllBooks()
+		books, err = h.bookUsecase.GetAllBooks(ctx)
 	}
 	if err != nil {
-		resp.Message = err.Error()
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
+		ctx.Error(err)
 		return
 	}
 	resp.Data = books
@@ -48,7 +47,7 @@ func (h *BookHandler) HandleCreateBook(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 		return
 	}
-	book, err := h.bookUsecase.CreateBook(newBook.ToBookModel())
+	book, err := h.bookUsecase.CreateBook(ctx, newBook.ToBookModel())
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)

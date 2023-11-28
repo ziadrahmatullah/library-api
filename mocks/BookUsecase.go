@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	models "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -12,13 +14,13 @@ type BookUsecase struct {
 	mock.Mock
 }
 
-// CreateBook provides a mock function with given fields: _a0
-func (_m *BookUsecase) CreateBook(_a0 models.Book) (*models.Book, error) {
-	ret := _m.Called(_a0)
+// CreateBook provides a mock function with given fields: _a0, _a1
+func (_m *BookUsecase) CreateBook(_a0 context.Context, _a1 models.Book) (*models.Book, error) {
+	ret := _m.Called(_a0, _a1)
 
 	var r0 *models.Book
-	if rf, ok := ret.Get(0).(func(models.Book) *models.Book); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(context.Context, models.Book) *models.Book); ok {
+		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.Book)
@@ -26,8 +28,8 @@ func (_m *BookUsecase) CreateBook(_a0 models.Book) (*models.Book, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(models.Book) error); ok {
-		r1 = rf(_a0)
+	if rf, ok := ret.Get(1).(func(context.Context, models.Book) error); ok {
+		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -35,35 +37,12 @@ func (_m *BookUsecase) CreateBook(_a0 models.Book) (*models.Book, error) {
 	return r0, r1
 }
 
-// GetAllBooks provides a mock function with given fields:
-func (_m *BookUsecase) GetAllBooks() ([]models.Book, error) {
-	ret := _m.Called()
-
-	var r0 []models.Book
-	if rf, ok := ret.Get(0).(func() []models.Book); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]models.Book)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetBooksByTitle provides a mock function with given fields: _a0
-func (_m *BookUsecase) GetBooksByTitle(_a0 string) ([]models.Book, error) {
+// GetAllBooks provides a mock function with given fields: _a0
+func (_m *BookUsecase) GetAllBooks(_a0 context.Context) ([]models.Book, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []models.Book
-	if rf, ok := ret.Get(0).(func(string) []models.Book); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) []models.Book); ok {
 		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
@@ -72,8 +51,31 @@ func (_m *BookUsecase) GetBooksByTitle(_a0 string) ([]models.Book, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetBooksByTitle provides a mock function with given fields: _a0, _a1
+func (_m *BookUsecase) GetBooksByTitle(_a0 context.Context, _a1 string) ([]models.Book, error) {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 []models.Book
+	if rf, ok := ret.Get(0).(func(context.Context, string) []models.Book); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.Book)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}

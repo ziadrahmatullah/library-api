@@ -20,7 +20,7 @@ func NewBorrowHandler(bu usecase.BorrowUsecase) *BorrowHandler {
 
 func (h *BorrowHandler) HandleGetRecords(ctx *gin.Context) {
 	resp := dto.Response{}
-	records, err := h.borrowUsecase.GetAllRecords()
+	records, err := h.borrowUsecase.GetAllRecords(ctx)
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
@@ -40,7 +40,7 @@ func (h *BorrowHandler) HandleBorrowBook(ctx *gin.Context) {
 		return
 	}
 	borrowModel := newBorrow.ToBorrowModel()
-	borrow, err := h.borrowUsecase.BorrowBook(borrowModel)
+	borrow, err := h.borrowUsecase.BorrowBook(ctx, borrowModel)
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)
@@ -61,7 +61,7 @@ func (h *BorrowHandler) HandleReturnBook(ctx *gin.Context){
 		return
 	}
 	borrowModel := borrowRecord.ToBorrowModel()
-	borrow, err := h.borrowUsecase.ReturnBook(borrowModel)
+	borrow, err := h.borrowUsecase.ReturnBook(ctx,borrowModel)
 	if err != nil {
 		resp.Message = err.Error()
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, resp)

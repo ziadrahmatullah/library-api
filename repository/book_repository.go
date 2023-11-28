@@ -1,16 +1,18 @@
 package repository
 
 import (
+	"context"
+
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
 	"gorm.io/gorm"
 )
 
 type BookRepository interface {
-	FindBooks() ([]models.Book, error)
-	FindBooksByTitle(string) ([]models.Book, error)
-	FindBooksById(uint) (*models.Book, error)
-	NewBook(models.Book) (*models.Book, error)
+	FindBooks(context.Context) ([]models.Book, error)
+	FindBooksByTitle(context.Context, string) ([]models.Book, error)
+	FindBooksById(context.Context, uint) (*models.Book, error)
+	NewBook(context.Context, models.Book) (*models.Book, error)
 }
 
 type bookRepository struct {
@@ -23,24 +25,25 @@ func NewBookRepository(db *gorm.DB) BookRepository {
 	}
 }
 
-func (b *bookRepository) FindBooks() (books []models.Book, err error) {
-	err = b.db.Preload("Author").Table("books").Find(&books).Error
+func (b *bookRepository) FindBooks(ctx context.Context) (books []models.Book, err error) {
+	b.db.WithContext(ctx).Exec("select pg_sleep(10)")
+	err = b.db.WithContext(ctx).Preload("Author").Table("books").Find(&books).Error
 	if err != nil {
-		return nil, apperror.ErrFindBooksQuery
+		return nil, err
 	}
 	return books, nil
 }
 
-func (b *bookRepository) FindBooksByTitle(title string) (books []models.Book, err error) {
-	err = b.db.Preload("Author").Table("books").Where("title = ?", title).Find(&books).Error
+func (b *bookRepository) FindBooksByTitle(ctx context.Context, title string) (books []models.Book, err error) {
+	err = b.db.WithContext(ctx).Preload("Author").Table("books").Where("title = ?", title).Find(&books).Error
 	if err != nil {
 		return nil, apperror.ErrFindBooksByTitleQuery
 	}
 	return books, nil
 }
 
-func (b *bookRepository) FindBooksById(id uint) (book *models.Book, err error) {
-	result := b.db.Table("books").Where("id = ?", id).Find(&book)
+func (b *bookRepository) FindBooksById(ctx context.Context, id uint) (book *models.Book, err error) {
+	result := b.db.WithContext(ctx).Table("books").Where("id = ?", id).Find(&book)
 	if result.Error != nil {
 		return nil, apperror.ErrFindBooksByTitleQuery
 	}
@@ -50,49 +53,10 @@ func (b *bookRepository) FindBooksById(id uint) (book *models.Book, err error) {
 	return book, nil
 }
 
-func (b *bookRepository) NewBook(book models.Book) (newBook *models.Book, err error) {
-	err = b.db.Table("books").Create(&book).Error
+func (b *bookRepository) NewBook(ctx context.Context, book models.Book) (newBook *models.Book, err error) {
+	err = b.db.WithContext(ctx).Table("books").Create(&book).Error
 	if err != nil {
 		return nil, apperror.ErrNewBookQuery
 	}
 	return &book, nil
 }
-
-// func (b *bookRepository) DecreaseBookQty(id uint) (err error) {
-// 	tx := b.db.Begin()
-// 	defer func() {
-// 		if r := recover(); r != nil {
-// 			tx.Rollback()
-// 		}
-// 	}()
-// 	err = tx.Table("books").Where("id = ?", id).Clauses(clause.Locking{Strength: "UPDATE"}).Update("quantity", gorm.Expr("quantity - ?", 1)).Error
-// 	if err != nil {
-// 		return apperror.ErrUpdateBookQtyQuery
-// 	}
-// 	err = tx.Commit().Error
-// 	if err != nil {
-// 		return apperror.ErrTxCommit
-// 	}
-// 	return nil
-// }
-
-// func (b *bookRepository) IncreaseBookQty(id uint) (err error) {
-// 	tx := b.db.Begin()
-// 	defer func() {
-// 		if r := recover(); r != nil {
-// 			tx.Rollback()
-// 		}
-// 	}()
-// 	if err = tx.Error; err != nil {
-// 		return
-// 	}
-// 	err = tx.Table("books").Where("id = ?", id).Clauses(clause.Locking{Strength: "UPDATE"}).Update("quantity", gorm.Expr("quantity + ?", 1)).Error
-// 	if err != nil {
-// 		return apperror.ErrUpdateBookQtyQuery
-// 	}
-// 	err = tx.Commit().Error
-// 	if err != nil {
-// 		return apperror.ErrTxCommit
-// 	}
-// 	return nil
-// }
