@@ -35,10 +35,7 @@ func (u *bookUsecase) GetSingleBook(ctx context.Context, query *valueobject.Quer
 }
 
 func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.Book, error) {
-	bookCondition := valueobject.NewCondition("title", valueobject.Equal, book.Title)
-	bookQuery := &valueobject.Query{
-		Conditions: []*valueobject.Condition{bookCondition},
-	}
+	bookQuery := valueobject.NewQuery().Condition("title", valueobject.Equal, book.Title)
 	b := u.GetSingleBook(ctx, bookQuery)
 	if b != nil {
 		return nil, apperror.Type{
@@ -50,8 +47,7 @@ func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.B
 			},
 		}
 	}
-	authorCondition := valueobject.NewCondition("id", valueobject.Equal, book.AuthorId)
-	authorQuery := &valueobject.Query{Conditions: []*valueobject.Condition{authorCondition}}
+	authorQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, book.AuthorId)
 	author := u.authorRepo.First(ctx, authorQuery)
 	if author == nil {
 		return nil, apperror.Type{

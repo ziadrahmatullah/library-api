@@ -30,11 +30,7 @@ func NewBorrowingRecordUsecase(borrowingRepo repository.BorrowingRecordRepositor
 
 func (u *borrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
 	atomic := func(c context.Context) error {
-		bookCondition := valueobject.NewCondition("id", valueobject.Equal, br.BookId)
-		bookQuery := &valueobject.Query{
-			Locked:     true,
-			Conditions: []*valueobject.Condition{bookCondition},
-		}
+		bookQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, br.BookId).Lock()
 		book := u.bookRepo.First(c, bookQuery)
 		if book == nil {
 			return apperror.Type{
@@ -75,11 +71,7 @@ func (u *borrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.Borr
 func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*entity.BorrowingRecords, error) {
 	var borrowingRecord *entity.BorrowingRecords
 	atomic := func(c context.Context) error {
-		brCondition := valueobject.NewCondition("id", valueobject.Equal, id)
-		brQuery := &valueobject.Query{
-			Locked:     true,
-			Conditions: []*valueobject.Condition{brCondition},
-		}
+		brQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, id).Lock()
 		br := u.borrowingRepo.First(c, brQuery)
 		if br == nil {
 			return apperror.Type{
@@ -104,11 +96,8 @@ func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*enti
 		if err != nil {
 			return err
 		}
-		bookCondition := valueobject.NewCondition("id", valueobject.Equal, br.BookId)
-		bookQuery := &valueobject.Query{
-			Locked:     true,
-			Conditions: []*valueobject.Condition{bookCondition},
-		}
+		
+		bookQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, br.BookId).Lock()
 		book := u.bookRepo.First(c, bookQuery)
 		if book == nil {
 			return apperror.Type{
