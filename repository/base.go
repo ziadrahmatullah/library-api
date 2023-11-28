@@ -44,7 +44,6 @@ func (r *baseRepository[T]) conn(ctx context.Context) *gorm.DB {
 
 func (r *baseRepository[T]) Find(ctx context.Context, q *valueobject.Query) ([]*T, error) {
 	var ts []*T
-	r.conn(ctx).Exec("select pg_sleep(4)")
 	limit, offset := getPagination(q)
 	query := r.conn(ctx).Model(ts)
 	for _, s := range q.With {
