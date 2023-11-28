@@ -53,11 +53,11 @@ func (_m *BaseRepository[T]) Delete(ctx context.Context, t *T) error {
 }
 
 // Find provides a mock function with given fields: ctx, query
-func (_m *BaseRepository[T]) Find(ctx context.Context, query valueobject.Query) []*T {
+func (_m *BaseRepository[T]) Find(ctx context.Context, query *valueobject.Query) []*T {
 	ret := _m.Called(ctx, query)
 
 	var r0 []*T
-	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) []*T); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *valueobject.Query) []*T); ok {
 		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
@@ -69,11 +69,11 @@ func (_m *BaseRepository[T]) Find(ctx context.Context, query valueobject.Query) 
 }
 
 // First provides a mock function with given fields: ctx, query
-func (_m *BaseRepository[T]) First(ctx context.Context, query valueobject.Query) *T {
+func (_m *BaseRepository[T]) First(ctx context.Context, query *valueobject.Query) *T {
 	ret := _m.Called(ctx, query)
 
 	var r0 *T
-	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) *T); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *valueobject.Query) *T); ok {
 		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {

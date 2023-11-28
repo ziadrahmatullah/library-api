@@ -12,8 +12,8 @@ import (
 
 type BaseRepository[T any] interface {
 	UnitOfWork
-	Find(ctx context.Context, query valueobject.Query) []*T
-	First(ctx context.Context, query valueobject.Query) *T
+	Find(ctx context.Context, query *valueobject.Query) []*T
+	First(ctx context.Context, query *valueobject.Query) *T
 	Create(ctx context.Context, t *T) (*T, error)
 	Update(ctx context.Context, t *T) (*T, error)
 	Delete(ctx context.Context, t *T) error
@@ -43,7 +43,7 @@ func (r *baseRepository[T]) conn(ctx context.Context) *gorm.DB {
 	return r.db
 }
 
-func (r *baseRepository[T]) Find(ctx context.Context, q valueobject.Query) []*T {
+func (r *baseRepository[T]) Find(ctx context.Context, q *valueobject.Query) []*T {
 	var ts []*T
 	limit, offset := getPagination(q)
 	query := r.conn(ctx).Model(ts)
@@ -62,7 +62,7 @@ func (r *baseRepository[T]) Find(ctx context.Context, q valueobject.Query) []*T 
 	return ts
 }
 
-func (r *baseRepository[T]) First(ctx context.Context, q valueobject.Query) *T {
+func (r *baseRepository[T]) First(ctx context.Context, q *valueobject.Query) *T {
 	conditions := q.Conditions
 	var t *T
 	query := r.conn(ctx).Model(t)

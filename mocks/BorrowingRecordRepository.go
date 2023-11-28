@@ -54,11 +54,11 @@ func (_m *BorrowingRecordRepository) Delete(ctx context.Context, t *entity.Borro
 }
 
 // Find provides a mock function with given fields: ctx, query
-func (_m *BorrowingRecordRepository) Find(ctx context.Context, query valueobject.Query) []*entity.BorrowingRecords {
+func (_m *BorrowingRecordRepository) Find(ctx context.Context, query *valueobject.Query) []*entity.BorrowingRecords {
 	ret := _m.Called(ctx, query)
 
 	var r0 []*entity.BorrowingRecords
-	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) []*entity.BorrowingRecords); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *valueobject.Query) []*entity.BorrowingRecords); ok {
 		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
@@ -70,11 +70,11 @@ func (_m *BorrowingRecordRepository) Find(ctx context.Context, query valueobject
 }
 
 // First provides a mock function with given fields: ctx, query
-func (_m *BorrowingRecordRepository) First(ctx context.Context, query valueobject.Query) *entity.BorrowingRecords {
+func (_m *BorrowingRecordRepository) First(ctx context.Context, query *valueobject.Query) *entity.BorrowingRecords {
 	ret := _m.Called(ctx, query)
 
 	var r0 *entity.BorrowingRecords
-	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) *entity.BorrowingRecords); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *valueobject.Query) *entity.BorrowingRecords); ok {
 		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {

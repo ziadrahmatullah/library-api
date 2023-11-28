@@ -15,11 +15,11 @@ func getQuery(c *gin.Context) (*valueobject.Query, error) {
 	return query, nil
 }
 
-func filterCondition(conditions []*valueobject.Condition) []valueobject.Condition {
-	filtered := make([]valueobject.Condition, 0)
+func filterCondition(conditions []*valueobject.Condition) []*valueobject.Condition {
+	filtered := make([]*valueobject.Condition, 0)
 	for _, condition := range conditions {
 		if condition != nil {
-			filtered = append(filtered, *condition)
+			filtered = append(filtered, condition)
 		}
 	}
 	return filtered

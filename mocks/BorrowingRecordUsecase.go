@@ -14,7 +14,7 @@ type BorrowingRecordUsecase struct {
 	mock.Mock
 }
 
-// AddBorrowingRecord provides a mock function with given fields: ctx, br
+// BorrowBook provides a mock function with given fields: ctx, br
 func (_m *BorrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
 	ret := _m.Called(ctx, br)
 
@@ -30,6 +30,29 @@ func (_m *BorrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.Bor
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *entity.BorrowingRecords) error); ok {
 		r1 = rf(ctx, br)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ReturnBook provides a mock function with given fields: ctx, id
+func (_m *BorrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*entity.BorrowingRecords, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *entity.BorrowingRecords
+	if rf, ok := ret.Get(0).(func(context.Context, uint) *entity.BorrowingRecords); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.BorrowingRecords)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, uint) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}

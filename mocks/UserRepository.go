@@ -54,11 +54,11 @@ func (_m *UserRepository) Delete(ctx context.Context, t *entity.User) error {
 }
 
 // Find provides a mock function with given fields: ctx, query
-func (_m *UserRepository) Find(ctx context.Context, query valueobject.Query) []*entity.User {
+func (_m *UserRepository) Find(ctx context.Context, query *valueobject.Query) []*entity.User {
 	ret := _m.Called(ctx, query)
 
 	var r0 []*entity.User
-	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) []*entity.User); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *valueobject.Query) []*entity.User); ok {
 		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
@@ -70,11 +70,11 @@ func (_m *UserRepository) Find(ctx context.Context, query valueobject.Query) []*
 }
 
 // First provides a mock function with given fields: ctx, query
-func (_m *UserRepository) First(ctx context.Context, query valueobject.Query) *entity.User {
+func (_m *UserRepository) First(ctx context.Context, query *valueobject.Query) *entity.User {
 	ret := _m.Called(ctx, query)
 
 	var r0 *entity.User
-	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) *entity.User); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *valueobject.Query) *entity.User); ok {
 		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {

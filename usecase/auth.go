@@ -29,9 +29,9 @@ func NewAuthUsecase(userRepo repository.UserRepository, jwt appjwt.Jwt) AuthUsec
 }
 
 func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.User, error) {
-	emailCondition := *valueobject.NewCondition("email", valueobject.Equal, user.Email)
-	emailQuery := valueobject.Query{
-		Conditions: []valueobject.Condition{emailCondition},
+	emailCondition := valueobject.NewCondition("email", valueobject.Equal, user.Email)
+	emailQuery := &valueobject.Query{
+		Conditions: []*valueobject.Condition{emailCondition},
 	}
 	fetchedUser := u.userRepo.First(ctx, emailQuery)
 	if fetchedUser != nil {
@@ -45,9 +45,9 @@ func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.
 		}
 	}
 
-	phoneCondition := *valueobject.NewCondition("phone", valueobject.Equal, user.Phone)
-	phoneQuery := valueobject.Query{
-		Conditions: []valueobject.Condition{phoneCondition},
+	phoneCondition := valueobject.NewCondition("phone", valueobject.Equal, user.Phone)
+	phoneQuery := &valueobject.Query{
+		Conditions: []*valueobject.Condition{phoneCondition},
 	}
 	fetchedUser = u.userRepo.First(ctx, phoneQuery)
 	if fetchedUser != nil {
@@ -75,9 +75,9 @@ func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.
 }
 
 func (u *authUsecase) Login(ctx context.Context, user *entity.User) (string, error) {
-	condition := *valueobject.NewCondition("email", valueobject.Equal, user.Email)
-	query := valueobject.Query{
-		Conditions: []valueobject.Condition{condition},
+	condition := valueobject.NewCondition("email", valueobject.Equal, user.Email)
+	query := &valueobject.Query{
+		Conditions: []*valueobject.Condition{condition},
 	}
 	fetchedUser := u.userRepo.First(ctx, query)
 	if fetchedUser == nil {

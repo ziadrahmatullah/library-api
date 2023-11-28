@@ -10,8 +10,8 @@ import (
 )
 
 type BookUsecase interface {
-	GetAllBooks(ctx context.Context, query valueobject.Query) []*entity.Book
-	GetSingleBook(ctx context.Context, query valueobject.Query) *entity.Book
+	GetAllBooks(ctx context.Context, query *valueobject.Query) []*entity.Book
+	GetSingleBook(ctx context.Context, query *valueobject.Query) *entity.Book
 	AddBook(ctx context.Context, book *entity.Book) (*entity.Book, error)
 }
 
@@ -26,18 +26,18 @@ func NewBookUsecase(bookRepo repository.BookRepository, authorRepo repository.Au
 		authorRepo: authorRepo,
 	}
 }
-func (u *bookUsecase) GetAllBooks(ctx context.Context, query valueobject.Query) []*entity.Book {
+func (u *bookUsecase) GetAllBooks(ctx context.Context, query *valueobject.Query) []*entity.Book {
 	return u.bookRepo.Find(ctx, query)
 }
 
-func (u *bookUsecase) GetSingleBook(ctx context.Context, query valueobject.Query) *entity.Book {
+func (u *bookUsecase) GetSingleBook(ctx context.Context, query *valueobject.Query) *entity.Book {
 	return u.bookRepo.First(ctx, query)
 }
 
 func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.Book, error) {
-	bookCondition := *valueobject.NewCondition("title", valueobject.Equal, book.Title)
-	bookQuery := valueobject.Query{
-		Conditions: []valueobject.Condition{bookCondition},
+	bookCondition := valueobject.NewCondition("title", valueobject.Equal, book.Title)
+	bookQuery := &valueobject.Query{
+		Conditions: []*valueobject.Condition{bookCondition},
 	}
 	b := u.GetSingleBook(ctx, bookQuery)
 	if b != nil {
@@ -50,8 +50,8 @@ func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.B
 			},
 		}
 	}
-	authorCondition := *valueobject.NewCondition("id", valueobject.Equal, book.AuthorId)
-	authorQuery := valueobject.Query{Conditions: []valueobject.Condition{authorCondition}}
+	authorCondition := valueobject.NewCondition("id", valueobject.Equal, book.AuthorId)
+	authorQuery := &valueobject.Query{Conditions: []*valueobject.Condition{authorCondition}}
 	author := u.authorRepo.First(ctx, authorQuery)
 	if author == nil {
 		return nil, apperror.Type{

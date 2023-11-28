@@ -11,7 +11,7 @@ const (
 	defaultLimit = 10
 )
 
-func getPagination(q valueobject.Query) (int, int) {
+func getPagination(q *valueobject.Query) (int, int) {
 	limit := q.PerPage
 	if limit == 0 {
 		limit = defaultLimit

@@ -54,11 +54,11 @@ func (_m *BookRepository) Delete(ctx context.Context, t *entity.Book) error {
 }
 
 // Find provides a mock function with given fields: ctx, query
-func (_m *BookRepository) Find(ctx context.Context, query valueobject.Query) []*entity.Book {
+func (_m *BookRepository) Find(ctx context.Context, query *valueobject.Query) []*entity.Book {
 	ret := _m.Called(ctx, query)
 
 	var r0 []*entity.Book
-	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) []*entity.Book); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *valueobject.Query) []*entity.Book); ok {
 		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
@@ -70,11 +70,11 @@ func (_m *BookRepository) Find(ctx context.Context, query valueobject.Query) []*
 }
 
 // First provides a mock function with given fields: ctx, query
-func (_m *BookRepository) First(ctx context.Context, query valueobject.Query) *entity.Book {
+func (_m *BookRepository) First(ctx context.Context, query *valueobject.Query) *entity.Book {
 	ret := _m.Called(ctx, query)
 
 	var r0 *entity.Book
-	if rf, ok := ret.Get(0).(func(context.Context, valueobject.Query) *entity.Book); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *valueobject.Query) *entity.Book); ok {
 		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {

@@ -6,7 +6,7 @@ type Query struct {
 	Page       int
 	PerPage    int
 	Order      string
-	Conditions []Condition
+	Conditions []*Condition
 	With       []string
 	Lock       bool
 }
