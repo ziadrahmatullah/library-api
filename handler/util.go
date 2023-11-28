@@ -18,7 +18,7 @@ func getQuery(c *gin.Context) (*valueobject.Query, error) {
 	if err != nil {
 		return nil, err
 	}
-	query := valueobject.NewQuery().Paginate(page, perPage)
+	query := valueobject.NewQuery().Paginate(page, perPage).Order(c.Query("order"))
 
 	return query, nil
 }
