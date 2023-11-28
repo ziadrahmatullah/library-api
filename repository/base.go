@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
@@ -76,12 +77,12 @@ func (r *baseRepository[T]) First(ctx context.Context, q *valueobject.Query) (*T
 		sql := fmt.Sprintf("%s %s $1", condition.Field, condition.Operation)
 		query.Where(sql, condition.Value)
 	}
-	err := query.Limit(1).Find(&t).Error
+	err := query.First(&t).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
-	}
-	if t == nil {
-		return nil, nil
 	}
 	return t, nil
 }
