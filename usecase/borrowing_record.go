@@ -31,7 +31,10 @@ func NewBorrowingRecordUsecase(borrowingRepo repository.BorrowingRecordRepositor
 func (u *borrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.BorrowingRecords) (*entity.BorrowingRecords, error) {
 	atomic := func(c context.Context) error {
 		bookQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, br.BookId).Lock()
-		book := u.bookRepo.First(c, bookQuery)
+		book, err := u.bookRepo.First(c, bookQuery)
+		if err != nil {
+			return err
+		}
 		if book == nil {
 			return apperror.Type{
 				Type: apperror.NotFound,
@@ -72,7 +75,10 @@ func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*enti
 	var borrowingRecord *entity.BorrowingRecords
 	atomic := func(c context.Context) error {
 		brQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, id).Lock()
-		br := u.borrowingRepo.First(c, brQuery)
+		br, err := u.borrowingRepo.First(c, brQuery)
+		if err != nil {
+			return err
+		}
 		if br == nil {
 			return apperror.Type{
 				Type: apperror.NotFound,
@@ -91,14 +97,17 @@ func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*enti
 		}
 		returnedDate := sql.NullTime{Time: time.Now(), Valid: true}
 		br.ReturnedDate = valueobject.NullTime{NullTime: returnedDate}
-		br, err := u.borrowingRepo.Update(c, br)
-		borrowingRecord = br
+		br, err = u.borrowingRepo.Update(c, br)
 		if err != nil {
 			return err
 		}
-		
+		borrowingRecord = br
+
 		bookQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, br.BookId).Lock()
-		book := u.bookRepo.First(c, bookQuery)
+		book, err := u.bookRepo.First(c, bookQuery)
+		if err != nil {
+			return err
+		}
 		if book == nil {
 			return apperror.Type{
 				Type: apperror.NotFound,

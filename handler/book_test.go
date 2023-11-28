@@ -42,7 +42,7 @@ func (s *BookHandlerTestSuite) SetupSubTest() {
 
 func (s *BookHandlerTestSuite) TestListBooks() {
 	s.Run("should return 200", func() {
-		s.bu.On("GetAllBooks", emptyCtx, mock.AnythingOfType("*valueobject.Query")).Return(books)
+		s.bu.On("GetAllBooks", emptyCtx, mock.AnythingOfType("*valueobject.Query")).Return(books, nil)
 		response := dto.NewFromBooks(books)
 		responseJson := marshal(h{"data": response})
 
@@ -53,7 +53,7 @@ func (s *BookHandlerTestSuite) TestListBooks() {
 		s.Equal(responseJson, getBody(s.rec))
 	})
 	s.Run("should return 200 when search by name", func() {
-		s.bu.On("GetAllBooks", emptyCtx, mock.AnythingOfType("*valueobject.Query")).Return([]*entity.Book{})
+		s.bu.On("GetAllBooks", emptyCtx, mock.AnythingOfType("*valueobject.Query")).Return([]*entity.Book{}, nil)
 		response := make([]*dto.BookResponse, 0)
 		responseJson := marshal(h{"data": response})
 

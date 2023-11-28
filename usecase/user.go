@@ -9,8 +9,8 @@ import (
 )
 
 type UserUsecase interface {
-	GetUsers(ctx context.Context, query *valueobject.Query) []*entity.User
-	GetSingleUser(ctx context.Context, query *valueobject.Query) *entity.User
+	GetUsers(ctx context.Context, query *valueobject.Query) ([]*entity.User, error)
+	GetSingleUser(ctx context.Context, query *valueobject.Query) (*entity.User, error)
 }
 
 type userUsecase struct {
@@ -23,10 +23,10 @@ func NewUserUsecase(userRepo repository.UserRepository) UserUsecase {
 	}
 }
 
-func (u *userUsecase) GetUsers(ctx context.Context, query *valueobject.Query) []*entity.User {
+func (u *userUsecase) GetUsers(ctx context.Context, query *valueobject.Query) ([]*entity.User, error) {
 	return u.userRepo.Find(ctx, query)
 }
 
-func (u *userUsecase) GetSingleUser(ctx context.Context, query *valueobject.Query) *entity.User {
+func (u *userUsecase) GetSingleUser(ctx context.Context, query *valueobject.Query) (*entity.User, error) {
 	return u.userRepo.First(ctx, query)
 }

@@ -38,7 +38,11 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	}
 	query.Conditions = filterCondition(conditions)
 	var users []*entity.User
-	users = h.userUsecase.GetUsers(c.Request.Context(), query)
+	users, err = h.userUsecase.GetUsers(c.Request.Context(), query)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"data": dto.NewFromUsers(users),
 	})

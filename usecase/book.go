@@ -10,8 +10,8 @@ import (
 )
 
 type BookUsecase interface {
-	GetAllBooks(ctx context.Context, query *valueobject.Query) []*entity.Book
-	GetSingleBook(ctx context.Context, query *valueobject.Query) *entity.Book
+	GetAllBooks(ctx context.Context, query *valueobject.Query) ([]*entity.Book, error)
+	GetSingleBook(ctx context.Context, query *valueobject.Query) (*entity.Book, error)
 	AddBook(ctx context.Context, book *entity.Book) (*entity.Book, error)
 }
 
@@ -26,17 +26,20 @@ func NewBookUsecase(bookRepo repository.BookRepository, authorRepo repository.Au
 		authorRepo: authorRepo,
 	}
 }
-func (u *bookUsecase) GetAllBooks(ctx context.Context, query *valueobject.Query) []*entity.Book {
+func (u *bookUsecase) GetAllBooks(ctx context.Context, query *valueobject.Query) ([]*entity.Book, error) {
 	return u.bookRepo.Find(ctx, query)
 }
 
-func (u *bookUsecase) GetSingleBook(ctx context.Context, query *valueobject.Query) *entity.Book {
+func (u *bookUsecase) GetSingleBook(ctx context.Context, query *valueobject.Query) (*entity.Book, error) {
 	return u.bookRepo.First(ctx, query)
 }
 
 func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.Book, error) {
 	bookQuery := valueobject.NewQuery().Condition("title", valueobject.Equal, book.Title)
-	b := u.GetSingleBook(ctx, bookQuery)
+	b, err := u.GetSingleBook(ctx, bookQuery)
+	if err != nil {
+		return nil, err
+	}
 	if b != nil {
 		return nil, apperror.Type{
 			Type: apperror.Conflict,
@@ -48,7 +51,10 @@ func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.B
 		}
 	}
 	authorQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, book.AuthorId)
-	author := u.authorRepo.First(ctx, authorQuery)
+	author, err := u.authorRepo.First(ctx, authorQuery)
+	if err != nil {
+		return nil, err
+	}
 	if author == nil {
 		return nil, apperror.Type{
 			Type: apperror.BadRequest,

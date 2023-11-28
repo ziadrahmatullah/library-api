@@ -40,7 +40,7 @@ func (_m *BookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.
 }
 
 // GetAllBooks provides a mock function with given fields: ctx, query
-func (_m *BookUsecase) GetAllBooks(ctx context.Context, query *valueobject.Query) []*entity.Book {
+func (_m *BookUsecase) GetAllBooks(ctx context.Context, query *valueobject.Query) ([]*entity.Book, error) {
 	ret := _m.Called(ctx, query)
 
 	var r0 []*entity.Book
@@ -52,11 +52,18 @@ func (_m *BookUsecase) GetAllBooks(ctx context.Context, query *valueobject.Query
 		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *valueobject.Query) error); ok {
+		r1 = rf(ctx, query)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GetSingleBook provides a mock function with given fields: ctx, query
-func (_m *BookUsecase) GetSingleBook(ctx context.Context, query *valueobject.Query) *entity.Book {
+func (_m *BookUsecase) GetSingleBook(ctx context.Context, query *valueobject.Query) (*entity.Book, error) {
 	ret := _m.Called(ctx, query)
 
 	var r0 *entity.Book
@@ -68,7 +75,14 @@ func (_m *BookUsecase) GetSingleBook(ctx context.Context, query *valueobject.Que
 		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *valueobject.Query) error); ok {
+		r1 = rf(ctx, query)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 type mockConstructorTestingTNewBookUsecase interface {

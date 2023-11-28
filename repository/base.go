@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
@@ -12,8 +11,8 @@ import (
 
 type BaseRepository[T any] interface {
 	UnitOfWork
-	Find(ctx context.Context, query *valueobject.Query) []*T
-	First(ctx context.Context, query *valueobject.Query) *T
+	Find(ctx context.Context, query *valueobject.Query) ([]*T, error)
+	First(ctx context.Context, query *valueobject.Query) (*T, error)
 	Create(ctx context.Context, t *T) (*T, error)
 	Update(ctx context.Context, t *T) (*T, error)
 	Delete(ctx context.Context, t *T) error
@@ -43,7 +42,7 @@ func (r *baseRepository[T]) conn(ctx context.Context) *gorm.DB {
 	return r.db
 }
 
-func (r *baseRepository[T]) Find(ctx context.Context, q *valueobject.Query) []*T {
+func (r *baseRepository[T]) Find(ctx context.Context, q *valueobject.Query) ([]*T, error) {
 	var ts []*T
 	limit, offset := getPagination(q)
 	query := r.conn(ctx).Model(ts)
@@ -54,15 +53,19 @@ func (r *baseRepository[T]) Find(ctx context.Context, q *valueobject.Query) []*T
 		sql := fmt.Sprintf("%s %s $1", condition.Field, condition.Operation)
 		query.Where(sql, condition.Value)
 	}
-	query.
+	err := query.
 		Limit(limit).
 		Offset(offset).
 		Order(q.OrderedBy).
-		Find(&ts)
-	return ts
+		Find(&ts).
+		Error
+	if err != nil {
+		return nil, err
+	}
+	return ts, nil
 }
 
-func (r *baseRepository[T]) First(ctx context.Context, q *valueobject.Query) *T {
+func (r *baseRepository[T]) First(ctx context.Context, q *valueobject.Query) (*T, error) {
 	conditions := q.Conditions
 	var t *T
 	query := r.conn(ctx).Model(t)
@@ -73,11 +76,14 @@ func (r *baseRepository[T]) First(ctx context.Context, q *valueobject.Query) *T 
 		sql := fmt.Sprintf("%s %s $1", condition.Field, condition.Operation)
 		query.Where(sql, condition.Value)
 	}
-	err := query.First(&t).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil
+	err := query.Limit(1).Find(&t).Error
+	if err != nil {
+		return nil, err
 	}
-	return t
+	if t == nil {
+		return nil, nil
+	}
+	return t, nil
 }
 
 func (r *baseRepository[T]) Create(ctx context.Context, t *T) (*T, error) {

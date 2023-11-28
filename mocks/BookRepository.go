@@ -54,7 +54,7 @@ func (_m *BookRepository) Delete(ctx context.Context, t *entity.Book) error {
 }
 
 // Find provides a mock function with given fields: ctx, query
-func (_m *BookRepository) Find(ctx context.Context, query *valueobject.Query) []*entity.Book {
+func (_m *BookRepository) Find(ctx context.Context, query *valueobject.Query) ([]*entity.Book, error) {
 	ret := _m.Called(ctx, query)
 
 	var r0 []*entity.Book
@@ -66,11 +66,18 @@ func (_m *BookRepository) Find(ctx context.Context, query *valueobject.Query) []
 		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *valueobject.Query) error); ok {
+		r1 = rf(ctx, query)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // First provides a mock function with given fields: ctx, query
-func (_m *BookRepository) First(ctx context.Context, query *valueobject.Query) *entity.Book {
+func (_m *BookRepository) First(ctx context.Context, query *valueobject.Query) (*entity.Book, error) {
 	ret := _m.Called(ctx, query)
 
 	var r0 *entity.Book
@@ -82,7 +89,14 @@ func (_m *BookRepository) First(ctx context.Context, query *valueobject.Query) *
 		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *valueobject.Query) error); ok {
+		r1 = rf(ctx, query)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // Run provides a mock function with given fields: ctx, runner

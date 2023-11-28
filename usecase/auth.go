@@ -30,7 +30,10 @@ func NewAuthUsecase(userRepo repository.UserRepository, jwt appjwt.Jwt) AuthUsec
 
 func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.User, error) {
 	emailQuery := valueobject.NewQuery().Condition("email", valueobject.Equal, user.Email)
-	fetchedUser := u.userRepo.First(ctx, emailQuery)
+	fetchedUser, err := u.userRepo.First(ctx, emailQuery)
+	if err != nil {
+		return nil, err
+	}
 	if fetchedUser != nil {
 		return nil, apperror.Type{
 			Type: apperror.Conflict,
@@ -43,7 +46,10 @@ func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.
 	}
 
 	phoneQuery := valueobject.NewQuery().Condition("phone", valueobject.Equal, user.Phone)
-	fetchedUser = u.userRepo.First(ctx, phoneQuery)
+	fetchedUser, err = u.userRepo.First(ctx, phoneQuery)
+	if err != nil {
+		return nil, err
+	}
 	if fetchedUser != nil {
 		return nil, apperror.Type{
 			Type: apperror.Conflict,
@@ -70,7 +76,10 @@ func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.
 
 func (u *authUsecase) Login(ctx context.Context, user *entity.User) (string, error) {
 	query := valueobject.NewQuery().Condition("email", valueobject.Equal, user.Email)
-	fetchedUser := u.userRepo.First(ctx, query)
+	fetchedUser, err := u.userRepo.First(ctx, query)
+	if err != nil {
+		return "", err
+	}
 	if fetchedUser == nil {
 		return "", apperror.Type{
 			Type:     apperror.UnAuthenticated,
