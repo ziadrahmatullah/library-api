@@ -32,7 +32,7 @@ func (u *borrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.Borr
 	atomic := func(c context.Context) error {
 		bookCondition := valueobject.NewCondition("id", valueobject.Equal, br.BookId)
 		bookQuery := &valueobject.Query{
-			Lock:       true,
+			Locked:     true,
 			Conditions: []*valueobject.Condition{bookCondition},
 		}
 		book := u.bookRepo.First(c, bookQuery)
@@ -77,7 +77,7 @@ func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*enti
 	atomic := func(c context.Context) error {
 		brCondition := valueobject.NewCondition("id", valueobject.Equal, id)
 		brQuery := &valueobject.Query{
-			Lock:       true,
+			Locked:     true,
 			Conditions: []*valueobject.Condition{brCondition},
 		}
 		br := u.borrowingRepo.First(c, brQuery)
@@ -106,7 +106,7 @@ func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*enti
 		}
 		bookCondition := valueobject.NewCondition("id", valueobject.Equal, br.BookId)
 		bookQuery := &valueobject.Query{
-			Lock:       true,
+			Locked:     true,
 			Conditions: []*valueobject.Condition{bookCondition},
 		}
 		book := u.bookRepo.First(c, bookQuery)

@@ -5,13 +5,13 @@ import "strconv"
 type Query struct {
 	Page       int
 	PerPage    int
-	Order      string
+	OrderedBy  string
 	Conditions []*Condition
 	With       []string
-	Lock       bool
+	Locked     bool
 }
 
-func NewQuery(page string, perPage string, order string) (*Query, error) {
+func NewQuery(page string, perPage string) (*Query, error) {
 	p, err := strconv.Atoi(page)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func NewQuery(page string, perPage string, order string) (*Query, error) {
 	query := &Query{
 		Page:    p,
 		PerPage: pp,
-		Order:   order,
 	}
+	query.Conditions = make([]*Condition, 0)
 	return query, nil
 }

@@ -57,7 +57,7 @@ func (r *baseRepository[T]) Find(ctx context.Context, q *valueobject.Query) []*T
 	query.
 		Limit(limit).
 		Offset(offset).
-		Order(q.Order).
+		Order(q.OrderedBy).
 		Find(&ts)
 	return ts
 }
@@ -66,7 +66,7 @@ func (r *baseRepository[T]) First(ctx context.Context, q *valueobject.Query) *T 
 	conditions := q.Conditions
 	var t *T
 	query := r.conn(ctx).Model(t)
-	if q.Lock {
+	if q.Locked {
 		query.Clauses(clause.Locking{Strength: "UPDATE"})
 	}
 	for _, condition := range conditions {

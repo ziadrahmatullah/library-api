@@ -8,7 +8,7 @@ import (
 func getQuery(c *gin.Context) (*valueobject.Query, error) {
 	page := c.DefaultQuery("page", "1")
 	perPage := c.DefaultQuery("per_page", "0")
-	query, err := valueobject.NewQuery(page, perPage, c.Query("order"))
+	query, err := valueobject.NewQuery(page, perPage)
 	if err != nil {
 		return nil, err
 	}
