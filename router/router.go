@@ -23,7 +23,9 @@ func New(handler Handlers) *gin.Engine {
 	router.GET("/users", handler.User.GetAllUsers)
 	router.GET("/books", handler.Book.GetAllBooks)
 
-	router.Use(middleware.AuthHandler)
+	if gin.Mode() != gin.DebugMode {
+		router.Use(middleware.AuthHandler)
+	}
 
 	router.POST("/books", handler.Book.AddBook)
 
