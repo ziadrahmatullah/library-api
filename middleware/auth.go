@@ -12,9 +12,13 @@ import (
 func AuthorizeHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if gin.Mode() == gin.TestMode {
+			return
+		}
+		
+		if ctx.Request.URL.Path == "/books" {
 			ctx.Next()
 			return
-		}	
+		}
 		
 		if ctx.Request.URL.Path == "/users/register" {
 			ctx.Next()
