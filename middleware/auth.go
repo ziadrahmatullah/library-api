@@ -14,11 +14,17 @@ func AuthorizeHandler() gin.HandlerFunc {
 		if gin.Mode() == gin.TestMode {
 			return
 		}
-		
+		// WHYYYY-----------------------------
 		if ctx.Request.URL.Path == "/books" {
 			ctx.Next()
 			return
 		}
+
+		if ctx.Request.URL.Path == "/users" {
+			ctx.Next()
+			return
+		}
+		//------------------------------
 		
 		if ctx.Request.URL.Path == "/users/register" {
 			ctx.Next()

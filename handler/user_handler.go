@@ -63,10 +63,10 @@ func (h *UserHandler) HandleUserLogin(ctx *gin.Context) {
 		ctx.Error(apperror.ErrInvalidBody)
 		return
 	}
-	res, err := h.userUsecase.UserLogin(ctx, data)
+	resp, err := h.userUsecase.UserLogin(ctx, data)
 	if err != nil {
 		ctx.Error(err)
 		return
 	}
-	ctx.JSON(http.StatusOK, res)
+	ctx.JSON(http.StatusOK, resp)
 }

@@ -82,15 +82,15 @@ func TestHandleGetBooks(t *testing.T) {
 		expectedResp, _ := json.Marshal(dto.Response{
 			Data: books,
 		})
-		bookUseCase := mocks.NewBookUsecase(t)
-		bookHandler := handler.NewBookHandler(bookUseCase)
+		bu := mocks.NewBookUsecase(t)
+		bh := handler.NewBookHandler(bu)
 		rec := httptest.NewRecorder()
 		gin.SetMode(gin.ReleaseMode)
 		c, _ := gin.CreateTestContext(rec)
 		c.Request, _ = http.NewRequest(http.MethodGet, "/books", nil)
-		bookUseCase.On("GetAllBooks", c).Return(books, nil)
+		bu.On("GetAllBooks", c).Return(books, nil)
 
-		bookHandler.HandleGetBooks(c)
+		bh.HandleGetBooks(c)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
@@ -100,14 +100,14 @@ func TestHandleGetBooks(t *testing.T) {
 		expectedResp, _ := json.Marshal(dto.Response{
 			Data: books,
 		})
-		bookUseCase := mocks.NewBookUsecase(t)
-		bookHandler := handler.NewBookHandler(bookUseCase)
+		bu := mocks.NewBookUsecase(t)
+		bh := handler.NewBookHandler(bu)
 		rec := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(rec)
 		c.Request, _ = http.NewRequest(http.MethodGet, "/books?title=Buku1", nil)
-		bookUseCase.On("GetBooksByTitle", c, "Buku1").Return(books, nil)
+		bu.On("GetBooksByTitle", c, "Buku1").Return(books, nil)
 
-		bookHandler.HandleGetBooks(c)
+		bh.HandleGetBooks(c)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
@@ -117,14 +117,14 @@ func TestHandleGetBooks(t *testing.T) {
 		expectedResp, _ := json.Marshal(dto.Response{
 			Data: make([]models.Book, 0),
 		})
-		bookUseCase := mocks.NewBookUsecase(t)
-		bookHandler := handler.NewBookHandler(bookUseCase)
+		bu := mocks.NewBookUsecase(t)
+		bh := handler.NewBookHandler(bu)
 		rec := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(rec)
 		c.Request, _ = http.NewRequest(http.MethodGet, "/books", nil)
-		bookUseCase.On("GetAllBooks", c).Return(make([]models.Book, 0), nil)
+		bu.On("GetAllBooks", c).Return(make([]models.Book, 0), nil)
 
-		bookHandler.HandleGetBooks(c)
+		bh.HandleGetBooks(c)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
@@ -156,15 +156,15 @@ func TestHandleCreateBooks(t *testing.T) {
 			Data: book,
 		})
 		param, _ := json.Marshal(bookReq)
-		bookUseCase := mocks.NewBookUsecase(t)
-		bookHandler := handler.NewBookHandler(bookUseCase)
+		bu := mocks.NewBookUsecase(t)
+		bh := handler.NewBookHandler(bu)
 		rec := httptest.NewRecorder()
 		gin.SetMode(gin.ReleaseMode)
 		c, _ := gin.CreateTestContext(rec)
 		c.Request, _ = http.NewRequest(http.MethodPost, "/books", strings.NewReader(string(param)))
-		bookUseCase.On("CreateBook", c, bookReq.ToBookModel()).Return(&book, nil)
+		bu.On("CreateBook", c, bookReq.ToBookModel()).Return(&book, nil)
 
-		bookHandler.HandleCreateBook(c)
+		bh.HandleCreateBook(c)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
@@ -175,15 +175,15 @@ func TestHandleCreateBooks(t *testing.T) {
 			Data: bookNoCover,
 		})
 		param, _ := json.Marshal(bookNoCoverReq)
-		bookUseCase := mocks.NewBookUsecase(t)
-		bookHandler := handler.NewBookHandler(bookUseCase)
+		bu := mocks.NewBookUsecase(t)
+		bh := handler.NewBookHandler(bu)
 		rec := httptest.NewRecorder()
 		gin.SetMode(gin.ReleaseMode)
 		c, _ := gin.CreateTestContext(rec)
 		c.Request, _ = http.NewRequest(http.MethodPost, "/books", strings.NewReader(string(param)))
-		bookUseCase.On("CreateBook", c, bookNoCoverReq.ToBookModel()).Return(&bookNoCover, nil)
+		bu.On("CreateBook", c, bookNoCoverReq.ToBookModel()).Return(&bookNoCover, nil)
 
-		bookHandler.HandleCreateBook(c)
+		bh.HandleCreateBook(c)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
