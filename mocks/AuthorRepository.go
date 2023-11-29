@@ -99,20 +99,6 @@ func (_m *AuthorRepository) First(ctx context.Context, query *valueobject.Query)
 	return r0, r1
 }
 
-// Run provides a mock function with given fields: ctx, runner
-func (_m *AuthorRepository) Run(ctx context.Context, runner func(context.Context) error) error {
-	ret := _m.Called(ctx, runner)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, func(context.Context) error) error); ok {
-		r0 = rf(ctx, runner)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
 // Update provides a mock function with given fields: ctx, t
 func (_m *AuthorRepository) Update(ctx context.Context, t *entity.Author) (*entity.Author, error) {
 	ret := _m.Called(ctx, t)
