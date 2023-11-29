@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/usecase"
 	"github.com/gin-gonic/gin"
@@ -23,7 +22,7 @@ func NewAuthHandler(authUsecase usecase.AuthUsecase) *AuthHandler {
 func (h *AuthHandler) Register(c *gin.Context) {
 	var request dto.RegisterRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		_ = c.Error(apperror.ErrBinding{ErrBinding: err})
+		_ = c.Error(err)
 		return
 	}
 	user := request.ToUser()
@@ -39,7 +38,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 func (h *AuthHandler) Login(c *gin.Context) {
 	var request dto.LoginRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		_ = c.Error(apperror.ErrBinding{ErrBinding: err})
+		_ = c.Error(err)
 	}
 	log.Println(request)
 	user := request.ToUser()

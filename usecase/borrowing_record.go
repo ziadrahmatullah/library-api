@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
@@ -39,20 +40,10 @@ func (u *borrowingRecordUsecase) BorrowBook(ctx context.Context, br *entity.Borr
 			return err
 		}
 		if book == nil {
-			return apperror.Type{
-				Type: apperror.NotFound,
-				AppError: apperror.ErrNotFound{
-					Resource: "book",
-					Field:    "id",
-					Value:    br.BookId,
-				},
-			}
+			return apperror.NewResourceNotFound("book", "id", br.BookId)
 		}
 		if book.Quantity == 0 {
-			return apperror.Type{
-				Type:     apperror.BadRequest,
-				AppError: apperror.ErrEmptyStock{Resource: "book"},
-			}
+			return apperror.NewUnavailableResourceError("book")
 		}
 		br.BorrowedDate = time.Now()
 		a, err := u.borrowingRepo.Create(c, br)
@@ -83,20 +74,10 @@ func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*enti
 			return err
 		}
 		if br == nil {
-			return apperror.Type{
-				Type: apperror.NotFound,
-				AppError: apperror.ErrNotFound{
-					Resource: "borrowing record",
-					Field:    "id",
-					Value:    id,
-				},
-			}
+			return apperror.NewResourceNotFound("borrowing record", "id", id)
 		}
 		if br.ReturnedDate.Valid {
-			return apperror.Type{
-				Type:     apperror.Conflict,
-				AppError: apperror.ErrBookAlreadyReturned{},
-			}
+			return fmt.Errorf("book already returned")
 		}
 		returnedDate := sql.NullTime{Time: time.Now(), Valid: true}
 		br.ReturnedDate = valueobject.NullTime{NullTime: returnedDate}
@@ -112,14 +93,7 @@ func (u *borrowingRecordUsecase) ReturnBook(ctx context.Context, id uint) (*enti
 			return err
 		}
 		if book == nil {
-			return apperror.Type{
-				Type: apperror.NotFound,
-				AppError: apperror.ErrNotFound{
-					Resource: "book",
-					Field:    "id",
-					Value:    br.BookId,
-				},
-			}
+			return apperror.NewResourceNotFound("book", "id", br.BookId)
 		}
 		book.Quantity = book.Quantity + 1
 		book, err = u.bookRepo.Update(c, book)

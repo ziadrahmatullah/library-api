@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 
-	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/usecase"
@@ -54,7 +53,7 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 func (h *BookHandler) AddBook(c *gin.Context) {
 	var request dto.BookRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		_ = c.Error(apperror.ErrBinding{ErrBinding: err})
+		_ = c.Error(err)
 		return
 	}
 	book := request.ToBook()

@@ -112,7 +112,7 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 		s.Equal(http.StatusBadRequest, s.rec.Code)
 		s.Contains(getBody(s.rec), "error")
 	})
-	s.Run("should return 409", func() {
+	s.Run("should return 400 when duplicate book", func() {
 		quantity := 1
 		request := dto.BookRequest{
 			Title:       "A",
@@ -120,12 +120,12 @@ func (s *BookHandlerTestSuite) TestAddBook() {
 			Quantity:    &quantity,
 			AuthorId:    1,
 		}
-		s.bu.On("AddBook", mock.Anything, mock.AnythingOfType("*entity.Book")).Return(nil, apperror.Type{Type: apperror.Conflict, AppError: apperror.ErrAlreadyExist{}})
+		s.bu.On("AddBook", mock.Anything, mock.AnythingOfType("*entity.Book")).Return(nil, apperror.NewResourceAlreadyExist("", "", ""))
 
 		req, _ := http.NewRequest(http.MethodPost, "/books", sendBody(request))
 		s.router.ServeHTTP(s.rec, req)
 
-		s.Equal(http.StatusConflict, s.rec.Code)
+		s.Equal(http.StatusBadRequest, s.rec.Code)
 		s.Contains(getBody(s.rec), "error")
 	})
 	s.Run("should return 500", func() {

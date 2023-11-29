@@ -35,14 +35,7 @@ func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.
 		return nil, err
 	}
 	if fetchedUser != nil {
-		return nil, apperror.Type{
-			Type: apperror.Conflict,
-			AppError: apperror.ErrAlreadyExist{
-				Resource: "user",
-				Field:    "email",
-				Value:    user.Email,
-			},
-		}
+		return nil, apperror.NewResourceAlreadyExist("user", "email", user.Email)
 	}
 
 	phoneQuery := valueobject.NewQuery().Condition("phone", valueobject.Equal, user.Phone)
@@ -51,14 +44,7 @@ func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.
 		return nil, err
 	}
 	if fetchedUser != nil {
-		return nil, apperror.Type{
-			Type: apperror.Conflict,
-			AppError: apperror.ErrAlreadyExist{
-				Resource: "user",
-				Field:    "phone",
-				Value:    user.Phone,
-			},
-		}
+		return nil, apperror.NewResourceAlreadyExist("user", "phone", user.Phone)
 	}
 
 	hashedPassword, err := hashPassword(user.Password)
@@ -81,16 +67,10 @@ func (u *authUsecase) Login(ctx context.Context, user *entity.User) (string, err
 		return "", err
 	}
 	if fetchedUser == nil {
-		return "", apperror.Type{
-			Type:     apperror.UnAuthenticated,
-			AppError: apperror.ErrInvalidCredential{},
-		}
+		return "", apperror.NewInvalidCredentialsError()
 	}
 	if !checkPasswordHash(fetchedUser.Password, user.Password) {
-		return "", apperror.Type{
-			Type:     apperror.UnAuthenticated,
-			AppError: apperror.ErrInvalidCredential{},
-		}
+		return "", apperror.NewInvalidCredentialsError()
 	}
 	token, err := u.jwt.GenerateToken(fetchedUser)
 	if err != nil {

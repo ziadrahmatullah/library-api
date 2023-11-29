@@ -23,7 +23,7 @@ func NewBorrowingRecordHandler(borrowingRecord usecase.BorrowingRecordUsecase) *
 func (h *BorrowingRecordHandler) BorrowBook(c *gin.Context) {
 	var request dto.BorrowingRecordRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		_ = c.Error(apperror.ErrBinding{ErrBinding: err})
+		_ = c.Error(err)
 		return
 	}
 	record := request.ToBorrowingRecord()
@@ -40,7 +40,8 @@ func (h *BorrowingRecordHandler) BorrowBook(c *gin.Context) {
 func (h *BorrowingRecordHandler) ReturnBook(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		_ = c.Error(apperror.ErrBinding{ErrBinding: err})
+		errPath := apperror.NewInvalidPathQueryParamError(err)
+		_ = c.Error(errPath)
 		return
 	}
 	br, err := h.borrowingUsecase.ReturnBook(c.Request.Context(), uint(id))

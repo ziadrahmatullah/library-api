@@ -23,7 +23,7 @@ func AuthHandler(c *gin.Context) {
 	claims, err := jwt.ValidateToken(token)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": apperror.ErrInvalidToken{}.Error(),
+			"error": apperror.NewInvalidTokenError().Error(),
 		})
 		return
 	}
@@ -34,11 +34,11 @@ func AuthHandler(c *gin.Context) {
 
 func extractBearerToken(bearerToken string) (string, error) {
 	if bearerToken == "" {
-		return "", apperror.ErrMissingToken{}
+		return "", apperror.NewMissingTokenError()
 	}
 	token := strings.Split(bearerToken, " ")
 	if len(token) != 2 {
-		return "", apperror.ErrInvalidToken{}
+		return "", apperror.NewInvalidTokenError()
 	}
 	return token[1], nil
 }

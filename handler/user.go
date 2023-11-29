@@ -24,7 +24,8 @@ func NewUserHandler(userUsecase usecase.UserUsecase) *UserHandler {
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	query, err := getQuery(c)
 	if err != nil {
-		_ = c.Error(apperror.ErrBinding{ErrBinding: err})
+		errQuery := apperror.NewInvalidPathQueryParamError(err)
+		_ = c.Error(errQuery)
 		return
 	}
 	name := c.Query("name")

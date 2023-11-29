@@ -41,14 +41,7 @@ func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.B
 		return nil, err
 	}
 	if b != nil {
-		return nil, apperror.Type{
-			Type: apperror.Conflict,
-			AppError: apperror.ErrAlreadyExist{
-				Resource: "book",
-				Field:    "title",
-				Value:    b.Title,
-			},
-		}
+		return nil, apperror.NewResourceAlreadyExist("book", "title", book.Title)
 	}
 	authorQuery := valueobject.NewQuery().Condition("id", valueobject.Equal, book.AuthorId)
 	author, err := u.authorRepo.First(ctx, authorQuery)
@@ -56,14 +49,7 @@ func (u *bookUsecase) AddBook(ctx context.Context, book *entity.Book) (*entity.B
 		return nil, err
 	}
 	if author == nil {
-		return nil, apperror.Type{
-			Type: apperror.BadRequest,
-			AppError: apperror.ErrNotFound{
-				Resource: "author",
-				Field:    "id",
-				Value:    book.AuthorId,
-			},
-		}
+		return nil, apperror.NewResourceNotFound("author", "id", book.AuthorId)
 	}
 	createdBook, err := u.bookRepo.Create(ctx, book)
 	if err != nil {
