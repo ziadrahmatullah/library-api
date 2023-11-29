@@ -39,6 +39,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	var request dto.LoginRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		_ = c.Error(err)
+		return
 	}
 	log.Println(request)
 	user := request.ToUser()
