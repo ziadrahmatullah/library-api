@@ -116,6 +116,54 @@ func (s *AuthUsecaseTestSuite) TestAuthUsecase_Register() {
 	})
 }
 
+func (s *AuthUsecaseTestSuite) TestAuthUsecase_Login() {
+	s.Run("should return token", func() {
+		s.userRepo.On("First", mock.Anything, mock.Anything).Return(user, nil)
+		s.hash.On("Compare", mock.Anything, mock.Anything).Return(true)
+		s.jwt.On("GenerateToken", mock.Anything).Return("", nil)
+
+		token, err := s.authUsecase.Login(context.Background(), user)
+
+		s.NotNil(token)
+		s.NoError(err)
+	})
+	s.Run("should return error when there's an error when searching for user", func() {
+		s.userRepo.On("First", mock.Anything, mock.Anything).Return(nil, errors.New(""))
+
+		token, err := s.authUsecase.Login(context.Background(), user)
+
+		s.Equal("", token)
+		s.Error(err)
+	})
+	s.Run("should return error when there's no user", func() {
+		s.userRepo.On("First", mock.Anything, mock.Anything).Return(nil, nil)
+
+		token, err := s.authUsecase.Login(context.Background(), user)
+
+		s.Equal("", token)
+		s.Error(err)
+	})
+	s.Run("should return error when password is wrong", func() {
+		s.userRepo.On("First", mock.Anything, mock.Anything).Return(user, nil)
+		s.hash.On("Compare", mock.Anything, mock.Anything).Return(false)
+
+		token, err := s.authUsecase.Login(context.Background(), user)
+
+		s.Equal("", token)
+		s.Error(err)
+	})
+	s.Run("should return error when there's an error when generating token", func() {
+		s.userRepo.On("First", mock.Anything, mock.Anything).Return(user, nil)
+		s.hash.On("Compare", mock.Anything, mock.Anything).Return(true)
+		s.jwt.On("GenerateToken", mock.Anything).Return("", errors.New(""))
+
+		token, err := s.authUsecase.Login(context.Background(), user)
+
+		s.Equal("", token)
+		s.Error(err)
+	})
+}
+
 func TestAuthUsecase(t *testing.T) {
 	suite.Run(t, new(AuthUsecaseTestSuite))
 }
