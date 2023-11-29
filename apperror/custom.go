@@ -61,7 +61,7 @@ var (
 	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
 	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "can't hash password")
 	ErrMatchHashPassword    = NewCustomError(http.StatusBadRequest, "password doesn't match")
-	ErrInvalidJWTToken      = NewCustomError(http.StatusBadRequest, "invalid jwt token")
+	ErrInvalidPassword      = NewCustomError(http.StatusBadRequest, "invalid password")
 
 	ErrInvalidBody = NewCustomError(http.StatusBadRequest, "invalid body")
 	ErrTxCommit    = NewCustomError(http.StatusInternalServerError, "commit transaction error")

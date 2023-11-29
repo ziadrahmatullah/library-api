@@ -15,17 +15,17 @@ func AuthorizeHandler() gin.HandlerFunc {
 			return
 		}
 		// WHYYYY-----------------------------
-		if ctx.Request.URL.Path == "/books" {
-			ctx.Next()
-			return
-		}
+		// if ctx.Request.URL.Path == "/books" {
+		// 	ctx.Next()
+		// 	return
+		// }
 
 		if ctx.Request.URL.Path == "/users" {
 			ctx.Next()
 			return
 		}
 		//------------------------------
-		
+
 		if ctx.Request.URL.Path == "/users/register" {
 			ctx.Next()
 			return
@@ -41,7 +41,7 @@ func AuthorizeHandler() gin.HandlerFunc {
 		header := ctx.GetHeader("Authorization")
 		splittedHeader := strings.Split(header, " ")
 		if len(splittedHeader) != 2 {
-			resp.Message = apperror.ErrInvalidJWTToken.Error()
+			resp.Message = apperror.ErrInvalidPassword.Error()
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, resp)
 			return
 		}
@@ -54,7 +54,7 @@ func AuthorizeHandler() gin.HandlerFunc {
 
 		claims, ok := token.Claims.(*dto.JwtClaims)
 		if !ok || !token.Valid {
-			resp.Message = apperror.ErrInvalidJWTToken.Error()
+			resp.Message = apperror.ErrInvalidPassword.Error()
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, resp)
 			return
 		}
