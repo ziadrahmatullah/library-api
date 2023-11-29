@@ -1,6 +1,7 @@
 package handler_test
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -53,6 +54,15 @@ func (s *UserHandlerTestSuite) TestListUser() {
 		s.router.ServeHTTP(s.rec, req)
 
 		s.Equal(http.StatusBadRequest, s.rec.Code)
+		s.Contains(getBody(s.rec), "error")
+	})
+	s.Run("should return 500", func() {
+		s.uu.On("GetUsers", mock.Anything, mock.Anything).Return(nil, errors.New(""))
+
+		req, _ := http.NewRequest(http.MethodGet, "/users?page=1", nil)
+		s.router.ServeHTTP(s.rec, req)
+
+		s.Equal(http.StatusInternalServerError, s.rec.Code)
 		s.Contains(getBody(s.rec), "error")
 	})
 }

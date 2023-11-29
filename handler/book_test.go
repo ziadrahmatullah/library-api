@@ -62,10 +62,19 @@ func (s *BookHandlerTestSuite) TestListBooks() {
 		s.Equal(responseJson, getBody(s.rec))
 	})
 	s.Run("should return 400 when param is invalid", func() {
-		req, _ := http.NewRequest(http.MethodGet, "/books?page=a", nil)
+		req, _ := http.NewRequest(http.MethodGet, "/books?per_page=a", nil)
 		s.router.ServeHTTP(s.rec, req)
 
 		s.Equal(http.StatusBadRequest, s.rec.Code)
+		s.Contains(getBody(s.rec), "error")
+	})
+	s.Run("should return 500", func() {
+		s.bu.On("GetAllBooks", mock.Anything, mock.Anything).Return(nil, errors.New(""))
+
+		req, _ := http.NewRequest(http.MethodGet, "/books?page=1", nil)
+		s.router.ServeHTTP(s.rec, req)
+
+		s.Equal(http.StatusInternalServerError, s.rec.Code)
 		s.Contains(getBody(s.rec), "error")
 	})
 }
