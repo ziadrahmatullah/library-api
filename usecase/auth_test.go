@@ -23,18 +23,21 @@ type AuthUsecaseTestSuite struct {
 	suite.Suite
 	userRepo    *mocks.UserRepository
 	jwt         *mocks.Jwt
+	hash        *mocks.Hasher
 	authUsecase usecase.AuthUsecase
 }
 
 func (s *AuthUsecaseTestSuite) SetupSubTest() {
 	s.userRepo = mocks.NewUserRepository(s.T())
 	s.jwt = mocks.NewJwt(s.T())
-	s.authUsecase = usecase.NewAuthUsecase(s.userRepo, s.jwt)
+	s.hash = mocks.NewHasher(s.T())
+	s.authUsecase = usecase.NewAuthUsecase(s.userRepo, s.jwt, s.hash)
 }
 
-func (s *AuthUsecaseTestSuite) TestAuthUsecase_Login() {
+func (s *AuthUsecaseTestSuite) TestAuthUsecase_Register() {
 	s.Run("should return new user", func() {
 		s.userRepo.On("First", mock.Anything, mock.Anything).Return(nil, nil)
+		s.hash.On("Hash", mock.Anything).Return("", nil)
 		s.userRepo.On("Create", mock.Anything, mock.Anything).Return(user, nil)
 
 		ctx := context.WithValue(context.Background(), "", "")
@@ -90,8 +93,18 @@ func (s *AuthUsecaseTestSuite) TestAuthUsecase_Login() {
 		s.Nil(createdUser)
 		s.Error(err)
 	})
+	s.Run("should return error when hashing the password", func() {
+		s.userRepo.On("First", mock.Anything, mock.Anything).Return(nil, nil)
+		s.hash.On("Hash", mock.Anything).Return("", errors.New(""))
+
+		createdUser, err := s.authUsecase.Register(context.Background(), user)
+
+		s.Nil(createdUser)
+		s.Error(err)
+	})
 	s.Run("should return error when there's an error when creating new user", func() {
 		s.userRepo.On("First", mock.Anything, mock.Anything).Return(nil, nil)
+		s.hash.On("Hash", mock.Anything).Return("", nil)
 		s.userRepo.On("Create", mock.Anything, mock.Anything).Return(nil, errors.New(""))
 
 		ctx := context.WithValue(context.Background(), "", "")

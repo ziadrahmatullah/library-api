@@ -6,9 +6,9 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/appjwt"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/entity"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/hasher"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/repository"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/valueobject"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthUsecase interface {
@@ -19,12 +19,18 @@ type AuthUsecase interface {
 type authUsecase struct {
 	userRepo repository.UserRepository
 	jwt      appjwt.Jwt
+	hash     hasher.Hasher
 }
 
-func NewAuthUsecase(userRepo repository.UserRepository, jwt appjwt.Jwt) AuthUsecase {
+func NewAuthUsecase(
+	userRepo repository.UserRepository,
+	jwt appjwt.Jwt,
+	hash hasher.Hasher,
+) AuthUsecase {
 	return &authUsecase{
 		userRepo: userRepo,
 		jwt:      jwt,
+		hash:     hash,
 	}
 }
 
@@ -47,7 +53,7 @@ func (u *authUsecase) Register(ctx context.Context, user *entity.User) (*entity.
 		return nil, apperror.NewResourceAlreadyExist("user", "phone", user.Phone)
 	}
 
-	hashedPassword, err := hashPassword(user.Password)
+	hashedPassword, err := u.hash.Hash(user.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +75,7 @@ func (u *authUsecase) Login(ctx context.Context, user *entity.User) (string, err
 	if fetchedUser == nil {
 		return "", apperror.NewInvalidCredentialsError()
 	}
-	if !checkPasswordHash(fetchedUser.Password, user.Password) {
+	if !u.hash.Compare(fetchedUser.Password, user.Password) {
 		return "", apperror.NewInvalidCredentialsError()
 	}
 	token, err := u.jwt.GenerateToken(fetchedUser)
@@ -77,14 +83,4 @@ func (u *authUsecase) Login(ctx context.Context, user *entity.User) (string, err
 		return "", err
 	}
 	return token, nil
-}
-
-func hashPassword(password string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 10)
-	return string(hashedPassword), err
-}
-
-func checkPasswordHash(hashedPassword string, password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-	return err == nil
 }

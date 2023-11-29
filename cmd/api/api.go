@@ -13,6 +13,7 @@ import (
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/appjwt"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/handler"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/hasher"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/logger"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/repository"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/router"
@@ -46,7 +47,8 @@ func main() {
 	borrowingRecordHandler := handler.NewBorrowingRecordHandler(borrowingRecordUsecase)
 
 	jwt := appjwt.NewJwt()
-	authUsecase := usecase.NewAuthUsecase(userRepo, jwt)
+	newHasher := hasher.NewHasher()
+	authUsecase := usecase.NewAuthUsecase(userRepo, jwt, newHasher)
 	authHandler := handler.NewAuthHandler(authUsecase)
 
 	handlers := router.Handlers{
