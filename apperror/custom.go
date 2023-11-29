@@ -58,10 +58,9 @@ var (
 	ErrFindBorrowsQuery     = NewCustomError(http.StatusInternalServerError, "find borrows query error")
 	ErrBorrowRecordNotFound = NewCustomError(http.StatusBadRequest, "borrow record not found")
 
-	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
-	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "can't hash password")
-	ErrMatchHashPassword    = NewCustomError(http.StatusBadRequest, "password doesn't match")
-	ErrInvalidPassword      = NewCustomError(http.StatusBadRequest, "invalid password")
+	ErrGenerateJWTToken       = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
+	ErrGenerateHashPassword   = NewCustomError(http.StatusInternalServerError, "can't hash password")
+	ErrInvalidPasswordOrEmail = NewCustomError(http.StatusBadRequest, "invalid password or email")
 
 	ErrInvalidBody = NewCustomError(http.StatusBadRequest, "invalid body")
 	ErrTxCommit    = NewCustomError(http.StatusInternalServerError, "commit transaction error")

@@ -56,11 +56,11 @@ func (u *userUsecase) CreateUser(ctx context.Context, registerData dto.RegisterR
 func (u *userUsecase) UserLogin(ctx context.Context, loginData dto.LoginReq) (token *dto.LoginRes, err error) {
 	user, err := u.userRepository.FindByEmail(ctx, loginData.Email)
 	if err != nil {
-		return nil, err
+		return nil, apperror.ErrInvalidPasswordOrEmail
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginData.Password))
 	if err != nil {
-		return nil, apperror.ErrMatchHashPassword
+		return nil, apperror.ErrInvalidPasswordOrEmail
 	}
 	newToken, err := dto.GenerateJWT(dto.JwtClaims{
 		ID: user.ID,

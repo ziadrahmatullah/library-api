@@ -26,7 +26,7 @@ func ValidateJWT(tokenString string) (*jwt.Token, error) {
 	return jwt.ParseWithClaims(tokenString, &JwtClaims{}, func(t *jwt.Token) (interface{}, error) {
 		_, ok := t.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
-			return nil, apperror.ErrInvalidPassword
+			return nil, apperror.ErrInvalidPasswordOrEmail
 		}
 
 		return []byte(os.Getenv("JWT_SECRET")), nil

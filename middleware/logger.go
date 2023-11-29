@@ -31,7 +31,7 @@ func Logger(log logger.Logger) gin.HandlerFunc {
 
 			if len(errList) > 0 {
 				param["errors"] = errList
-				log.Errorf("Invalid password", param)
+				log.Errorf("",param)
 			}
 		}
 	}

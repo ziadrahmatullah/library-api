@@ -41,7 +41,7 @@ func AuthorizeHandler() gin.HandlerFunc {
 		header := ctx.GetHeader("Authorization")
 		splittedHeader := strings.Split(header, " ")
 		if len(splittedHeader) != 2 {
-			resp.Message = apperror.ErrInvalidPassword.Error()
+			resp.Message = apperror.ErrInvalidPasswordOrEmail.Error()
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, resp)
 			return
 		}
@@ -54,7 +54,7 @@ func AuthorizeHandler() gin.HandlerFunc {
 
 		claims, ok := token.Claims.(*dto.JwtClaims)
 		if !ok || !token.Valid {
-			resp.Message = apperror.ErrInvalidPassword.Error()
+			resp.Message = apperror.ErrInvalidPasswordOrEmail.Error()
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, resp)
 			return
 		}
