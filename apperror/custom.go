@@ -1,7 +1,6 @@
 package apperror
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -22,7 +21,7 @@ func NewCustomError(code int, message string) *CustomError {
 }
 
 func (ce *CustomError) Error() string {
-	return fmt.Sprintf("Error %d: %s", ce.Code, ce.Message)
+	return ce.Message
 }
 
 func (ce *CustomError) ToErrorRes() ErrorRes {
@@ -61,6 +60,7 @@ var (
 	ErrGenerateJWTToken       = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
 	ErrGenerateHashPassword   = NewCustomError(http.StatusInternalServerError, "can't hash password")
 	ErrInvalidPasswordOrEmail = NewCustomError(http.StatusBadRequest, "invalid password or email")
+	ErrNotAuthorize           = NewCustomError(http.StatusBadRequest, "not authorize")
 
 	ErrInvalidBody = NewCustomError(http.StatusBadRequest, "invalid body")
 	ErrTxCommit    = NewCustomError(http.StatusInternalServerError, "commit transaction error")

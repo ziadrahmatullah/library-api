@@ -14,10 +14,10 @@ type RouterOpts struct {
 }
 
 func NewRouter(opts RouterOpts) *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
+	router := gin.New()
 	router.ContextWithFallback = true
 
+	router.Use(gin.Recovery())
 	router.Use(middleware.WithTimeout)
 	router.Use(middleware.AuthorizeHandler())
 	router.Use(middleware.ErrorHandler())
