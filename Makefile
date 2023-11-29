@@ -29,6 +29,11 @@ cover:
 	@go tool cover -html=cover.out
 	@rm cover.out
 
+coverall:
+	@go test ./... --cover --coverprofile=cover.out >> /dev/null
+	@go tool cover --func cover.out | grep total
+	@rm cover.out
+
 air:
 	@command -v air > /dev/null || go install github.com/cosmtrek/air@latest
 
