@@ -13,6 +13,7 @@ import (
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/appjwt"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/handler"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/logger"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/repository"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/router"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/transactor"
@@ -20,9 +21,12 @@ import (
 )
 
 func main() {
+	logrusLogger := logger.NewLogrusLogger()
+	logger.SetLogger(logrusLogger)
+
 	db, err := repository.GetConnection()
 	if err != nil {
-		log.Println(err)
+		logger.Log.Error(err)
 	}
 
 	manager := transactor.NewTransactor(db)
@@ -78,11 +82,11 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
 	defer cancel()
 	if err = server.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
+		logger.Log.Info("Server Shutdown:", err)
 	}
 	select {
 	case <-ctx.Done():
-		log.Println("timeout of 5 seconds.")
+		logger.Log.Info("timeout of 5 seconds.")
 	}
-	log.Println("Server exiting")
+	logger.Log.Info("Server exiting")
 }
