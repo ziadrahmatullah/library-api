@@ -24,6 +24,9 @@ run: build
 test:
 	@go test ./... -v
 
+testfail:
+	@go test ./... -v | fgrep FAIL || echo "No test failed"
+
 cover:
 	@go test ./... --cover --coverprofile=cover.out
 	@go tool cover -html=cover.out
