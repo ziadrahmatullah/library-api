@@ -11,7 +11,7 @@ import (
 
 func AuthorizeHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if gin.Mode() == gin.TestMode {
+		if gin.Mode() == gin.DebugMode {
 			return
 		}
 
@@ -30,7 +30,7 @@ func AuthorizeHandler() gin.HandlerFunc {
 		header := ctx.GetHeader("Authorization")
 		splittedHeader := strings.Split(header, " ")
 		if len(splittedHeader) != 2 {
-			resp.Message = apperror.ErrInvalidPasswordOrEmail.Error()
+			resp.Message = apperror.ErrNotAuthorize.Error()
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, resp)
 			return
 		}
@@ -43,7 +43,7 @@ func AuthorizeHandler() gin.HandlerFunc {
 
 		claims, ok := token.Claims.(*dto.JwtClaims)
 		if !ok || !token.Valid {
-			resp.Message = apperror.ErrInvalidPasswordOrEmail.Error()
+			resp.Message = apperror.ErrNotAuthorize.Error()
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, resp)
 			return
 		}

@@ -35,7 +35,7 @@ func (h *BorrowHandler) HandleBorrowBook(ctx *gin.Context) {
 	newBorrow := dto.BorrowReq{}
 	err := ctx.ShouldBindJSON(&newBorrow)
 	if err != nil {
-		ctx.Error(err)
+		ctx.Error(apperror.ErrInvalidBody)
 		return
 	}
 	reqContext := dto.CreateContext(ctx)
