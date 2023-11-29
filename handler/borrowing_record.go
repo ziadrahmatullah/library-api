@@ -20,7 +20,7 @@ func NewBorrowingRecordHandler(borrowingRecord usecase.BorrowingRecordUsecase) *
 	}
 }
 
-func (h *BorrowingRecordHandler) AddBorrowing(c *gin.Context) {
+func (h *BorrowingRecordHandler) BorrowBook(c *gin.Context) {
 	var request dto.BorrowingRecordRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		_ = c.Error(apperror.ErrBinding{ErrBinding: err})

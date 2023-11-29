@@ -30,7 +30,7 @@ func New(handler Handlers) *gin.Engine {
 
 	router.POST("/books", handler.Book.AddBook)
 
-	router.POST("/borrowing-records", handler.BorrowingRecord.AddBorrowing)
+	router.POST("/borrowing-records", handler.BorrowingRecord.BorrowBook)
 	router.PUT("/borrowing-records/:id", handler.BorrowingRecord.ReturnBook)
 
 	return router
