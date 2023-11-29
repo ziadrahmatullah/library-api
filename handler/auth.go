@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/dto"
@@ -41,7 +40,6 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		_ = c.Error(err)
 		return
 	}
-	log.Println(request)
 	user := request.ToUser()
 	token, err := h.authUsecase.Login(c.Request.Context(), user)
 	if err != nil {
