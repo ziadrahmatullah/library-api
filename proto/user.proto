@@ -1,58 +1,23 @@
 syntax = "proto3";
 
-package proto;
+package user;
 
-option go_package = "./proto";
-
-message LoginReq {
-  string email = 1;
-  string password = 2;
-}
-
-message LoginRes {
-  string access_token = 1;
-}
-
-message RegisterReq{
-  string name = 1;
-  string email = 2;
-  string phone = 3;
-  string password = 4;
-}
-
-message RegisterRes{
-  uint32 id = 1;
-  string name = 2;
-  string email = 3;
-  string phone = 4;
-}
+option go_package = "./pb";
 
 message User{
-  uint32 id = 1;
-  int64 created_at = 2;
-  int64 updated_at = 3;
-  int64 deleted_at = 4;
-  string name = 5;
-  string email = 6;
-  string phone = 7;
-  string password = 8;
+    uint32 id = 1;
+    string name = 2;
+    string email = 3;
+    string phone = 4;
+    string password = 5;
 }
 
-message Users{
-  repeated User list = 1;
+message UsersRes{
+    repeated User users = 1;
 }
 
-message UserReq{
+message UsersReq{}
 
+service UserHandler{
+    rpc GetAllUsers (UsersReq) returns (UsersRes);
 }
-
-service Auth {
-  rpc Login (LoginReq) returns (LoginRes);
-  rpc Register (RegisterReq) returns (RegisterRes);
-}
-
-service UserService {
-  rpc GetAllUsers (UserReq)returns (Users);
-}
-
-

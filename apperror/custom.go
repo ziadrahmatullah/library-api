@@ -2,6 +2,9 @@ package apperror
 
 import (
 	"net/http"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type CustomError struct {
@@ -28,6 +31,15 @@ func (ce *CustomError) ToErrorRes() ErrorRes {
 	return ErrorRes{
 		Message: ce.Message,
 	}
+}
+
+func (ce *CustomError) ToGrpcError() error {
+	errorMapper := map[int]codes.Code{
+		http.StatusInternalServerError: codes.Internal,
+		http.StatusBadRequest:          codes.InvalidArgument,
+		http.StatusUnauthorized:        codes.PermissionDenied,
+	}
+	return status.Error(errorMapper[ce.Code], ce.Message)
 }
 
 var (
@@ -60,7 +72,9 @@ var (
 	ErrGenerateJWTToken       = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
 	ErrGenerateHashPassword   = NewCustomError(http.StatusInternalServerError, "can't hash password")
 	ErrInvalidPasswordOrEmail = NewCustomError(http.StatusBadRequest, "invalid password or email")
-	ErrNotAuthorize           = NewCustomError(http.StatusBadRequest, "not authorize")
+	ErrNotAuthorize           = NewCustomError(http.StatusUnauthorized, "not authorize")
+	ErrInvalidAuthHeader      = NewCustomError(http.StatusUnauthorized, "erorr invalid authorization header")
+	ErrInvalidJWTToken        = NewCustomError(http.StatusUnauthorized, "invalid jwt token")
 
 	ErrInvalidBody = NewCustomError(http.StatusBadRequest, "invalid body")
 	ErrTxCommit    = NewCustomError(http.StatusInternalServerError, "commit transaction error")

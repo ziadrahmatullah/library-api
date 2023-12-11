@@ -1,10 +1,12 @@
 package middleware
 
 import (
+	"context"
 	"time"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/logger"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 )
 
 func Logger(log logger.Logger) gin.HandlerFunc {
@@ -31,9 +33,23 @@ func Logger(log logger.Logger) gin.HandlerFunc {
 
 			if len(errList) > 0 {
 				param["errors"] = errList
-				log.Errorf("",param)
+				log.Errorf("", param)
 			}
 		}
 	}
 
+}
+
+func LoggerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
+	log := logger.NewLogger()
+	startTime := time.Now()
+
+	res, err := handler(ctx, req)
+
+	log.Info(map[string]interface{}{
+		"latency": time.Since(startTime).Seconds(),
+		"method":  info.FullMethod,
+	})
+
+	return res, err
 }

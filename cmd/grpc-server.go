@@ -1,41 +1,60 @@
 package cmd
 
 import (
-	"encoding/json"
-	"fmt"
+	"net"
 	"os"
+	"os/signal"
+	"syscall"
 
-	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/models"
-	pb "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/pb/proto"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/database"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/handler"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/middleware"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/repository"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/usecase"
+	"github.com/rs/zerolog/log"
+	"google.golang.org/grpc"
 
-	"google.golang.org/protobuf/proto"
+	pb "git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/pb"
 )
 
 func StartGrpcServer() {
-	user := &pb.User{
-		Id:       1,
-		Name:     "alice",
-		Email:    "alice@gmail.com",
-		Phone:    "081234567890",
-		Password: "alice123",
-	}
+	db := database.ConnectDB()
 
-	userJson := &models.User{
-		Name:     "alice",
-		Email:    "alice@gmail.com",
-		Phone:    "081234567890",
-		Password: "alice123",
-	}
+	ur := repository.NewUserRepository(db)
+	uu := usecase.NewUserUsecase(ur)
+	authGrpcHandler := handler.NewAuthGrpcHandler(uu)
+	userGrpcHandler := handler.NewUserGrpcHandler(uu)
 
-	data, _ := proto.Marshal(user)
-	err := os.WriteFile("./response/protobuff", data, 0644)
+	br := repository.NewBookRepository(db)
+	bu := usecase.NewBookUsecase(br)
+	bookGrpcHandler := handler.NewBookGrpcHandler(bu)
+
+	list, err := net.Listen("tcp", "localhost:50051")
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Fatal().Err(err).Msg("error starting tcp server")
 	}
 
-	dataJSON, _ := json.Marshal(userJson)
-	err = os.WriteFile("./response/response.json", dataJSON, 0644)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	server := grpc.NewServer(grpc.ChainUnaryInterceptor(
+		middleware.ErrorInterceptor,
+		middleware.AuthInterceptor,
+	))
+
+	pb.RegisterAuthServer(server, authGrpcHandler)
+	pb.RegisterUserHandlerServer(server, userGrpcHandler)
+	pb.RegisterBookServiceServer(server, bookGrpcHandler)
+
+	log.Info().Msg("starting grpc server")
+
+	signCh := make(chan os.Signal, 1)
+	signal.Notify(signCh, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		if err := server.Serve(list); err != nil {
+			signCh <- syscall.SIGINT
+		}
+	}()
+	log.Info().Msg("server started")
+	<-signCh
+	log.Info().Msg("server stopped")
+
 }

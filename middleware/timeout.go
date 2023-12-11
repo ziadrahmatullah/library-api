@@ -14,3 +14,11 @@ func WithTimeout(c *gin.Context) {
 	c.Request = c.Request.WithContext(ctx)
 	c.Next()
 }
+
+func GrpcTimeout(){
+	// log.Info().Msg("stopping server")
+	// ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	// defer cancel()
+	// server.GracefulStop()
+	// <-ctx.Done()
+}

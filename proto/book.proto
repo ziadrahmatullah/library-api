@@ -1,15 +1,16 @@
 syntax = "proto3";
 
-package proto;
+package book;
 
-option go_package = "./proto";
+option go_package = "./pb";
+
 
 // Created_at, Updated_at, Deleted_at is Timestamp
 message Book{
     uint32 id = 1;
-    int64 created_at = 2;
-    int64 updated_at = 3;
-    int64 deleted_at = 4;
+    string created_at = 2;
+    string updated_at = 3;
+    string deleted_at = 4;
     string title = 5;
     string description = 6;
     uint32 quantity = 7;
@@ -17,14 +18,14 @@ message Book{
     uint32 author_id = 9;
 }
 
-message BookReq{
+message BooksReq{
 }
 
-message Books{
-    repeated Book list = 1;
+message BooksRes{
+    repeated Book books = 1;
 }
 
 service BookService{
-    rpc GetAllBook(BookReq) returns (Books);
+    rpc GetAllBook(BooksReq) returns (BooksRes);
 }
 

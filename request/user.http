@@ -1,0 +1,8 @@
+proto < ../proto/user.proto
+@host=localhost:50051
+
+### Success
+GRPC /UserHandler/GetAllUsers
+{
+    
+}
