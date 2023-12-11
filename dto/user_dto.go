@@ -10,7 +10,7 @@ type LoginReq struct {
 }
 
 type LoginRes struct {
-	AccessToken string `json:"accessToken"`
+	AccessToken string `json:"access_token"`
 }
 
 type RegisterReq struct{
