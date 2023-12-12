@@ -35,6 +35,7 @@ func StartGrpcServer() {
 	}
 
 	server := grpc.NewServer(grpc.ChainUnaryInterceptor(
+		middleware.LoggerInterceptor,
 		middleware.ErrorInterceptor,
 		middleware.AuthInterceptor,
 	))

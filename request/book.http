@@ -1,7 +1,7 @@
 proto < ../proto/book.proto
 @host=localhost:50051
 {{+
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJpc3MiOiJhdXRoVG9rZW4iLCJleHAiOjE3MDIyODYxNDAsImlhdCI6MTcwMjI4MjU0MH0.3zdrCbcXC7RdFgWzUeeul6BDKadlFV-Z79zdnPPincE"
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJpc3MiOiJhdXRoVG9rZW4iLCJleHAiOjE3MDIzNTU5NTgsImlhdCI6MTcwMjM1MjM1OH0.UebAvjC1B1XM025VzSKTtHF_xeeCUckTR-eXbfDez8A"
   exports.defaultHeaders = {
     'Content-Type': 'text/html',
     'Authorization': `Bearer ${token}`

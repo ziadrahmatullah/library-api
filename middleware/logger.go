@@ -7,6 +7,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/logger"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 )
 
 func Logger(log logger.Logger) gin.HandlerFunc {
@@ -45,11 +46,19 @@ func LoggerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo,
 	startTime := time.Now()
 
 	res, err := handler(ctx, req)
+	s := status.Code(err)
 
-	log.Info(map[string]interface{}{
-		"latency": time.Since(startTime).Seconds(),
-		"method":  info.FullMethod,
-	})
+	param := map[string]interface{}{
+		"status_code": s,
+		"method":      info.FullMethod,
+		"latency":     time.Since(startTime).Seconds(),
+	}
+	if err == nil {
+		log.Info(param)
+	} else {
+		param["errors"] = err.Error()
+		log.Errorf("", param)
+	}
 
 	return res, err
 }
