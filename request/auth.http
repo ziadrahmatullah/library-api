@@ -4,7 +4,7 @@ proto < ../proto/auth.proto
 ### Success
 GRPC /Auth/Login
 {
-    "email": "felis@gmail.com",
+    "email":"felis@gmail.om",
     "password": "felis123"
 }
 

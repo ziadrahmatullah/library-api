@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/appvalidator"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/database"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/handler"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/shared-projects/library-api/-/tree/ziad-rahmatullah/middleware"
@@ -19,10 +20,12 @@ import (
 
 func StartGrpcServer() {
 	db := database.ConnectDB()
+	validator := appvalidator.NewAppValidatorImpl()
+	appvalidator.SetValidator(validator)
 
 	ur := repository.NewUserRepository(db)
 	uu := usecase.NewUserUsecase(ur)
-	authGrpcHandler := handler.NewAuthGrpcHandler(uu)
+	authGrpcHandler := handler.NewAuthGrpcHandler(uu, appvalidator.Validator)
 	userGrpcHandler := handler.NewUserGrpcHandler(uu)
 
 	br := repository.NewBookRepository(db)

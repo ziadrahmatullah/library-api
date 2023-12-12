@@ -5,22 +5,22 @@ import (
 )
 
 type LoginReq struct {
-	Email    string `binding:"required" json:"email"`
-	Password string `binding:"required" json:"password"`
+	Email    string `binding:"required,email" json:"email" validate:"required,email"`
+	Password string `binding:"required" json:"password" validate:"required"`
 }
 
 type LoginRes struct {
 	AccessToken string `json:"access_token"`
 }
 
-type RegisterReq struct{
+type RegisterReq struct {
 	Name     string `binding:"required" json:"name"`
 	Email    string `binding:"required" json:"email"`
 	Phone    string `binding:"required" json:"phone"`
 	Password string `binding:"required" json:"password"`
 }
 
-type RegisterRes struct{
+type RegisterRes struct {
 	ID    uint   `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
@@ -36,10 +36,10 @@ func (r *RegisterReq) ToUserModelFromRegisterDTO(password string) models.User {
 	}
 }
 
-func ToUserResponsDTOFromModel(user *models.User) *RegisterRes{
+func ToUserResponsDTOFromModel(user *models.User) *RegisterRes {
 	return &RegisterRes{
-		ID: user.ID,
-		Name: user.Name,
+		ID:    user.ID,
+		Name:  user.Name,
 		Email: user.Email,
 		Phone: user.Phone,
 	}
