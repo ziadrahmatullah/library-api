@@ -12,5 +12,6 @@ func main() {
 		log.Println("no env got")
 	}
 	// cmd.StartRestAPI()
-	cmd.StartGrpcServer()
+	// cmd.StartGrpcServer()
+	cmd.StartGrpcClient()
 }

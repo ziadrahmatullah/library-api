@@ -1,5 +1,5 @@
-proto < ../proto/book.proto
-@host=localhost:50051
+proto < ../proto/borrow.proto
+@host=10.20.191.148:50051
 {{+
   const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJpc3MiOiJhdXRoVG9rZW4iLCJleHAiOjE3MDIzNzc2MDgsImlhdCI6MTcwMjM3NDAwOH0.CRWgtEw2dnmKKbtZ5o2tNVbma1z_sb4uStuwESaXB1o"
   exports.defaultHeaders = {
@@ -7,20 +7,11 @@ proto < ../proto/book.proto
     'Authorization': `Bearer ${token}`
   };
 }}
-### Success
-GRPC /BookService/GetAllBook
-...defaultHeaders
-{
-    
-}
 
 ### Success
-GRPC /BookService/CreateBook
+GRPC /Borrow/Borrow
 ...defaultHeaders
 {
-    "title":"Buku Sejarah",
-    "description": "Mengenai peradaban atlantis",
-    "quantity": 4,
-    "cover": "Atlantis",
-    "authorId":99
+    "bookId":2, 
+    "userId":1
 }

@@ -29,7 +29,11 @@ func StartGrpcServer() {
 	bu := usecase.NewBookUsecase(br)
 	bookGrpcHandler := handler.NewBookGrpcHandler(bu)
 
-	list, err := net.Listen("tcp", "localhost:50051")
+	bbr := repository.NewBorrowRepository(db)
+	bbu := usecase.NewBorrowUsecase(bbr, br, ur)
+	borrowGrpcHandler := handler.NewBorrowGrpcHandler(bbu)
+
+	list, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatal().Err(err).Msg("error starting tcp server")
 	}
@@ -43,6 +47,7 @@ func StartGrpcServer() {
 	pb.RegisterAuthServer(server, authGrpcHandler)
 	pb.RegisterUserHandlerServer(server, userGrpcHandler)
 	pb.RegisterBookServiceServer(server, bookGrpcHandler)
+	pb.RegisterBorrowServer(server, borrowGrpcHandler)
 
 	log.Info().Msg("starting grpc server")
 

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package borrow;
+
+option go_package = "./pb";
+
+message BorrowRequest{
+    uint32 book_id = 1;
+    uint32 user_id = 2;
+}
+
+message BorrowResponse{
+    uint32 id = 1;
+    uint32 user_id = 2;
+    uint32 book_id = 3;
+    string status = 4;
+}
+
+service Borrow{
+    rpc Borrow(BorrowRequest) returns (BorrowResponse);
+}

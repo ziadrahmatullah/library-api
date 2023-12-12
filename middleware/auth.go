@@ -100,6 +100,7 @@ func isMethodValid(method string) bool {
 	allowedMethod := []string{
 		"/book.BookService/GetAllBook",
 		"/book.BookService/CreateBook",
+		"/borrow.Borrow/Borrow",
 	}
 
 	for _, m := range allowedMethod {
