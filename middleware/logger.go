@@ -51,7 +51,7 @@ func LoggerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo,
 	param := map[string]interface{}{
 		"status_code": s,
 		"method":      info.FullMethod,
-		"latency":     time.Since(startTime).Seconds(),
+		"latency":     time.Since(startTime), // diganti
 	}
 	if err == nil {
 		log.Info(param)

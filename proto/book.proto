@@ -25,7 +25,16 @@ message BooksRes{
     repeated Book books = 1;
 }
 
+message CreateBookReq{
+    string title = 1;
+    string description = 2;
+    uint32 quantity = 3;
+    string cover = 4;
+    uint32 author_id = 5;
+}
+
 service BookService{
     rpc GetAllBook(BooksReq) returns (BooksRes);
+    rpc CreateBook(CreateBookReq) returns (Book);
 }
 

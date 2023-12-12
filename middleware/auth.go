@@ -99,6 +99,7 @@ func AuthInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, h
 func isMethodValid(method string) bool {
 	allowedMethod := []string{
 		"/book.BookService/GetAllBook",
+		"/book.BookService/CreateBook",
 	}
 
 	for _, m := range allowedMethod {

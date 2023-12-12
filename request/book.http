@@ -1,7 +1,7 @@
 proto < ../proto/book.proto
 @host=localhost:50051
 {{+
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJpc3MiOiJhdXRoVG9rZW4iLCJleHAiOjE3MDIzNTU5NTgsImlhdCI6MTcwMjM1MjM1OH0.UebAvjC1B1XM025VzSKTtHF_xeeCUckTR-eXbfDez8A"
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJpc3MiOiJhdXRoVG9rZW4iLCJleHAiOjE3MDIzNjgzMDQsImlhdCI6MTcwMjM2NDcwNH0.okPV74wJieh1pU2W-0R5GOs-qAu1s75L3B-K5ffJLdM"
   exports.defaultHeaders = {
     'Content-Type': 'text/html',
     'Authorization': `Bearer ${token}`
@@ -12,4 +12,15 @@ GRPC /BookService/GetAllBook
 ...defaultHeaders
 {
     
+}
+
+### Success
+GRPC /BookService/CreateBook
+...defaultHeaders
+{
+    "title":"Buku Sejarah",
+    "description": "Mengenai peradaban atlantis",
+    "quantity": 4,
+    "cover": "Atlantis",
+    "authorId":99
 }

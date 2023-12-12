@@ -38,6 +38,9 @@ func ErrorHandler() gin.HandlerFunc {
 func ErrorInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 	res, err := handler(ctx, req)
 	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return nil, status.Error(codes.DeadlineExceeded, err.Error())
+		}
 		switch e := err.(type) {
 		case *apperror.CustomError:
 			return nil, e.ToGrpcError()

@@ -5,11 +5,11 @@ import (
 )
 
 type BookReq struct {
-	Title       string `json:"title" binding:"required,max=35"`
-	Description string `json:"description" binding:"required"`
-	Quantity    *int   `json:"quantity" binding:"required,min=0"`
+	Title       string `json:"title" binding:"required,max=35" validate:"required,max=35"`
+	Description string `json:"description" binding:"required" validate:"required"`
+	Quantity    *int   `json:"quantity" binding:"required,min=0" validate:"required,min=0"`
 	Cover       string `json:"cover,omitempty"`
-	AuthorId    uint   `json:"author_id" binding:"required"`
+	AuthorId    uint   `json:"author_id" binding:"required" validate:"required"`
 }
 
 func (b *BookReq) ToBookModel() models.Book {
