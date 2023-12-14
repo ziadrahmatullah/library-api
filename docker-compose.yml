@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  app:
+    container_name: golang_container
+    build: .
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    networks:
+      - library
+    depends_on:
+      database:
+        condition: service_healthy
+    links:
+      - "database:db"
+
+  database:
+    image: postgres:16-alpine
+    container_name: postgres_container
+    ports:
+      - 5555:5432
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d library_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - dbvolume:/var/lib/postgresql/data
+    networks:
+      library:
+
+  migration:
+    container_name: migration_container
+    build:
+      context: .
+      target: "migration"
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      library:
+    links:
+      - "database:db"
+
+volumes:
+  dbvolume:
+
+networks:
+  library:
