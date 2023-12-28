@@ -19,9 +19,9 @@ VALUES
 INSERT INTO users (name, email, phone, password, created_at, updated_at)
 VALUES
 ('Alice', 'alice@gmail.com', '0877237373','no hash', NOW(), NOW());
--- ('Bob', 'alice@gmail.com', '0877237373', NOW(), NOW()),
--- ('Celine', 'alice@gmail.com', '0877237373', NOW(), NOW()),
--- ('Ferina', 'alice@gmail.com', '0877237373', NOW(), NOW());
+('Bob', 'alice@gmail.com', '0877237373', NOW(), NOW()),
+('Celine', 'alice@gmail.com', '0877237373', NOW(), NOW()),
+('Ferina', 'alice@gmail.com', '0877237373', NOW(), NOW());
 
 
 INSERT INTO borrowing_books (book_id, user_id, status, created_at, updated_at)

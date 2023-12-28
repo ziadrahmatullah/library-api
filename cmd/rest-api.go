@@ -38,6 +38,8 @@ func StartRestAPI() {
 		UserHandler:   uh,
 		BorrowHandler: brh,
 	}
+
+	// db.Debug().AutoMigrate(&models.Book{}, &models.Author{}, &models.BorrowBook{}, &models.User{})
 	r := server.NewRouter(opts)
 
 	srv := http.Server{

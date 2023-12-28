@@ -11,7 +11,7 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Println("no env got")
 	}
-	// cmd.StartRestAPI()
-	cmd.StartGrpcServer()
+	cmd.StartRestAPI()
+	// cmd.StartGrpcServer()
 	// cmd.StartGrpcClient()
 }

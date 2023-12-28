@@ -1,6 +1,5 @@
 proto < ../proto/auth.proto
-@host=localhost:50051
-
+@host=0.0.0.0:8080
 ### Success
 GRPC /Auth/Login
 {
